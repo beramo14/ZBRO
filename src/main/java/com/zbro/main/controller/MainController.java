@@ -36,5 +36,13 @@ public class MainController {
 		
 		
 		return "index";
+		
+		
+	}
+	@RequestMapping("/roomdetailrefix")
+	public String Getlayout() {
+		
+		return "main/roomdetailrefix";
+		
 	}
 }
