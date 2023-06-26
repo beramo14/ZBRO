@@ -48,13 +48,16 @@ public class SellerUser {
 	private boolean admission;
 	
 	@Comment("전화번호_1")
-	private int tel1;
+	@Column(length = 10)
+	private String tel1;
 	
 	@Comment("전화번호_2")
-	private int tel2;
+	@Column(length = 10)
+	private String tel2;
 
 	@Comment("전화번호_3")
-	private int tel3;
+	@Column(length = 10)
+	private String tel3;
 	
 	@Comment("판매자 소개")
 	private String description;
