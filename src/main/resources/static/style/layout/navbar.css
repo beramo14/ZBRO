@@ -1,0 +1,43 @@
+.nav-link.btn.btn-link {
+    border: 1px solid ;
+    border-radius: 12px;
+   	border-color:#acda93;
+   	padding: 14px;
+   	font-weight: bolder;
+   	font-size: 22px;
+    color : #acda93;
+    margin: 12px
+   	
+  }
+  
+  
+.nav-item1 .nav-link {
+	font-weight: bolder;
+	font-size: 22px;
+	color: #acda93;
+	margin: 20px
+	
+}
+
+.navigation {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.navigation::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 2%;
+  width: 95%;
+  height: 4px;
+  background-image: linear-gradient(to right, #86c69f, #acda93);
+}
+
+.dropdown-menu .dropdown-item {
+  padding: 10px;
+  color : #86c69f;
+}
+
+
