@@ -9,7 +9,9 @@
 <body>
 	<th:block th:replace="layout/fragments/navbar :: navbar"></th:block>
 	
-	<th:block layout:fragment="content"></th:block>
+	<div class="main_wrapper">
+		<th:block layout:fragment="content"></th:block>
+	</div>
 	
 	<th:block th:replace="layout/fragments/footer :: footer"></th:block>
 	<th:block th:replace="layout/fragments/script :: script"></th:block>
