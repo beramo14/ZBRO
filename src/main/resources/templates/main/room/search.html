@@ -1,97 +1,27 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/search_layout}">
 <th:block layout:fragment="customStyle">
+	<link href="/style/main/room/room_search.css" rel="stylesheet" type="text/css" />
 	<style th:inline="css" type="text/css">
-		.search-main-wrapper {
-			width: 95vw;
-			min-width: 1200px;
-			margin: 10px auto;
-			border: 1px solid lightgray;
-			padding: 10px;
-		}
-		
-		.search-wrapper {
-			margin-bottom: 10px;
-		}
-		
-		.search-result-wrapper {
-			height: 77vh;
-			display: flex;
-		}
-		
-		.room-list {
-			width: 30%;
-			border: 1px solid blue;
-			overflow-y: scroll;
-		}
-		
-		.map-wrapper {
-			height: 100%;
-			width: 70%;
-			border: 1px solid red;
-		}
-		
-		.room-item {
-			height: 140px;
-			border: 1px solid green;
-			margin: 0px;
-			padding: 5px;
-		}
-		
-		.room-photo-wrapper {
-			margin-right: 10px;
-		}
-		
-		
-		
-		
-		.room-photo-wrapper {
-			height: 100%;
-			float: left;
-		}
-		
-		.room-image {
-			height: 100%;
-			width: 130px;
-			object-fit: cover;
-		}
-		
-		.room-info-wrapper {
-			
-		}
-		
-		.room-info-wrapper p {
-			margin: unset;
-			line-height:115%;
-		}
-		
-		.room-cost-wrapper{
-		
-		}
-		.room-cost-wrapper p {
-			font-size: 1.3rem;
-			
-		}
-		
-		form.search-form {
-		}
 	</style>
 </th:block>
 <th:block layout:fragment="content">
 	
 	<div class="search-main-wrapper">
 		<div class="search-wrapper">
-			<form action="" class="search-form" style="display: flex;">
+			<form action="#" class="search-form" style="display: flex;">
 					<input type="text" name="searchWord" class="form-control me-1" style="width: 200px; "/>
-					<button type="button" class="btn btn-outline-primary me-5">검색</button>
+					<button type="submit" class="btn btn-outline-primary me-5">검색</button>
 					<select name="type" class="form-select me-1" style="width: 120px;">
-						<option value="원룸" selected>원룸</option>
+						<option value="" selected>-유형-</option>
+						<option value="원룸">원룸</option>
 						<option value="오피스텔">오피스텔</option>
 						<option value="고시원">고시원</option>
 					</select>
 					
 					<select name="costType" class="form-select" style="width: 120px; ">
-						<option value="월세" selected>월세</option>
+						<option value="" selected>-전/월세-</option>
+						<option value="월세">월세</option>
 						<option value="전세">전세</option>
 					</select>
 			</form>
@@ -106,24 +36,21 @@
 				        <img src="https://picsum.photos/300/200" th:alt="${room.address}" class="room-image" />
 				    </div>
 				    <div class="room-info-wrapper">
-				        <div class="room-cost-wrapper">
-				            <p>
-				                <span th:text="${room.costType}">월세</span>
-				                <th:block th:if="${room.costType.toString() == '월세'}">
-				                	<th:block th:if="${room.deposit != 0}" >
-						                <span th:text="${room.deposit}">1000</span>
-						                <span>/</span>
-				                	</th:block>
-					                <span th:text="${room.monthCost}">30</span>
-				                </th:block>
-				                <th:block th:if="${room.costType.toString() == '전세'}">
-				                	<span th:text="${room.deposit}">1000</span>
-				                </th:block>
-				            </p>
-				            <p th:if="${room.costType == '전세'}" th:text="${room.deposit}">1000</p>
-				        </div>
-				        <div th:text="${room.type}">원룸</div>
-				        <p th:text="${room.intro}"></p>
+			            <p class="room-cost">
+			                <span th:text="${room.costType}">월세</span>
+			                <th:block th:if="${room.costType == '월세'}">
+			                	<th:block th:if="${room.deposit != 0}" >
+					                <span th:text="${room.deposit}">1000</span>
+					                <span>/</span>
+			                	</th:block>
+				                <span th:text="${room.monthCost}">30</span>
+			                </th:block>
+			                <th:block th:if="${room.costType == '전세'}">
+			                	<span th:text="${room.deposit}">1000</span>
+			                </th:block>
+			            </p>
+				        <p class="room-item-type" th:text="${room.type}">원룸</p>
+				        <p class="room-item-intro" th:text="${room.intro}"></p>
 				    </div>
 				</div>
 
@@ -186,7 +113,7 @@
 				             position: coords
 				         });
 				         map.setCenter(coords);
-				         map.setLevel(4);
+				         map.setLevel(3);
 				    }
 		    		map.setBounds(bounds);
 				});
