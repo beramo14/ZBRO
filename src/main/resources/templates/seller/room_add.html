@@ -12,18 +12,41 @@
 <body>
 	<h1>매물등록</h1>
 	<div id="roomInsert">
-		<form action="room_add" method="post" id="roomForm">
+		<form action="room_add" method="post" id="roomForm" enctype="multipart/form-data">
 		    <div>
-		        판매자id <input type="hidden" name="seller" value="1" /> <br />
+		    	<!-- 이미지등록<br />
+		    	<input type="file" name="fileName" multiple="multiple" accept=".jpeg, .png" /> -->
+		    	
+		    	
+		    	<div style="border: 1px solid gray; width:400px">
+		    		<h3>공용 옵션</h3>
+		    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == true}">
+		    			<th:block th:if="${optionType.sortOrder == 6}"><br /></th:block>
+					    <label>
+					        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}" />
+					        <span th:text="${optionType.optionName}"></span>
+					    </label>
+					</th:block>
+		    	</div>
+		    	<div style="border: 1px solid gray; width:400px">
+		    		<h3>방 옵션</h3>
+		    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == false}">
+					    <label>
+					        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}" />
+					        <span th:text="${optionType.optionName}"></span>
+					    </label>
+					</th:block>
+		    	</div>
+				<input type="hidden" name="seller" value="1" /> <br />
 		        방 종류 <select name="type">
 		            <option value="원룸" selected>원룸</option>
 		            <option value="오피스텔">오피스텔</option>
 		            <option value="고시원">고시원</option>
 		        </select> <br />
-		        매물 간단소개 <input type="text" name="intro"/> <br /> 
+		        매물 간단소개 <input type="text" name="intro" value="간단소개"/> <br /> 
 		        매물 상세소개 <textarea name="description"></textarea> <br />
 		        건물명 <input type="text" name="buildingName"/> <br />
-		        주소 <input type="text" name="address"/> <br />
+		        주소 <input type="text" name="address" value="주소"/> <br />
 		        호수 <input type="text" name="roomNumber"/> <br />
 		        월/전세 &nbsp 월세 <input type="radio" name="costType" value="월세" checked >
 		            &nbsp 전세 <input type="radio" name="costType" value="전세"> <br />
@@ -104,7 +127,6 @@
 	
 	    toggleOfferDiv();
 	</script>
-
 
 </body>
 </html>
