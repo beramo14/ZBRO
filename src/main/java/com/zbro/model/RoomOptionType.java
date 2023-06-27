@@ -23,4 +23,7 @@ public class RoomOptionType {
 	
 	@Comment("공용_여부")
 	private boolean isShare;
+	
+	@Comment("정렬_순서")
+	private int sortOrder;
 }
