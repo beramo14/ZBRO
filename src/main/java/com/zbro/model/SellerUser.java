@@ -79,6 +79,4 @@ public class SellerUser {
 	private LocalDateTime createDate;
 	
 	
-	@OneToMany(mappedBy="seller", cascade = CascadeType.ALL)
-	private List<Room> rooms = new ArrayList<>();
 }
