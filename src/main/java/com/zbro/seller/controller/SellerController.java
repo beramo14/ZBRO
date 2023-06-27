@@ -36,6 +36,9 @@ public class SellerController {
 		return "seller/room_add";
 	}
 	
+
+	
+	// 매물 등록하기
 	@PostMapping("/room_add")
 	public String roomAdd(@RequestParam("isRoomIn") boolean isRoomIn, 
 						  @RequestParam("isElevator") boolean isElevator,
@@ -48,14 +51,14 @@ public class SellerController {
 		roomService.insertRoom(room);
 		
 		// room insert 결과 확인
-		System.out.println("등록된 room id : " + room.getRoomId());
+//		System.out.println("등록된 room id : " + room.getRoomId());
 		
-		if (optionTypes != null) {
-	        for (String optionType : optionTypes) {
-	            System.out.println("선택한 옵션: " + optionType.toString());
-	        }
-	    }
-		 
+		// 선택한 옵션 확인
+//		if (optionTypes != null) {
+//	        for (String optionType : optionTypes) {
+//	            System.out.println("선택한 옵션: " + optionType.toString());
+//	        }
+//	    }
 		
 		// RoomOption insert
 		if(optionTypes != null) {
@@ -69,9 +72,6 @@ public class SellerController {
 			}
 		}
 		
-		
-		
-//		System.out.println(roomOption.toString());
 		return "redirect:add_test";
 	}
 	
