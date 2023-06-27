@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.zbro.model.Room;
+import com.zbro.model.SellerUser;
 import com.zbro.seller.service.RoomService;
 import com.zbro.seller.service.SellerService;
 import com.zbro.type.CostType;
