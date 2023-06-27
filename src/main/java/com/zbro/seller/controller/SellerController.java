@@ -55,7 +55,7 @@ public class SellerController {
 	            System.out.println("선택한 옵션: " + optionType.toString());
 	        }
 	    }
-		
+		 
 		
 		// RoomOption insert
 		if(optionTypes != null) {
