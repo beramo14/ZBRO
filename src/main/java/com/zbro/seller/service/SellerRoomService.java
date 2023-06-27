@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zbro.model.Room;
-import com.zbro.seller.repository.RoomRepository;
+import com.zbro.seller.repository.SellerRoomRepository;
 
 @Service
-public class RoomService {
+public class SellerRoomService {
 	
 	@Autowired
-	private RoomRepository roomRepo;
+	private SellerRoomRepository roomRepo;
 
 	public void insertRoom(Room room) {
 		roomRepo.save(room);
