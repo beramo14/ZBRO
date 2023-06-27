@@ -39,5 +39,10 @@ public class MainController {
 		
 		
 	}
-	
+	@RequestMapping("/roomdetailrefix")
+	public String Getlayout() {
+		
+		return "main/roomdetailrefix";
+		
+	}
 }
