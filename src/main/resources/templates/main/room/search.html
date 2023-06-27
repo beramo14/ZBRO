@@ -3,7 +3,9 @@
 <th:block layout:fragment="customStyle">
 	<style th:inline="css" type="text/css">
 		.search-main-wrapper {
-			margin: 10px 20px;
+			width: 95vw;
+			min-width: 1200px;
+			margin: 10px auto;
 			border: 1px solid lightgray;
 			padding: 10px;
 		}
@@ -18,55 +20,113 @@
 		}
 		
 		.room-list {
-			width: 25%;
+			width: 30%;
 			border: 1px solid blue;
 			overflow-y: scroll;
 		}
 		
 		.map-wrapper {
 			height: 100%;
-			width: 75%;
+			width: 70%;
 			border: 1px solid red;
 		}
 		
 		.room-item {
-			height: 100%;
+			height: 140px;
 			border: 1px solid green;
-			margin: 5px;
-			padding: 10px;
-			height: 150px;
+			margin: 0px;
+			padding: 5px;
+		}
+		
+		.room-photo-wrapper {
+			margin-right: 10px;
+		}
+		
+		
+		
+		
+		.room-photo-wrapper {
+			height: 100%;
+			float: left;
+		}
+		
+		.room-image {
+			height: 100%;
+			width: 130px;
+			object-fit: cover;
+		}
+		
+		.room-info-wrapper {
+			
+		}
+		
+		.room-info-wrapper p {
+			margin: unset;
+			line-height:115%;
+		}
+		
+		.room-cost-wrapper{
+		
+		}
+		.room-cost-wrapper p {
+			font-size: 1.3rem;
+			
+		}
+		
+		form.search-form {
 		}
 	</style>
 </th:block>
 <th:block layout:fragment="content">
 	
-	
 	<div class="search-main-wrapper">
 		<div class="search-wrapper">
-			<form action="" class="form-inline">
-				<input type="text" class="form-control" style="width: 200px; float:left;"/>
-				<button type="button" class="btn btn-outline-primary">검색</button>
+			<form action="" class="search-form" style="display: flex;">
+					<input type="text" name="searchWord" class="form-control me-1" style="width: 200px; "/>
+					<button type="button" class="btn btn-outline-primary me-5">검색</button>
+					<select name="type" class="form-select me-1" style="width: 120px;">
+						<option value="원룸" selected>원룸</option>
+						<option value="오피스텔">오피스텔</option>
+						<option value="고시원">고시원</option>
+					</select>
+					
+					<select name="costType" class="form-select" style="width: 120px; ">
+						<option value="월세" selected>월세</option>
+						<option value="전세">전세</option>
+					</select>
 			</form>
 		</div>
 		
 		<div class="search-result-wrapper">
 			<div class="room-list">
-				<div class="room-item">
+			
+				<div class="room-item" th:each="room : ${rooms}">
+					<input type="hidden" class="address" th:value="${room.address}" th:data="${room.roomId}"/>
+				    <div class="room-photo-wrapper">
+				        <img src="https://picsum.photos/300/200" th:alt="${room.address}" class="room-image" />
+				    </div>
+				    <div class="room-info-wrapper">
+				        <div class="room-cost-wrapper">
+				            <p>
+				                <span th:text="${room.costType}">월세</span>
+				                <th:block th:if="${room.costType.toString() == '월세'}">
+				                	<th:block th:if="${room.deposit != 0}" >
+						                <span th:text="${room.deposit}">1000</span>
+						                <span>/</span>
+				                	</th:block>
+					                <span th:text="${room.monthCost}">30</span>
+				                </th:block>
+				                <th:block th:if="${room.costType.toString() == '전세'}">
+				                	<span th:text="${room.deposit}">1000</span>
+				                </th:block>
+				            </p>
+				            <p th:if="${room.costType == '전세'}" th:text="${room.deposit}">1000</p>
+				        </div>
+				        <div th:text="${room.type}">원룸</div>
+				        <p th:text="${room.intro}"></p>
+				    </div>
 				</div>
-				<div class="room-item">
-				</div>
-				<div class="room-item">
-				</div>
-				<div class="room-item">
-				</div>
-				<div class="room-item">
-				</div>
-				<div class="room-item">
-				</div>
-				<div class="room-item">
-				</div>
-				<div class="room-item">
-				</div>
+
 				
 			</div>
 			<div class="map-wrapper">
@@ -77,9 +137,22 @@
 	
 </th:block>
 <th:block layout:fragment="customScript">
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b2dd20bb2f4a2bd31a676e25dd5a0ef0"></script>
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b2dd20bb2f4a2bd31a676e25dd5a0ef0&libraries=services"></script>
 	<script th:inline="javascript" type="text/javascript">
 		$(document).ready(function () {
+			
+			
+			let addressArray=[];
+			
+			console.log($(".address"));
+			
+			$.each($(".address"), function(index, element){
+			    addressArray.push({
+			    	"roomId" : element.attributes.data.value ,
+			    	"address" : element.value
+		    	});
+			})
+			console.log(addressArray);
 		
 			var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
 		    var options = { //지도를 생성할 때 필요한 기본 옵션
@@ -89,15 +162,40 @@
 		
 		    var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 		
-		    var markerPosition  = new kakao.maps.LatLng(33.450701, 126.570667); 
-		
-		    // 마커를 생성합니다
-		    var marker = new kakao.maps.Marker({
-		        position: markerPosition
+		    
+		    var geocoder = new kakao.maps.services.Geocoder();
+
+		    
+		    bounds = new kakao.maps.LatLngBounds();
+		    
+		    $.each(addressArray, function(index, item) {
+		    	
+		    	console.log(item.address)
+		    	
+				// 주소로 좌표를 검색합니다
+				geocoder.addressSearch(item.address, function(result, status) {
+	
+				    // 정상적으로 검색이 완료됐으면 
+				    if (status === kakao.maps.services.Status.OK) {
+				    	 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+				    	 bounds.extend(coords);
+				    	 
+				    	// 결과값으로 받은 위치를 마커로 표시합니다
+				         var marker = new kakao.maps.Marker({
+				             map: map,
+				             position: coords
+				         });
+				         map.setCenter(coords);
+				         map.setLevel(4);
+				    }
+		    		map.setBounds(bounds);
+				});
+				
 		    });
+		    
+		    
 		
-		    // 마커가 지도 위에 표시되도록 설정합니다
-		    marker.setMap(map);
+		
 		});
 	</script>
 </th:block>

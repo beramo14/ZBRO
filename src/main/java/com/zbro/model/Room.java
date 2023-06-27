@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
 import com.zbro.type.CostType;
@@ -59,13 +60,13 @@ public class Room {
 	private String roomNumber;
 	
 	@Comment("월세")
-	private int	monthCost;
+	private int	monthCost = 0;
 	
 	@Comment("보증금")
-	private int deposit;
+	private int deposit = 0;
 	
 	@Comment("관리비")
-	private int manageCost;
+	private int manageCost = 0;
 	
 	@Comment("전/월세 구분")
 	@Column(length = 20)
@@ -124,6 +125,7 @@ public class Room {
 	private String amenityOffer;
 	
 	@Comment("조회수")
+	@ColumnDefault("0")
 	private int viewCount;
 	
 	@Comment("등록일")
