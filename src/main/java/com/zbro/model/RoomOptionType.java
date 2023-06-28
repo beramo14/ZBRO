@@ -21,9 +21,9 @@ public class RoomOptionType {
 	@Column(nullable = false, length = 20)
 	private String optionName;
 	
-	@Comment("고시원_여부")
-	private boolean isGositel;
+	@Comment("공용_여부")
+	private boolean isShare;
 	
-	@Comment("원룸,오피스텔_여부")
-	private boolean isOneroom;
+	@Comment("정렬_순서")
+	private int sortOrder;
 }
