@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<head>
+    <th:block layout:fragment="customStyle">
+        <style th:inline="css" type="text/css">
+            .comparison-item {
+                display: inline-block;
+                
+                border: 1px solid #ccc;
+                padding: 10px;
+                position: relative;
+                width: 300px;
+                height: 700px;
+                vertical-align: top;
+                box-sizing: border-box;
+                margin-top: 40px;
+                left: 70px;
+
+            }
+            
+
+            .hidden-div {
+                display: none;
+                text-align: center;
+            }
+
+            .favorite-item {
+                margin-left: 40px;
+                margin-right: 10px;
+                position: relative;
+                text-align: center;
+                
+                
+            }
+
+            .favorite-item img {
+                width: 210px;
+                height: 150px;
+                cursor: pointer;
+            }
+
+            .favorite-item input[type="checkbox"] {
+                width: 23px;
+                height: 23px;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+			.filter-arrow {
+			    border-radius: 50%;
+			    display: block;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 30px;
+                height: 30px;
+                line-height: 30px;
+                text-align: center;
+                background-color: #ccc;
+                color: #fff;
+                cursor: pointer;
+                z-index: 1;
+			}
+            .filter-arrow-left {
+                left: -40px;
+            }
+
+            .filter-arrow-right {
+                right: -40px;
+                
+            }
+
+			.checkWrap {
+			    text-align: center;
+			    padding: 30px ;
+			    position: relative;
+			}
+			
+			.checkWrap::before,
+			.checkWrap::after {
+			    content: "";
+			    position: absolute;
+			    left: 0;
+			    right: 0;
+			    height: 1px;
+			    background-color: #9C9A9A;
+			}
+			
+			.checkWrap::before {
+			    top: 0;
+			}
+			
+			.checkWrap::after {
+			    bottom: 0;
+			}
+
+	        .comparison-title {
+	            text-align: center;
+	            margin: 130px 0 100px;
+	        }
+	        
+	        .big-title {
+	            font-size: 24px;
+	            font-weight: bold;
+	        }
+	        
+	        .small-title {
+	            font-size: 16px;
+	            margin-top: 10px;
+	            color: #9C9A9A;
+	        }
+		    .hamburger-menu {
+                position: fixed;
+                top: 150px;
+                left: 50px;
+                width: 30px;
+                height: 30px;
+                cursor: pointer;
+
+            }
+
+            .hamburger-line {
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                background-color: #000;
+                transition: all 0.3s ease;
+            }
+
+            .hamburger-line:nth-child(2) {
+                top: 12px;
+            }
+
+            .hamburger-line:nth-child(3) {
+                top: 24px;
+            }
+
+            .side-menu {
+                position: fixed;
+                top: 140px;
+                left: 0;
+                width: 300px;
+                height: 100%;
+                background-color: white;
+                transform: translateX(-300px);
+                transition: all 0.3s ease;
+                z-index: 998;
+                opacity: 0.9;
+               
+            }
+
+            .side-menu.open {
+                transform: translateX(0);
+            }
+
+            .side-menu-content {
+                padding: 20px;
+            }
+            .hamburger-menu.open {
+                display: none;
+            }
+			.close-button{
+				position: absolute; 
+				top: 15px; 
+				right: 35px;
+				font-size: 24px;
+			}
+			.favoriteCost{
+				font-size: 20px;
+			}
+			.checkWrapBig{
+				font-weight: bold;
+				font-size: 25px;
+			}
+			.checkWrapSmall{
+				font-size: 15px;
+				color: #9C9A9A;
+			}
+			.checkWrapTitle {
+				padding: 10px 20px;
+			}
+
+		.checkWrapSmall button {
+			margin-left: 1040px; 
+			border: none;
+    		padding: 8px;
+			border-radius: 15px;
+		} 
+        </style>
+    </th:block>
+</head>
+
+<body>	
+
+    <th:block layout:fragment="content">
+    	<!-- 햄버거 -->
+        <div class="hamburger-menu" onclick="toggleSideMenu()">
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+        </div>
+
+        <div class="side-menu" id="sideMenu">
+            <div class="side-menu-content">
+                <span class="close-button" onclick="toggleSideMenu()">X</span>
+                사이드메뉴다
+            </div>
+        </div>
+        
+        <div class="comparison-title">
+        	<div class="big-title">매물 비교</div>
+        	<div class="small-title">한 눈에 비교하며 내게 맞는 방을 고르세요 </div>
+        </div>
+		<div class="checkWrapTitle">
+		    <div class="checkWrapBig">방 선택</div>
+		    <div class="checkWrapSmall">
+		        <span>최대 4개 선택 가능합니다</span>
+		        <button onclick="deselectCheckboxes()">방 재선택</button>
+		    </div>
+		</div>
+        <div class="checkWrap">
+            <div class="filter-arrow filter-arrow-left" id="filterLeftArrow" onclick="showPreviousFavorites()">&lt;</div>
+
+            <label th:each="favorite, status : ${favorites}" class="favorite-item">
+                <img src='/images/매물쓰리.JPEG' alt="이미지" class="small-image">
+                <input type="checkbox" name="favoriteIds" th:value="${favorite.favoriteId}" onchange="filterFavorites()"
+                    onclick="handleCheckboxClick(event)">
+                <div>
+                    <span class="favoriteCost" th:text="${favorite.room.costType} + ' ' + ${favorite.room.deposit} + '/' + ${favorite.room.monthCost}"></span>
+                    <span class="favoriteType" th:text="${favorite.room.type}"></span>
+                </div>
+            </label>
+
+            <div class="filter-arrow filter-arrow-right" id="filterRightArrow" onclick="showNextFavorites()">&gt;</div>
+        </div>
+
+		
+        <div id="comparisonContainer" class="hidden-div" >
+        	
+            <div th:each="favorite, status : ${favorites}" class="comparison-item">
+            
+                <div class="favorite-id" th:text="${favorite.favoriteId}"></div>
+                <div class="favorite-type" th:text="${favorite.room.type}"></div>
+                <div class="favorite-intro" th:text="${favorite.room.intro}"></div>
+                <div class="favorite-description" th:text="${favorite.room.description}"></div>
+                <div class="favorite-building-name" th:text="${favorite.room.buildingName}"></div>
+                <div class="favorite-address" th:text="${favorite.room.address}"></div>
+                <div class="favorite-room-number" th:text="${favorite.room.roomNumber}"></div>
+                <div class="favorite-month-cost" th:text="${favorite.room.monthCost}"></div>
+                <div class="favorite-deposit" th:text="${favorite.room.deposit}"></div>
+                <div class="favorite-manage-cost" th:text="${favorite.room.manageCost}"></div>
+                <div class="favorite-cost-type" th:text="${favorite.room.costType}"></div>
+                <div class="favorite-size" th:text="${favorite.room.size}"></div>
+                <div class="favorite-direction" th:text="${favorite.room.direction}"></div>
+                <div class="favorite-transport-info" th:text="${favorite.room.transportInfo}"></div>
+                <div class="favorite-total-floor" th:text="${favorite.room.totalFloor}"></div>
+                <div class="favorite-room-floor" th:text="${favorite.room.roomFloor}"></div>
+                <div class="favorite-is-room-in" th:text="${favorite.room.isRoomIn}"></div>
+                <div class="favorite-security-info" th:text="${favorite.room.securityInfo}"></div>
+                <div class="favorite-is-elevator" th:text="${favorite.room.isElevator}"></div>
+                <div class="favorite-heat-info" th:text="${favorite.room.heatInfo}"></div>
+                <div class="favorite-parking-info" th:text="${favorite.room.parkingInfo}"></div>
+                <div class="favorite-internet-info" th:text="${favorite.room.internetInfo}"></div>
+                <div class="favorite-gender-info" th:text="${favorite.room.genderInfo}"></div>
+                <div class="favorite-food-offer" th:text="${favorite.room.foodOffer}"></div>
+                <div class="favorite-amenity-offer" th:text="${favorite.room.amenityOffer}"></div>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block layout:fragment="customScript">
+        <script th:inline="javascript" type="text/javascript">
+        
+        function toggleSideMenu() {
+            var sideMenu = document.getElementById("sideMenu");
+            var hamburgerMenu = document.querySelector(".hamburger-menu");
+            sideMenu.classList.toggle("open");
+            hamburgerMenu.classList.toggle("open");
+        }
+        
+            var currentIndex = 0;
+            var favorites = document.getElementsByClassName("favorite-item");
+            var totalFavorites = favorites.length;
+            var visibleFavorites = 4; // 한 번에 보여줄 즐겨찾기 항목의 수
+            var maxCheckboxCount = 4; // 최대 선택 가능한 체크박스 수
+
+            function filterFavorites() {
+                var selectedFavoriteIds = [];
+                var checkboxes = document.getElementsByName("favoriteIds");
+                var checkedCount = 0;
+
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i].checked) {
+                        checkedCount++;
+
+                        if (checkedCount <= maxCheckboxCount) {
+                            selectedFavoriteIds.push(checkboxes[i].value);
+                        } else {
+                            checkboxes[i].checked = false; // 4개를 초과해서 선택한 경우 체크 해제
+                        }
+                    }
+                }
+
+                if (checkedCount > maxCheckboxCount) {
+                    alert("매물 비교는 최대" + maxCheckboxCount + "개까지 선택할 수 있습니다!");
+                }
+
+                var comparisonItems = document.getElementsByClassName("comparison-item");
+
+                for (var i = 0; i < comparisonItems.length; i++) {
+                    var favoriteId = comparisonItems[i].getElementsByClassName("favorite-id")[0].textContent;
+                    var shouldDisplay = selectedFavoriteIds.includes(favoriteId);
+
+                    if (shouldDisplay) {
+                        comparisonItems[i].classList.remove("hidden-div");
+                    } else {
+                        comparisonItems[i].classList.add("hidden-div");
+                    }
+                }
+
+                var comparisonContainer = document.getElementById("comparisonContainer");
+                comparisonContainer.classList.remove("hidden-div");
+            }
+
+            function showPreviousFavorites() {
+                currentIndex = (currentIndex - 4) ;
+                updateFavoriteVisibility();
+            }
+
+            function showNextFavorites() {
+                currentIndex = (currentIndex + 4) ;
+                updateFavoriteVisibility();
+            }
+
+            function updateFavoriteVisibility() {
+                for (var i = 0; i < totalFavorites; i++) {
+                    if (i >= currentIndex && i < currentIndex + visibleFavorites) {
+                        favorites[i].style.display = "inline-block";
+                    } else {
+                        favorites[i].style.display = "none";
+                    }
+                }
+
+                var filterLeftArrow = document.getElementById("filterLeftArrow");
+                var filterRightArrow = document.getElementById("filterRightArrow");
+
+                if (currentIndex === 0) {
+                    filterLeftArrow.style.display = "none"; 
+                } else {
+                    filterLeftArrow.style.display = "inline-block"; 
+                }
+
+                if (currentIndex + visibleFavorites >= totalFavorites) {
+                    filterRightArrow.style.display = "none"; 
+                } else {
+                    filterRightArrow.style.display = "inline-block"; 
+                }
+            }
+            
+            function deselectCheckboxes() {
+                var checkboxes = document.getElementsByName("favoriteIds");
+                var comparisonItems = document.getElementsByClassName("comparison-item");
+
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = false;
+                }
+
+                for (var i = 0; i < comparisonItems.length; i++) {
+                    comparisonItems[i].classList.add("hidden-div");
+                }
+
+                var comparisonContainer = document.getElementById("comparisonContainer");
+                comparisonContainer.classList.add("hidden-div");
+            }
+
+            // 초기 로딩 시 첫 4개의 즐겨찾기 항목을 표시합니다.
+            updateFavoriteVisibility();
+        </script>
+    </th:block>
+</html>
