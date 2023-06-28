@@ -10,27 +10,28 @@
 	<div class="search-main-wrapper">
 		<div class="search-wrapper">
 			<form action="#" class="search-form" style="display: flex;">
-					<input type="text" name="searchWord" class="form-control me-1" style="width: 200px;" th:value="${roomSearchDTO.searchWord}"/>
-					<button type="submit" class="btn btn-outline-primary me-5">검색</button>
-					<select name="type" class="form-select me-1" style="width: 120px;">
-						<option value="none" th:selected="${roomSearchDTO.type.toString()} == 'none'">-유형-</option>
-						<option value="원룸" th:selected="${roomSearchDTO.type.toString()} == '원룸'">원룸</option>
-						<option value="오피스텔" th:selected="${roomSearchDTO.type.toString()} == '오피스텔'">오피스텔</option>
-						<option value="고시원" th:selected="${roomSearchDTO.type.toString()} == '고시원'">고시원</option>
-					</select>
-					
-					<select name="costType" class="form-select" style="width: 120px; ">
-						<option value="none" th:selected="${roomSearchDTO.costType.toString() == 'none'}">-전/월세-</option>
-						<option value="월세" th:selected="${roomSearchDTO.costType.toString() == '월세'}">월세</option>
-						<option value="전세" th:selected="${roomSearchDTO.costType.toString() == '전세'}">전세</option>
-					</select>
+				<input type="text" name="searchWord" class="form-control me-1" style="width: 200px;" th:value="${roomSearchDTO.searchWord}"/>
+				<button type="submit" class="btn btn-outline-primary me-5">검색</button>
+				<!-- 검색어 삭제 버튼 추가(인풋안에 오른쪽 부분에 x버튼) -->
+				<select name="type" class="form-select me-1" style="width: 120px;">
+					<option value="none" th:selected="${roomSearchDTO.type.toString()} == 'none'">-유형-</option>
+					<option value="원룸" th:selected="${roomSearchDTO.type.toString()} == '원룸'">원룸</option>
+					<option value="오피스텔" th:selected="${roomSearchDTO.type.toString()} == '오피스텔'">오피스텔</option>
+					<option value="고시원" th:selected="${roomSearchDTO.type.toString()} == '고시원'">고시원</option>
+				</select>
+				
+				<select name="costType" class="form-select" style="width: 120px; ">
+					<option value="none" th:selected="${roomSearchDTO.costType.toString() == 'none'}">-전/월세-</option>
+					<option value="월세" th:selected="${roomSearchDTO.costType.toString() == '월세'}">월세</option>
+					<option value="전세" th:selected="${roomSearchDTO.costType.toString() == '전세'}">전세</option>
+				</select>
 			</form>
 		</div>
 		
 		<div class="search-result-wrapper">
 			<div class="room-list">
 			
-				<div class="room-item" th:each="room : ${rooms}">
+				<div class="room-item" th:classappend="'room-'+${room.roomId}" th:each="room : ${rooms}">
 					<div class="room-item-wrapper">
 						<input type="hidden" class="address" th:value="${room.address}" th:data="${room.roomId}"/>
 					    <div class="room-photo-wrapper">
@@ -67,66 +68,7 @@
 </th:block>
 <th:block layout:fragment="customScript">
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b2dd20bb2f4a2bd31a676e25dd5a0ef0&libraries=services"></script>
-	<script th:inline="javascript" type="text/javascript">
-		$(document).ready(function () {
-			
-			
-			let addressArray=[];
-			
-			console.log($(".address"));
-			
-			$.each($(".address"), function(index, element){
-			    addressArray.push({
-			    	"roomId" : element.attributes.data.value ,
-			    	"address" : element.value
-		    	});
-			})
-			console.log(addressArray);
-		
-			var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-		    var options = { //지도를 생성할 때 필요한 기본 옵션
-	    		center: new kakao.maps.LatLng(33.450701, 126.570667),
-		        level: 3 //지도의 레벨(확대, 축소 정도)
-		    };
-		
-		    var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
-		
-		    
-		    var geocoder = new kakao.maps.services.Geocoder();
-
-		    
-		    bounds = new kakao.maps.LatLngBounds();
-		    
-		    $.each(addressArray, function(index, item) {
-		    	
-		    	console.log(item.address)
-		    	
-				// 주소로 좌표를 검색합니다
-				geocoder.addressSearch(item.address, function(result, status) {
-	
-				    // 정상적으로 검색이 완료됐으면 
-				    if (status === kakao.maps.services.Status.OK) {
-				    	 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-				    	 bounds.extend(coords);
-				    	 
-				    	// 결과값으로 받은 위치를 마커로 표시합니다
-				         var marker = new kakao.maps.Marker({
-				             map: map,
-				             position: coords
-				         });
-				         map.setCenter(coords);
-				         map.setLevel(3);
-				    }
-		    		map.setBounds(bounds);
-				});
-				
-		    });
-		    
-		    
-		
-		
-		});
-	</script>
+	<script type="text/javascript" src="/script/main/room/room_search.js"></script>
 </th:block>
 
 <th:block th:include="navbar"></th:block>
