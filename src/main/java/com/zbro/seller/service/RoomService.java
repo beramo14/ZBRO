@@ -39,5 +39,5 @@ public class RoomService {
 		
 		return findOptionTypes;
 	}
-	
+
 }

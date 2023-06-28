@@ -3,22 +3,19 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous" />
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 	<title>Insert title here</title>
 </head>
 <body>
 	<h1>매물등록</h1>
 	<div id="roomInsert">
-		<form action="room_add" method="post" id="roomForm" enctype="multipart/form-data">
+		<form action="room_add" method="post" id="roomForm" multiple="multiple">
 		    <div>
-		    	이미지등록<br />
-		    	<input type="file" name="fileName" multiple="multiple" accept=".jpeg, .png" />
-		    	
-		    	
-		    	
 				<input type="hidden" name="seller" value="1" /> <br />
 		        방 종류 <select name="type">
 		            <option value="원룸" selected>원룸</option>
@@ -74,6 +71,20 @@
 		            제공식사 <input type="text" name="foodOffer"/> <br />
 		            제공비품 <input type="text" name="amenityOffer"/> <br />
 		        </div>
+		        
+		        
+		        
+		        <br />
+		        이미지등록<br />
+		    	<button id="btn-upload" type="button" style="border: 1px solid #ddd; outline: none;">파일추가</button>
+		    	<input id="input_file" type="file" name="fileName" multiple="multiple" accept=".jpeg, .png" style="display:none;"/>
+		    	<span style="font-size: 10px; color:gray;">※이미지는 최대 5개까지 등록이 가능합니다.</span>
+		    	<div class="data_file_txt" id="data_file_txt" style="margin:40px;">
+		    		<span>첨부 파일</span> <br />
+		    		<div id="articlefileChange"></div>
+		    	</div>
+		        
+		        
 		    </div>
 		    <button type="submit">등록하기</button>
 		</form>
@@ -82,8 +93,117 @@
 	
 	
 	
-	
-	
+	<!-- 파일 업로드 스크립트 -->
+	<script>
+		//input file 파일첨부시 fileCheck함수 실행
+		$(document).ready(function() {
+			$("#input_file").on("change", fileCheck);
+		});
+		
+		$(function () {
+		    $('#btn-upload').click(function (e) {
+		        e.preventDefault();
+		        $('#input_file').click();
+		    });
+		});
+		
+		
+		var totalCount = 5;	// 전체 업로드 갯수
+		var fileCount = 0;		// 현재 필드 숫자(totalCount와 비교할 값)
+		var fileNum = 0;		// 파일 고유번호
+		var content_files = new Array();	// 첨부파일 배열
+		
+		
+		/* input type을 file로 지정 -> 파일선택 대화상자 이용가능
+			 [ <input type="flie">의 프로퍼티 목록 ]
+			- accept 	: 선택을 허가하는 파일 종류를 MIME Type으로 지정. (여러개 지정은 콤마로 구분)
+			- multiple  : 복수의 파일 선택 가능하게 함
+			- files 	: 선택된 파일의 File객체를 포함하는 배열
+			- onchange 	: 파일을 선택할때 실행되는 이벤트헨들러
+		*/
+		// 파일개수 확인하고 배열에 담는 함수
+		function fileCheck(e) {
+			//선택한 파일들의 File객체 배열형태로 취득
+			var files = e.target.files;
+			var filesArr = Array.prototype.slice.call(files);
+			
+			// 파일 개수 확인/제한
+			if (fileCount + filesArr.length > totalCount) {
+		      alert('파일은 최대 '+totalCount+'개까지 업로드 할 수 있습니다.');
+		      return;
+		    } else {
+		    	 fileCount = fileCount + filesArr.length;
+		    }
+
+			
+			// 각각의 파일 배열에 담기				// (f) : 함수의 매개변수
+			filesArr.forEach(function (f) {			// forEach 메서드의 콜백함수에서 첫번째 매개변수 : 배열의 각 요소를 나타내는 매개변수
+				var reader = new FileReader(); 		// 업로드된 파일 읽을 수 있는 객체
+				reader.onload = function (e) {		// FileReader.onload() : 읽기 동작이 성공적으로 완료되었을 때마다 발생하는 이벤트 헨들러
+					content_files.push(f);			// Array배열에 선택한 파일들을 넣음
+					$('#articlefileChange').append(
+				       		'<div id="file' + fileNum + '" onclick="fileDelete(\'file' + fileNum + '\')">'
+				       		+ '<font style="font-size:12px">' + f.name + '</font>'  
+				       		+ '<img src="/img/icon_minus.png" style="width:20px; height:auto; vertical-align: middle; cursor: pointer;"/>' 
+				       		+ '<div/>'
+						);
+				        fileNum ++;
+			     };
+			     reader.readAsDataURL(f);	// 업로드파일 미리보기 역할(파일 형식을 Data URL 형식으로 반환)
+			});
+		    console.log(content_files);
+		    $("#input_file").val("");
+		  }
+			
+			
+		// 파일 부분삭제 함수
+		function fileDelete(fileNum){
+		    var no = fileNum.replace(/[^0-9]/g, "");	// fileNum에서 숫자 외 전부 제거.
+		    content_files[no].is_delete = true;			// 배열의 해당하는 파일객체의 is_delete속성을 true로 설정
+			$('#' + fileNum).remove();
+			fileCount --;
+		    console.log(content_files);
+		}
+		
+		
+		// 폼 submit 로직
+		function registerAction(){
+			
+		var form = $("form")[0];        
+	 	var formData = new FormData(form);
+			for (var x = 0; x < content_files.length; x++) {
+				// 삭제 안된것만 업로드 해준다. 
+				if(!content_files[x].is_delete){
+					 formData.append("article_file", content_files[x]);
+				}
+			}
+		$.ajax({
+	   	      type: "POST",
+	   	   	  enctype: "multipart/form-data",
+	   	      url: "/file-upload",
+	       	  data : formData,
+	       	  processData: false,
+	   	      contentType: false,
+	   	      success: function (data) {
+	   	    	if(JSON.parse(data)['result'] == "OK"){
+	   	    		alert("파일업로드 성공");
+				} else
+					alert("서버내 오류로 처리가 지연되고있습니다. 잠시 후 다시 시도해주세요");
+	   	      },
+	   	      error: function (xhr, status, error) {
+	   	    	alert("서버오류로 지연되고있습니다. 잠시 후 다시 시도해주시기 바랍니다.");
+	   	     return false;
+	   	      }
+	   	    });
+	   	    return false;
+		}
+		
+		
+		
+	</script>
+	<!-- https://tyrannocoding.tistory.com/54
+		https://congsong.tistory.com/39
+		https://addio3305.tistory.com/85 -->
 
 	
 	
