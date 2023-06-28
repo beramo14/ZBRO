@@ -35,6 +35,15 @@
 					<div class="room-item-wrapper">
 						<input type="hidden" class="address" th:value="${room.address}" th:data="${room.roomId}"/>
 					    <div class="room-photo-wrapper">
+				    		<div class="favorite-button" th:classappend="'favorite-room-'+${room.roomId}">
+				    			<button type="button" onclick="doFavorite(this)" th:if="${room.isFavorite == false}" th:data-room="${room.roomId}">
+				    				<i class="bi bi-heart"></i>
+				    			</button>
+				    			<button type="button" onclick="doUnfavorite(this)" th:if="${room.isFavorite == true}" th:data-favorite="${room.favoriteId}" th:data-room="${room.roomId}">
+				    				<i class="bi bi-heart-fill"></i>
+				    			</button>
+			    			</div>
+					    	<div class="image-wrapper"></div>
 					        <img src="https://picsum.photos/300/200" th:alt="${room.address}" class="room-image" />
 					    </div>
 					    <div class="room-info-wrapper">
@@ -69,6 +78,57 @@
 <th:block layout:fragment="customScript">
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b2dd20bb2f4a2bd31a676e25dd5a0ef0&libraries=services"></script>
 	<script type="text/javascript" src="/script/main/room/room_search.js"></script>
+	<script>
+		function doUnfavorite(e){
+			let favId = e.attributes["data-favorite"].value;
+			console.log("favId = " + favId);
+			
+			$.ajax({
+				type: "post",
+				url: '/room/unfavorite',
+				data: {"favoriteId":favId},
+				success:function(res) {
+					console.log(res);
+					favoriteToggle(e, false);
+				},
+				error: function(error) {
+					console.log(error);
+				}
+			});
+		
+		}
+		
+		function doFavorite(e){
+			let roomId = e.attributes["data-room"].value;
+			console.log("roomId = " + roomId);	
+			
+			$.ajax({
+				type: "post",
+				url: '/room/favorite',
+				data: {"roomId":roomId},
+				success:function(res) {
+					console.log(res);
+					favoriteToggle(e, true, res);
+				},
+				error: function(error) {
+					console.log(error);
+				}
+			});
+			
+		}
+		
+		const heartElement = "<i class='bi bi-heart'></i>";
+		const heartFillElement = "<i class='bi bi-heart-fill'></i>";
+		function favoriteToggle(e, faved, favId) {
+			if(faved == true) {
+				e.setAttribute("data-favorite", favId);
+				e.innerHTML = heartFillElement;
+			} else if(faved == false) {
+				e.removeAttribute("data-favorite");
+				e.innerHTML = heartElement;
+			}
+		}
+	</script>
 </th:block>
 
 <th:block th:include="navbar"></th:block>

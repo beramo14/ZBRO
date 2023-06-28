@@ -27,6 +27,8 @@ public class RoomSearchDTO {
 	private String intro;
 	private int monthCost;
 	private int deposit;
+	private Long favoriteId;
+	private boolean isFavorite = false;
 	
 	
 	public RoomSearchDTO(Room room) {

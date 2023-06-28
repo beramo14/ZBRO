@@ -2,12 +2,17 @@ package com.zbro.main.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zbro.dto.RoomSearchDTO;
+import com.zbro.main.repository.FavoritRepository;
 import com.zbro.main.repository.RoomRepository;
+import com.zbro.model.ConsumerUser;
+import com.zbro.model.Favorite;
 import com.zbro.model.Room;
 import com.zbro.type.CostType;
 import com.zbro.type.RoomType;
@@ -21,7 +26,11 @@ public class RoomService {
 	@Autowired
 	private RoomRepository roomRepository;
 	
-	public List<RoomSearchDTO> searchRoom(RoomSearchDTO roomDTO) {
+	@Autowired
+	private FavoritRepository favRepository;
+	
+	
+	public List<RoomSearchDTO> searchRoomAndFavorite(RoomSearchDTO roomDTO, Long userId) {
 		
 		List<Room> findedRooms = new ArrayList<>();
 		
@@ -35,8 +44,20 @@ public class RoomService {
 			findedRooms = roomRepository.findRoomsByTypeAndCostTypeAndAddressContaining(roomDTO.getType(), roomDTO.getCostType(), roomDTO.getSearchWord());
 		}
 		
+		List<RoomSearchDTO> roomDTOList = new ArrayList<>();
+		for(Room room : findedRooms) {
+			ConsumerUser user = new ConsumerUser();
+			user.setConsumerId(userId);
+			Optional<Favorite> findedFavorite = favRepository.findByUserAndRoom(user, room);
+			RoomSearchDTO findedRoomDTO = new RoomSearchDTO(room);
+			if(findedFavorite.isPresent() == true) {
+				findedRoomDTO.setFavorite(true);
+				findedRoomDTO.setFavoriteId(findedFavorite.get().getFavoriteId());
+			}
+			roomDTOList.add(findedRoomDTO);
+		}
+//		List<RoomSearchDTO> roomDTOList = RoomSearchDTO.convertToDTO(findedRooms);
 		
-		List<RoomSearchDTO> roomDTOList = RoomSearchDTO.convertToDTO(findedRooms);
 		return roomDTOList;
 	}
 	

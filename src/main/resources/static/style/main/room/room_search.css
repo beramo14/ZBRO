@@ -40,7 +40,7 @@
 	height:100%;
 }
 .room-item-wrapper:hover {
-	cursor: pointer;
+	/* cursor: pointer; */
 }
 
 
@@ -48,6 +48,15 @@
 	margin-right: 10px;
 	height: 100%;
 	float: left;
+	position:relative;
+}
+
+.image-wrapper {
+	position: absolute;
+	z-index: 1; 
+	height: 100%;
+	width: 138px;
+	background-image: linear-gradient(to bottom, white 1%, transparent 70%)
 }
 
 .room-image {
@@ -78,4 +87,23 @@ p.room-cost {
 
 .room-item-intro{
 	line-height:115%;
+}
+
+
+.favorite-button {
+	position: absolute;
+	z-index: 100; 
+	right: 10px;
+	top: 8px;	
+}
+.favorite-button > button {
+	border: unset;
+	background: unset;
+	margin: 0;
+	border: 0;
+} 
+
+.favorite-button  i{
+	color: #dc3545;
+	font-size: 1.5rem;
 }
