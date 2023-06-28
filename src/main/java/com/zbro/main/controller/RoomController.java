@@ -1,6 +1,5 @@
 package com.zbro.main.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.zbro.dto.RoomSearchDTO;
 import com.zbro.main.service.RoomService;
-import com.zbro.model.Room;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,13 +25,10 @@ public class RoomController {
 	@GetMapping("/search")
 	public String searchView(RoomSearchDTO roomDTO, Model model) {
 		
-		List<Room> findList = roomService.searchRoom(roomDTO);
+		List<RoomSearchDTO> roomDTOList = roomService.searchRoom(roomDTO);
 		
-		List<RoomSearchDTO> responseList = RoomSearchDTO.convertToDTO(findList);
-		
-		log.info(responseList.toString());
-		
-		model.addAttribute("rooms", responseList);
+		model.addAttribute("rooms", roomDTOList);
+		model.addAttribute("roomSearchDTO", roomDTO);
 		
 		return "/main/room/search";
 	}
