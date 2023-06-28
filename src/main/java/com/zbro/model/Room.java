@@ -1,6 +1,8 @@
 package com.zbro.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Comment;
 
@@ -130,5 +133,14 @@ public class Room {
 	@Column(updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime createDate;
 	
-	
+//	// 룸옵션을 가져오기 위한 컬럼 설정
+//	@OneToMany
+//	@JoinColumn(name= "room_Id")
+//	private List<RoomOption> roomOption = new ArrayList<>();
+//	
+//	public List<RoomOption> getRoomOption(Long RoomId){
+//		return roomOption;
+//	}
+//							
+
 }

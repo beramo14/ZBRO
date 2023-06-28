@@ -59,30 +59,44 @@
 			<div>
 				<h4>가격정보</h4>
 				<div>
-					<li>월세</li>
-					<li>관리비</li>
-					<li>주차가능여부</li>
-					<li>즉시입주여부</li>
+					<ul th:each="room : ${room}">
+						<li>월세 :<span th:text="${room.monthCost}"></span>
+						</li>
+						<li>관리비:<span th:text="${room.manageCost}"></span></li>
+						<li>주차가능여부:<span th:text="${room.parkingInfo}"></span></li>
+						<li>즉시입주여부:<span th:text="${room.isRoomIn}"></span></li>
+					</ul>
 				</div>
 				<h4>상세정보</h4>
-				<div>
-					<li>방종류</li>
-					<li>방층/건물층</li>
-					<li>호수</li>
-					<li>면적</li>
-					<li>방향</li>
-					<li>엘리베이터</li>
-					<li>냉난방</li>
-					<li>인터넷</li>
-					<li>남여층 분리</li>
-					<li>안전시설</li>
+				<div th:each="room : ${room}">
+
+					<li>방종류:<span th:text="${room.type}"></span></li>
+					<li>방층:<span th:text="${room.roomFloor}"></span> /건물층:<span
+						th:text="${room.totalFloor}"></span></li>
+					<li>호수:<span th:text="${room.roomNumber}"></span></li>
+					<li>면적:<span th:text="${room.size}"></span></li>
+					<li>방향:<span th:text="${room.direction}"></span></li>
+					<li>엘리베이터:<span th:text="${room.isElevator}"></span></li>
+					<li>냉난방:<span th:text="${room.heatInfo}"></span></li>
+					<li>인터넷:<span th:text="${room.internetInfo}"></span></li>
+					<th:blcok th:if="${room.type}== '고시원'">
+						<li>남여층 분리:<span th:text="${room.genderInfo}"></span></li>
+					</th:blcok>
+					<th:blcok th:unless="${room.type} != '고시원'"></th:blcok>
+					<li>안전시설:<span th:text="${room.securityInfo}"></span></li>
 				</div>
 				<h4>옵션 및 서비스</h4>
 				<div>
 					<h4>공용옵션</h4>
-					<li>옵션을 표시할 자리입니다.</li>
+
+					<li>
+						<div th:each="roomOption : ${roomOption}">
+							<span th:text="${roomOption.optionType.optionName}"></span> 
+						</div>
+					</li>
 					<h4>방옵션</h4>
-					<li>옵션을 표시할 자리압니다2.</li>
+					<div></div>
+
 				</div>
 				<!--가격정보 종료  -->
 
