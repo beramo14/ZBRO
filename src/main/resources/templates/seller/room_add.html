@@ -14,7 +14,7 @@
 <body>
 	<h1>매물등록</h1>
 	<div id="roomInsert">
-		<form action="room_add" method="post" id="roomForm" multiple="multiple">
+		<form action="room_add" method="post" id="roomForm" enctype="multipart/form-data">
 		    <div>
 				<input type="hidden" name="seller" value="1" /> <br />
 		        방 종류 <select name="type">
@@ -77,7 +77,7 @@
 		        <br />
 		        이미지등록<br />
 		    	<button id="btn-upload" type="button" style="border: 1px solid #ddd; outline: none;">파일추가</button>
-		    	<input id="input_file" type="file" name="fileName" multiple="multiple" accept=".jpeg, .png" style="display:none;"/>
+		    	<input id="input_file" type="file" name="fileName" multiple="multiple" accept=".jpeg, .png, .jpg," style="display:none;"/>
 		    	<span style="font-size: 10px; color:gray;">※이미지는 최대 5개까지 등록이 가능합니다.</span>
 		    	<div class="data_file_txt" id="data_file_txt" style="margin:40px;">
 		    		<span>첨부 파일</span> <br />
@@ -166,49 +166,12 @@
 		}
 		
 		
-		// 폼 submit 로직
-		function registerAction(){
-			
-		var form = $("form")[0];        
-	 	var formData = new FormData(form);
-			for (var x = 0; x < content_files.length; x++) {
-				// 삭제 안된것만 업로드 해준다. 
-				if(!content_files[x].is_delete){
-					 formData.append("article_file", content_files[x]);
-				}
-			}
-		$.ajax({
-	   	      type: "POST",
-	   	   	  enctype: "multipart/form-data",
-	   	      url: "/file-upload",
-	       	  data : formData,
-	       	  processData: false,
-	   	      contentType: false,
-	   	      success: function (data) {
-	   	    	if(JSON.parse(data)['result'] == "OK"){
-	   	    		alert("파일업로드 성공");
-				} else
-					alert("서버내 오류로 처리가 지연되고있습니다. 잠시 후 다시 시도해주세요");
-	   	      },
-	   	      error: function (xhr, status, error) {
-	   	    	alert("서버오류로 지연되고있습니다. 잠시 후 다시 시도해주시기 바랍니다.");
-	   	     return false;
-	   	      }
-	   	    });
-	   	    return false;
-		}
-		
-		
-		
 	</script>
 	<!-- https://tyrannocoding.tistory.com/54
 		https://congsong.tistory.com/39
 		https://addio3305.tistory.com/85 -->
 
-	
-	
-	
-	
+
 	<!-- 월/전세 선택에 따른 월세 입력칸 보이기/숨기기 -->
 	<script>
 	    /*단일 라디오 버튼 : getElementById 사용	ex) const selectedValue = document.getElementById('costType');
