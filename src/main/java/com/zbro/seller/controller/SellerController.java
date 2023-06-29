@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.zbro.model.Room;
 import com.zbro.model.SellerUser;
-import com.zbro.seller.service.RoomService;
+import com.zbro.seller.service.SellerRoomService;
 import com.zbro.seller.service.SellerService;
 import com.zbro.type.CostType;
 
@@ -19,7 +19,7 @@ public class SellerController {
 	@Autowired
 	private SellerService sellerService;
 	@Autowired
-	private RoomService roomService;
+	private SellerRoomService roomService;
 	
 	
 	@GetMapping("/room_add")
