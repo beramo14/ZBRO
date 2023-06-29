@@ -7,8 +7,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Comment;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zbro.type.ImageType;
 
@@ -31,5 +33,8 @@ public class RoomPhoto {
 	@Enumerated(EnumType.STRING)
 	@Column(length = 10)
 	private ImageType imageType;
+	
+	@Transient
+	private MultipartFile uploadFile;
 	
 }

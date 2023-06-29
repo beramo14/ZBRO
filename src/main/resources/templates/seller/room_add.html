@@ -14,7 +14,7 @@
 <body>
 	<h1>매물등록</h1>
 	<div id="roomInsert">
-		<form action="room_add" method="post" id="roomForm" enctype="multipart/form-data">
+		<form id="roomForm" action="room_add" enctype="multipart/form-data" method="post">
 		    <div>
 				<input type="hidden" name="seller" value="1" /> <br />
 		        방 종류 <select name="type">
@@ -77,7 +77,7 @@
 		        <br />
 		        이미지등록<br />
 		    	<button id="btn-upload" type="button" style="border: 1px solid #ddd; outline: none;">파일추가</button>
-		    	<input id="input_file" type="file" name="fileName" multiple="multiple" accept=".jpeg, .png, .jpg," style="display:none;"/>
+		    	<input id="input_file" type="file" multiple="multiple" accept=".jpeg, .png, .jpg," style="display:none;"/>
 		    	<span style="font-size: 10px; color:gray;">※이미지는 최대 5개까지 등록이 가능합니다.</span>
 		    	<div class="data_file_txt" id="data_file_txt" style="margin:40px;">
 		    		<span>첨부 파일</span> <br />
@@ -163,6 +163,83 @@
 			$('#' + fileNum).remove();
 			fileCount --;
 		    console.log(content_files);
+		}
+
+		// 폼 submit 로직
+		$(document).ready(function () {
+		    $("#roomForm").submit(function (e) {
+		      e.preventDefault(); // 기본 폼 제출 동작 막기
+		
+		      // content_files를 담을 배열
+		      var fileList = [];
+		
+		      for (var x = 0; x < content_files.length; x++) {
+		        if (!content_files[x].is_delete) {
+		          fileList.push(content_files[x]);
+		        }
+		      }
+		
+		      // fileList 배열을 JSON 문자열로 변환하여 formData에 추가
+		      var formData = new FormData();
+		      formData.append("fileList", JSON.stringify(fileList));
+		
+		      // 기존의 폼 데이터도 formData에 추가
+		      var form = $(this);
+		      var formDataOriginal = new FormData(form[0]);
+		      formDataOriginal.forEach(function (value, key) {
+		        formData.append(key, value);
+		      });
+		
+		      // AJAX를 사용하여 formData를 컨트롤러로 전송
+		      $.ajax({
+		        url: form.attr("action"),
+		        type: form.attr("method"),
+		        data: formData,
+		        processData: false,
+		        contentType: false,
+		        success: function (response) {
+		          // 성공적으로 전송된 후 처리할 내용
+		          console.log("전송 성공!");
+		          // ...
+		        },
+		        error: function (xhr, status, error) {
+		          // 전송 실패 시 처리할 내용
+		          console.log("전송 실패!");
+		          // ...
+		        },
+		      });
+		    });
+		  });
+			
+		/* // 폼 submit 로직
+		function registerAction(){
+			var form = $("roomForm")[0];
+			var formData = new FormData(form);
+			var isRoomInValue = $("#isRoomIn").val();
+			var isElevatorValue = $("#isElevator").val();
+			formData.append("isRoomIn", isRoomInValue);
+			formData.append("isRoomIn", isElevatorValue);
+			for (var x = 0; x < content_files.length; x++) {
+				if(!content_files[x].is_delete){
+					formData.append("article_file", content_files[x]);	//article_file에 삭제되지 않은 파일만 넣음.
+				}
+			}
+			
+			$.ajax({
+				type: "POST",
+				enctype: "multipart/form-data",
+				url: "/room_add",
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function (data) {
+					if(data.redirectUrl) {
+						window.location.href = data.redirectUrl;
+					} else alert("파일업로드 실패");
+				},
+			})
+			
+			return false;*/
 		}
 		
 		

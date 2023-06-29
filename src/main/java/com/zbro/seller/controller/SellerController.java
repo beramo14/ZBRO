@@ -1,9 +1,12 @@
 package com.zbro.seller.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,9 +90,11 @@ public class SellerController {
             @RequestParam("isRoomIn") boolean isRoomIn,
             @RequestParam("isElevator") boolean isElevator,
             @RequestParam(value = "optionType", required = false) List<String> optionTypes,
-            Room room, RoomPhoto roomPhoto,
-            @RequestPart("fileName") List<MultipartFile> files) throws IOException {
-
+            @RequestParam("file") MultipartFile file,
+            Room room, RoomPhoto roomPhoto) {
+		
+		System.out.println("inRoomIn 테스트: "+isRoomIn);
+		
         // room insert
         room.setRoomIn(isRoomIn);
         room.setElevator(isElevator);
@@ -107,44 +112,13 @@ public class SellerController {
             }
         }
         
-        String uploadFile = roomPhoto.getFileName();
-        
-        System.out.println(uploadFile);
-        
-        
-        // File upload
-        for (MultipartFile file : files) {
-        	// 파일 이름 가져오기
-            String fileName = file.getOriginalFilename();
-            System.out.println("File Name: " + fileName);
-
-            // 파일 크기 가져오기
-            long fileSize = file.getSize();
-            System.out.println("File Size: " + fileSize + " bytes");
-
-            // 파일의 내용(byte 배열) 가져오기
-            byte[] fileContent = file.getBytes();
-            // 파일의 내용을 이용하여 원하는 작업 수행
-            // 예: 파일 저장, 파일 분석 등
-
-            // 파일의 MIME 타입 가져오기
-            String mimeType = file.getContentType();
-            System.out.println("MIME Type: " + mimeType);
-            
-            if (!file.isEmpty()) {
-                // 파일 업로드 로직을 구현하세요.
-                // 예를 들어, 서버에 파일 저장이 필요한 경우:
-                // String fileName = file.getOriginalFilename();
-                // file.transferTo(new File("저장할_경로/" + fileName));
-            	System.out.println("파일이 넘어왔습니다");
-            }
-            if (file.isEmpty()) {
-            	System.out.println("파일이 안넘어옴");
-            }
-        }
-
         return "redirect:add_test";
     }
+	
+	
+	
+	
+	
 	
 	
 	
