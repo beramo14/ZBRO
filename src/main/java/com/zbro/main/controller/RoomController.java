@@ -53,9 +53,6 @@ public class RoomController {
 	}
 	
 	
-//	@GetMapping("/favorite/{roomId}")
-//	@ResponseBody
-//	public ResponseEntity<?> doFavorite(@PathVariable Long roomId) {
 	@PostMapping("/favorite")
 	@ResponseBody
 	public ResponseEntity<?> doFavorite(Room Room) {
