@@ -78,7 +78,7 @@
 <th:block layout:fragment="customScript">
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b2dd20bb2f4a2bd31a676e25dd5a0ef0&libraries=services"></script>
 	<script type="text/javascript" src="/script/main/room/room_search.js"></script>
-	<script>
+	<script th:inline="javascript" type="text/javascript">
 		function doUnfavorite(e){
 			let favId = e.attributes["data-favorite"].value;
 			console.log("favId = " + favId);
