@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.zbro.model.RoomOptionType;
 
-public interface RoomOptionTypeRepository extends JpaRepository<RoomOptionType, String> {
+public interface SellerRoomOptionTypeRepository extends JpaRepository<RoomOptionType, String> {
 
 }

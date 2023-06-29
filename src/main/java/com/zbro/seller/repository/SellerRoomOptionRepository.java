@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 import com.zbro.model.RoomOption;
 
-public interface RoomOptionRepository extends JpaRepository<RoomOption, Long>{
+public interface SellerRoomOptionRepository extends JpaRepository<RoomOption, Long>{
 
 }

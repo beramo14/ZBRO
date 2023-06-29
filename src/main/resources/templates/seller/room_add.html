@@ -14,7 +14,7 @@
 <body>
 	<h1>매물등록</h1>
 	<div id="roomInsert">
-		<form id="roomForm" action="room_add" enctype="multipart/form-data" method="post">
+		<form id="saveForm" action="room_add" method="post" enctype="multipart/form-data" autocomplete="off">
 		    <div>
 				<input type="hidden" name="seller" value="1" /> <br />
 		        방 종류 <select name="type">
@@ -71,18 +71,21 @@
 		            제공식사 <input type="text" name="foodOffer"/> <br />
 		            제공비품 <input type="text" name="amenityOffer"/> <br />
 		        </div>
-		        
-		        
-		        
 		        <br />
 		        이미지등록<br />
-		    	<button id="btn-upload" type="button" style="border: 1px solid #ddd; outline: none;">파일추가</button>
-		    	<input id="input_file" type="file" multiple="multiple" accept=".jpeg, .png, .jpg," style="display:none;"/>
-		    	<span style="font-size: 10px; color:gray;">※이미지는 최대 5개까지 등록이 가능합니다.</span>
-		    	<div class="data_file_txt" id="data_file_txt" style="margin:40px;">
-		    		<span>첨부 파일</span> <br />
-		    		<div id="articlefileChange"></div>
-		    	</div>
+		        <div class="file_list">
+	                <div>
+	                    <div class="file_input">
+	                        <input type="text" name="fileName" readonly />
+	                        <label> 첨부파일
+	                            <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
+	                        </label>
+	                    </div>
+	                    <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
+	                    <button type="button" onclick="addFile();" class="btns fn_add_btn"><span>파일 추가</span></button>
+	                </div>
+	            </div>
+		    	
 		        
 		        
 		    </div>
@@ -92,161 +95,77 @@
 	
 	
 	
-	
-	<!-- 파일 업로드 스크립트 -->
 	<script>
-		//input file 파일첨부시 fileCheck함수 실행
-		$(document).ready(function() {
-			$("#input_file").on("change", fileCheck);
-		});
+		var totalFileCount = 5;
+		var fileCount = 1;
 		
-		$(function () {
-		    $('#btn-upload').click(function (e) {
-		        e.preventDefault();
-		        $('#input_file').click();
-		    });
-		});
-		
-		
-		var totalCount = 5;	// 전체 업로드 갯수
-		var fileCount = 0;		// 현재 필드 숫자(totalCount와 비교할 값)
-		var fileNum = 0;		// 파일 고유번호
-		var content_files = new Array();	// 첨부파일 배열
-		
-		
-		/* input type을 file로 지정 -> 파일선택 대화상자 이용가능
-			 [ <input type="flie">의 프로퍼티 목록 ]
-			- accept 	: 선택을 허가하는 파일 종류를 MIME Type으로 지정. (여러개 지정은 콤마로 구분)
-			- multiple  : 복수의 파일 선택 가능하게 함
-			- files 	: 선택된 파일의 File객체를 포함하는 배열
-			- onchange 	: 파일을 선택할때 실행되는 이벤트헨들러
-		*/
-		// 파일개수 확인하고 배열에 담는 함수
-		function fileCheck(e) {
-			//선택한 파일들의 File객체 배열형태로 취득
-			var files = e.target.files;
-			var filesArr = Array.prototype.slice.call(files);
+		// 파일 선택
+	    function selectFile(element) {
 			
-			// 파일 개수 확인/제한
-			if (fileCount + filesArr.length > totalCount) {
-		      alert('파일은 최대 '+totalCount+'개까지 업로드 할 수 있습니다.');
-		      return;
-		    } else {
-		    	 fileCount = fileCount + filesArr.length;
-		    }
-
+	        const file = element.files[0];	//선택된 파일정보
+	        const filename = element.closest('.file_input').firstElementChild;
+	        							//파일명을 표시하는 입력 요소를 가리킴.
+	        							// <div class="file_input">의 첫번째 자식요소에 파일이름을 표시
+	
+	        // 1. 파일 선택 창에서 취소 버튼이 클릭된 경우
+	        //	  파일명이 안보이게 하겠다.
+	        if ( !file ) {
+	            filename.value = '';
+	            return false;
+	        }
+	
+	        // 2. 파일 크기가 10MB를 초과하는 경우
+	        const fileSize = Math.floor(file.size / 1024 / 1024);
+	        if (fileSize > 10) {
+	            alert('10MB 이하의 파일로 업로드해 주세요.');
+	            filename.value = '';
+	            element.value = '';
+	            return false;
+	        }
+	
+	        // 3. 파일명 지정
+	        filename.value = file.name;
+	    }
+		
+		// 파일 추가
+	    function addFile() {
 			
-			// 각각의 파일 배열에 담기				// (f) : 함수의 매개변수
-			filesArr.forEach(function (f) {			// forEach 메서드의 콜백함수에서 첫번째 매개변수 : 배열의 각 요소를 나타내는 매개변수
-				var reader = new FileReader(); 		// 업로드된 파일 읽을 수 있는 객체
-				reader.onload = function (e) {		// FileReader.onload() : 읽기 동작이 성공적으로 완료되었을 때마다 발생하는 이벤트 헨들러
-					content_files.push(f);			// Array배열에 선택한 파일들을 넣음
-					$('#articlefileChange').append(
-				       		'<div id="file' + fileNum + '" onclick="fileDelete(\'file' + fileNum + '\')">'
-				       		+ '<font style="font-size:12px">' + f.name + '</font>'  
-				       		+ '<img src="/img/icon_minus.png" style="width:20px; height:auto; vertical-align: middle; cursor: pointer;"/>' 
-				       		+ '<div/>'
-						);
-				        fileNum ++;
-			     };
-			     reader.readAsDataURL(f);	// 업로드파일 미리보기 역할(파일 형식을 Data URL 형식으로 반환)
-			});
-		    console.log(content_files);
-		    $("#input_file").val("");
-		  }
-			
-			
-		// 파일 부분삭제 함수
-		function fileDelete(fileNum){
-		    var no = fileNum.replace(/[^0-9]/g, "");	// fileNum에서 숫자 외 전부 제거.
-		    content_files[no].is_delete = true;			// 배열의 해당하는 파일객체의 is_delete속성을 true로 설정
-			$('#' + fileNum).remove();
-			fileCount --;
-		    console.log(content_files);
-		}
-
-		// 폼 submit 로직
-		$(document).ready(function () {
-		    $("#roomForm").submit(function (e) {
-		      e.preventDefault(); // 기본 폼 제출 동작 막기
-		
-		      // content_files를 담을 배열
-		      var fileList = [];
-		
-		      for (var x = 0; x < content_files.length; x++) {
-		        if (!content_files[x].is_delete) {
-		          fileList.push(content_files[x]);
-		        }
-		      }
-		
-		      // fileList 배열을 JSON 문자열로 변환하여 formData에 추가
-		      var formData = new FormData();
-		      formData.append("fileList", JSON.stringify(fileList));
-		
-		      // 기존의 폼 데이터도 formData에 추가
-		      var form = $(this);
-		      var formDataOriginal = new FormData(form[0]);
-		      formDataOriginal.forEach(function (value, key) {
-		        formData.append(key, value);
-		      });
-		
-		      // AJAX를 사용하여 formData를 컨트롤러로 전송
-		      $.ajax({
-		        url: form.attr("action"),
-		        type: form.attr("method"),
-		        data: formData,
-		        processData: false,
-		        contentType: false,
-		        success: function (response) {
-		          // 성공적으로 전송된 후 처리할 내용
-		          console.log("전송 성공!");
-		          // ...
-		        },
-		        error: function (xhr, status, error) {
-		          // 전송 실패 시 처리할 내용
-		          console.log("전송 실패!");
-		          // ...
-		        },
-		      });
-		    });
-		  });
-			
-		/* // 폼 submit 로직
-		function registerAction(){
-			var form = $("roomForm")[0];
-			var formData = new FormData(form);
-			var isRoomInValue = $("#isRoomIn").val();
-			var isElevatorValue = $("#isElevator").val();
-			formData.append("isRoomIn", isRoomInValue);
-			formData.append("isRoomIn", isElevatorValue);
-			for (var x = 0; x < content_files.length; x++) {
-				if(!content_files[x].is_delete){
-					formData.append("article_file", content_files[x]);	//article_file에 삭제되지 않은 파일만 넣음.
-				}
+	    	if(fileCount == totalFileCount) {
+				alert('최대 5개까지 등록 가능합니다');
+				return false;
 			}
 			
-			$.ajax({
-				type: "POST",
-				enctype: "multipart/form-data",
-				url: "/room_add",
-				data: formData,
-				processData: false,
-				contentType: false,
-				success: function (data) {
-					if(data.redirectUrl) {
-						window.location.href = data.redirectUrl;
-					} else alert("파일업로드 실패");
-				},
-			})
-			
-			return false;*/
-		}
+	        const fileDiv = document.createElement('div');
+	        fileDiv.innerHTML =`
+	        	<div class="file_input">
+	                <input type="text" readonly />
+	                <label> 첨부파일
+	                    <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
+	                </label>
+	            </div>
+	            <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
+	        `;
+	        document.querySelector('.file_list').appendChild(fileDiv);
+	        
+	     	// 파일개수 제한
+	        fileCount = fileCount+1;
+	    }
 		
-		
+	 	// 파일 삭제
+	    function removeFile(element) {
+	        const fileAddBtn = element.nextElementSibling;
+	        if (fileAddBtn) {
+	            const inputs = element.previousElementSibling.querySelectorAll('input');
+	            inputs.forEach(input => input.value = '')
+	            return false;
+	        }
+	        element.parentElement.remove();
+	        
+	        fileCount = fileCount-1;
+	    }
 	</script>
-	<!-- https://tyrannocoding.tistory.com/54
-		https://congsong.tistory.com/39
-		https://addio3305.tistory.com/85 -->
+	
+
 
 
 	<!-- 월/전세 선택에 따른 월세 입력칸 보이기/숨기기 -->

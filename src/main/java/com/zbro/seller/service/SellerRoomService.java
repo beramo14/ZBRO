@@ -10,19 +10,23 @@ import org.springframework.stereotype.Service;
 import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
 import com.zbro.model.RoomOptionType;
-import com.zbro.seller.repository.RoomOptionRepository;
-import com.zbro.seller.repository.RoomOptionTypeRepository;
-import com.zbro.seller.repository.RoomRepository;
+import com.zbro.model.RoomPhoto;
+import com.zbro.seller.repository.SellerRoomOptionRepository;
+import com.zbro.seller.repository.SellerRoomOptionTypeRepository;
+import com.zbro.seller.repository.SellerRoomPhotoRepository;
+import com.zbro.seller.repository.SellerRoomRepository;
 
 @Service
-public class RoomService {
+public class SellerRoomService {
 	
 	@Autowired
-	private RoomRepository roomRepo;
+	private SellerRoomRepository roomRepo;
 	@Autowired
-	private RoomOptionRepository roomOptionRepo;
+	private SellerRoomOptionRepository roomOptionRepo;
 	@Autowired
-	private RoomOptionTypeRepository roomOptionTypeRepo;
+	private SellerRoomOptionTypeRepository roomOptionTypeRepo;
+	@Autowired
+	private SellerRoomPhotoRepository roomPhotoRepo;
 
 	public void insertRoom(Room room) {
 		roomRepo.save(room);
@@ -38,6 +42,10 @@ public class RoomService {
 		Collections.sort(findOptionTypes, Comparator.comparingInt(RoomOptionType::getSortOrder));
 		
 		return findOptionTypes;
+	}
+
+	public void insertRoomPhoto(RoomPhoto roomPhoto) {
+		roomPhotoRepo.save(roomPhoto);
 	}
 
 }
