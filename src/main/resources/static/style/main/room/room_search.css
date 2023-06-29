@@ -50,9 +50,6 @@ button.search-word-reset-button {
 .room-item-wrapper{
 	height:100%;
 }
-.room-item-wrapper:hover {
-	/* cursor: pointer; */
-}
 
 
 .room-photo-wrapper {
@@ -76,8 +73,8 @@ button.search-word-reset-button {
 	object-fit: cover;
 }
 
-.room-info-wrapper {
-	
+.room-info-wrapper:hover {
+	cursor: pointer;
 }
 
 .room-info-wrapper p {

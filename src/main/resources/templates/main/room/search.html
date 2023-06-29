@@ -48,7 +48,8 @@
 					    	<div class="image-wrapper"></div>
 					        <img src="https://picsum.photos/300/200" th:alt="${room.address}" class="room-image" />
 					    </div>
-					    <div class="room-info-wrapper">
+					    
+					    <div class="room-info-wrapper" th:onclick="|location.href='@{/room/detail(roomId=${room.roomId})}'|">
 				            <p class="room-cost">
 				                <span th:text="${room.costType}">월세</span>
 				                <th:block th:if="${room.costType.toString() == '월세'}">
@@ -67,7 +68,6 @@
 					    </div>
 					</div>
 				</div>
-
 				
 			</div>
 			<div class="map-wrapper">
