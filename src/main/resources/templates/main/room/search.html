@@ -87,9 +87,13 @@
 				type: "post",
 				url: '/room/unfavorite',
 				data: {"favoriteId":favId},
-				success:function(res) {
-					console.log(res);
-					favoriteToggle(e, false);
+				success: function(res) {
+					if(res == "success") {
+						console.log("unfavorite(favId="+favId+") : "+res);
+						favoriteToggle(e, false);
+					} else {
+						console.error("unfavorite failed... (favId="+favId+")")
+					}
 				},
 				error: function(error) {
 					console.log(error);
@@ -107,11 +111,15 @@
 				url: '/room/favorite',
 				data: {"roomId":roomId},
 				success:function(res) {
-					console.log(res);
-					favoriteToggle(e, true, res);
+					if(res != null && res === "") {
+						console.log("favorited success! (favId="+res+")");
+						favoriteToggle(e, true, res);
+					} else {
+						console.error("favorited failed... (room"+res")");						
+					}
 				},
 				error: function(error) {
-					console.log(error);
+					console.error(error);
 				}
 			});
 			
