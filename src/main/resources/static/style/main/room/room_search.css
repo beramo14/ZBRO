@@ -14,6 +14,17 @@
 	height: calc(100vh - 205px);
 	display: flex;
 }
+button.search-word-reset-button {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	background-color: unset;
+	position: absolute;
+	right: 12px;
+	top: calc(50% - 14px);
+	color: darkgray;
+	font-size: 1.2rem;
+}
 
 .room-list {
 	width: 340px;
@@ -56,7 +67,7 @@
 	z-index: 1; 
 	height: 100%;
 	width: 138px;
-	background-image: linear-gradient(to bottom, white 1%, transparent 70%)
+	background-image: linear-gradient(to bottom, white 2%, transparent 70%)
 }
 
 .room-image {

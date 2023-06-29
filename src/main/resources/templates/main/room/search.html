@@ -10,9 +10,11 @@
 	<div class="search-main-wrapper">
 		<div class="search-wrapper">
 			<form action="#" class="search-form" style="display: flex;">
-				<input type="text" name="searchWord" class="form-control me-1" style="width: 200px;" th:value="${roomSearchDTO.searchWord}"/>
+				<div style="width:auto; position:relative;">
+					<button type="button" class="search-word-reset-button" onclick="searchWordReset()"><i class="bi bi-x"></i></button>
+					<input type="text" name="searchWord" class="form-control me-1" style="width: 200px;" th:value="${roomSearchDTO.searchWord}"/>
+				</div>
 				<button type="submit" class="btn btn-outline-primary me-5">검색</button>
-				<!-- 검색어 삭제 버튼 추가(인풋안에 오른쪽 부분에 x버튼) -->
 				<select name="type" class="form-select me-1" style="width: 120px;">
 					<option value="none" th:selected="${roomSearchDTO.type.toString()} == 'none'">-유형-</option>
 					<option value="원룸" th:selected="${roomSearchDTO.type.toString()} == '원룸'">원룸</option>
@@ -81,7 +83,6 @@
 	<script th:inline="javascript" type="text/javascript">
 		function doUnfavorite(e){
 			let favId = e.attributes["data-favorite"].value;
-			console.log("favId = " + favId);
 			
 			$.ajax({
 				type: "post",
@@ -92,7 +93,7 @@
 						console.log("unfavorite(favId="+favId+") : "+res);
 						favoriteToggle(e, false);
 					} else {
-						console.error("unfavorite failed... (favId="+favId+")")
+						console.error("unfavorite failed... (favId="+favId+")");
 					}
 				},
 				error: function(error) {
@@ -104,18 +105,17 @@
 		
 		function doFavorite(e){
 			let roomId = e.attributes["data-room"].value;
-			console.log("roomId = " + roomId);	
 			
 			$.ajax({
 				type: "post",
 				url: '/room/favorite',
 				data: {"roomId":roomId},
 				success:function(res) {
-					if(res != null && res === "") {
+					if(res != null && res != "") {
 						console.log("favorited success! (favId="+res+")");
 						favoriteToggle(e, true, res);
 					} else {
-						console.error("favorited failed... (room"+res")");						
+						console.error("favorited failed... (room"+res+")");						
 					}
 				},
 				error: function(error) {

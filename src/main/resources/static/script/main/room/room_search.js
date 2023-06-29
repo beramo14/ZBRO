@@ -1,8 +1,13 @@
 /**
  * 
  */
+
+function searchWordReset() { 
+	document.querySelector("input[name='searchWord']").value = "";
+}
+
 $(document).ready(function () {
-	//위치 기본값(이젠)
+	//위치 기본값(강남 이젠)
 	let centerPosition = new kakao.maps.LatLng(37.5026685, 127.0221589);
 	
 	if (navigator.geolocation) {
@@ -11,9 +16,6 @@ $(document).ready(function () {
 	    navigator.geolocation.getCurrentPosition( function(position) {
 	        let lat = position.coords.latitude; // 위도
 	        let lon = position.coords.longitude; // 경도
-	        
-	        console.log(position);
-	        console.log(lat,lon);
 	        
 	        centerPosition = new kakao.maps.LatLng(lat, lon);
 	    });
@@ -28,7 +30,7 @@ $(document).ready(function () {
 	    	"roomId" : element.attributes.data.value ,
 	    	"address" : element.value
     	});
-	})
+	});
 	console.log(addressArray);
 
 	var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
@@ -66,6 +68,8 @@ $(document).ready(function () {
 				
 				//마커 클릭시 좌측 매물 리스트에서 클릭한 매물 하나만 표출
 				kakao.maps.event.addListener(marker, 'click', function() {
+					map.setCenter(coords);
+					map.setLevel(3);
 					roomItemShowController(item.roomId);
 				});
 		    }
@@ -75,15 +79,16 @@ $(document).ready(function () {
     });
     
     //맵 클릭시 매물 리스트 전체 표시
-    kakao.maps.event.addListener(map, 'click', function(){
+    kakao.maps.event.addListener(map, 'click', function() {
     	$(".room-item").show();
+		map.setBounds(bounds);
     });
     
     //매물 하나만 표시
 	function roomItemShowController(roomId) {
 		$(".room-item").hide();
 		$(document.querySelector(".room-"+roomId)).show();
-	}    
+	}
 
 
 });
