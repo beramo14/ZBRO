@@ -19,7 +19,11 @@ public class SellerController {
 	@Autowired
 	private SellerService sellerService;
 	@Autowired
+<<<<<<< HEAD
 	private SellerRoomService roomService;
+=======
+	private SellerRoomService sellerRoomService;
+>>>>>>> roomsearch
 	
 	
 	@GetMapping("/room_add")
@@ -34,7 +38,7 @@ public class SellerController {
 		room.setRoomIn(isRoomIn);
 		room.setElevator(isElevator);
 		System.out.println(room.toString());
-		roomService.insertRoom(room);
+		sellerRoomService.insertRoom(room);
 		
 
 		return "redirect:add_test";
