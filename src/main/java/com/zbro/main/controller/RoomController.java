@@ -46,7 +46,8 @@ public class RoomController {
 	    Room room = roomService.findById(roomId);
 	    List<RoomOption> roomOption = roomService.getroomOption(room);
 	        model.addAttribute("room", room);
-	        model.addAttribute("roomOption", roomOption);
+	        model.addAttribute("roomOptions", roomOption);
+	        System.out.println(roomOption);
 	    return "main/room/roomdetailrefix";
 	}
 
