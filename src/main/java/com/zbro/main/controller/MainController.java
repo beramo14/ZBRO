@@ -2,9 +2,12 @@ package com.zbro.main.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.zbro.main.service.MainService;
+import com.zbro.model.ConsumerUser;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,6 +41,28 @@ public class MainController {
 		return "index";
 		
 		
+	}
+	
+	
+	@GetMapping("/login")
+	public String loginSelectView() {
+		
+		return "login/login_select";
+	}
+	
+	@GetMapping("/login/consumer")
+	public String loginConsumerView() {
+		
+		return "login/consumer_login";
+	}
+	
+	@PostMapping("/login/consumer")
+	public String loginConsumer(ConsumerUser user) {
+		log.info("### loginConsumer = {}", user);
+		
+		/*Login logic*/
+		
+		return "redirect:/";
 	}
 	
 	
