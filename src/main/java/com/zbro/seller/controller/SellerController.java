@@ -15,15 +15,11 @@ import com.zbro.type.CostType;
 @Controller
 public class SellerController {
 	
-	// Repository
 	@Autowired
 	private SellerService sellerService;
+	
 	@Autowired
-<<<<<<< HEAD
-	private SellerRoomService roomService;
-=======
 	private SellerRoomService sellerRoomService;
->>>>>>> roomsearch
 	
 	
 	@GetMapping("/room_add")
