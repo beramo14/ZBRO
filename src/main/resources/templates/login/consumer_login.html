@@ -50,9 +50,6 @@
 	
 	
 	/*modal*/
-	#user-find-modal{
-	}
-	
 	.custom-modal{
 		background-color: rgba(255,255,255,0.9);
 		border: 1px solid gray;
@@ -60,9 +57,10 @@
 		width: 450px;
 		position: absolute;
 		z-index: 100;
-		top: 40%;
+		top: 35%;
 		left: 50%;
 		transform: translateX(-50%);
+		box-shadow: black 1px 1px 6px 0px;
 	}
 	
 	.custom-modal .modal-control {
@@ -79,13 +77,16 @@
 		font-size: 1.4rem;
 	}
 	
-	.custom-modal h2 {
+	.modal-content-title {
 		text-align: center;
-		margin-bottom: 40px;
+		margin-bottom: 30px;
+	}
+	.modal-content-title p {
+		margin: 0;
 	}
 	
-	#user-find-modal .modal-content{
-		margin-bottom: 50px;
+	.modal-content{
+		margin-bottom: 70px;
 	}
 	
 </style>
@@ -108,19 +109,24 @@
 						<a href="/join/consumer">회원가입</a>
 					</span>
 					<span>
-						<a href="#" onclick="$('#user-find-modal').show();">계정 찾기</a> / <a href="#">비밀번호 찾기</a>
+						<a href="#" onclick="$('#user-find-modal').show();">계정 찾기</a> / <a href="#" onclick="$('#password-find-modal').show();">비밀번호 찾기</a>
 					</span>
 				</div>
 			</div>
 		</div>
 	</div>
 	
+	
+	
+	<!-- ########## Modals ##########-->
 	<div id="user-find-modal" class="custom-modal" style="display:none;">
 		<div class="modal-control">
 			<button type="button" id="user-find-modal-close-button" class="close-button"><i class="bi bi-x-lg"></i></button>
 		</div>
 		<div class="modal-content" style="align-items: center;">
-			<h2>계정찾기</h2>
+			<div class="modal-content-title">
+				<h2>계정찾기</h2>
+			</div>
 			<div>
 				<form action="#" id="user-find">
 					<div class="modal-form-input-wrapper" style="margin: 0 auto; text-align: center;">
@@ -142,16 +148,28 @@
 			<button type="button" id="password-find-modal-close-button" class="close-button"><i class="bi bi-x-lg"></i></button>
 		</div>
 		<div class="modal-content" style="align-items: center;">
-			<h2>계정찾기</h2>
+			<div class="modal-content-title">
+				<h2>비밀번호 찾기</h2>
+				<p>입력하신 이메일로 인증번호를 보내드립니다.</p>
+			</div>
 			<div>
-				<form action="#" id="password-find">
+				<!--확인 코드 이메일 발송 폼-->
+				<form action="#" id="verify-code-send" class="mb-2">
 					<div class="modal-form-input-wrapper" style="margin: 0 auto; text-align: center;">
 						<input type="email" name="email" class="form-control form-control-lg" placeholder="이메일을 입력해주세요." style="display: inline-block; width: auto; vertical-align: middle;" required/>
 						<button type="submit" class="btn btn-lg btn-primary" style="display: inline-block; width: auto; vertical-align: middle;">찾기</button>
 					</div>
+				</form>
+				<!--확인코드 입력 폼-->
+				<form action="#" id="verify-code-check">
 					<div class="modal-message" style="text-align: left;">
+						<input type="number" name="verify-code" class="form-control form-control-lg" placeholder="받으신 인증번호를 입력." style="display: inline-block; width: auto; vertical-align: middle;" required/>
+						<button type="submit" class="btn btn-lg btn-primary" style="display: inline-block; width: auto; vertical-align: middle;">찾기</button>
 					</div>
 				</form>
+				<div class="modal-message" style="text-align: left;">
+					<span class="message-verify-not-equal">인증번호를 확인해주세요.</span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -163,6 +181,9 @@
 		
 		$("#user-find-modal-close-button").click( function(){
 			$("#user-find-modal").hide();
+		});
+		$("#password-find-modal-close-button").click( function(){
+			$("#password-find-modal").hide();
 		});
 		
 		
