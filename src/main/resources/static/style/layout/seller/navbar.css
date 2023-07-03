@@ -1,0 +1,10 @@
+
+.navigation {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	padding: 18px 30px;
+	position: relative;
+	background-color: white;
+}
+

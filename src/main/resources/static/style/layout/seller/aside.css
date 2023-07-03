@@ -1,0 +1,94 @@
+
+aside {
+	width: 240px;
+	min-width: 240px;
+	height : auto;
+  	min-height: 100%;
+	background-color: #434343;
+	position: relative;
+	color: white;
+}
+
+
+.aside-inner {
+	display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 11px;
+    margin: 22px 10px;
+}
+
+.aside-inner > .aside-section {
+	width: 100%;
+}
+
+.profile-wrapper{
+	padding: 30px 0;
+	border-top: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
+	text-align: center;
+}
+
+img.profile-image{
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+}
+
+p.username {
+	padding: 0;
+	margin: 0;
+	margin-top: 5px;
+	margin-bottom: -5px;
+	font-weight: bold;
+}
+
+span.admission-info {
+	color: gray;
+	font-size: 12px;
+	
+}
+
+.logo-wrapper {
+	display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+img.logo {
+	width: 110px;
+}
+
+a.go-home {
+	font-size: 11px;
+	text-decoration: none;
+	color: gray;
+}
+
+.menu-wrapper .menu{
+	margin-top: 18px;
+	padding: 0 5px;
+}
+
+.menu-wrapper p.outer-menu{
+	font-weight: bold;
+	font-size: 1.3rem;
+	margin: 0;	
+}
+
+.menu-wrapper ul{
+	list-style-type: none;
+	font-size: 1rem;
+	padding-left: 1.5rem;
+}
+
+.menu-wrapper li{
+	margin: 4px 0;
+}
+
+.menu-wrapper a{
+	color: white;
+	text-decoration: none;
+}

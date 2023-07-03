@@ -39,6 +39,13 @@ public class SellerController {
 	public String uploadFolder;
 	
 	
+	@GetMapping("/seller")
+	public String sellerMainPage() {
+		
+		return "seller/index";
+	}
+	
+	
 	// 매물등록 페이지 들어가기.
 	@GetMapping("/room_add")
 	public String roomAddView(Model model, RoomOptionType roomOptionType) {
