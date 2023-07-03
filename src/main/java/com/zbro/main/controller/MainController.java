@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.zbro.main.service.MainService;
 import com.zbro.model.ConsumerUser;
+import com.zbro.model.SellerUser;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,6 +42,38 @@ public class MainController {
 		return "index";
 		
 		
+	}
+	
+	
+	@GetMapping("/join/seller")
+	public String joinSellerView() {
+		return "/join/seller_join";
+	}
+	
+	@PostMapping("/join/seller")
+	public String joinSeller(SellerUser user) {
+		
+		log.info("### joinConsumer = {}", user);
+		
+		/*join logic*/
+		
+		return "redirect:/"; //셀러 메인 페이지로 수정해야함
+	}
+	
+	@GetMapping("/join/consumer")
+	public String joinConsumerView() {
+		return "/join/consumer_join";
+	}
+	
+	
+	@PostMapping("/join/consumer")
+	public String joinConsumer(ConsumerUser user) {
+		
+		log.info("### joinConsumer = {}", user);
+		
+		/*join logic*/
+		
+		return "redirect:/login";
 	}
 	
 	
