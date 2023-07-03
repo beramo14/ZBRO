@@ -15,7 +15,7 @@
 		margin-bottom: 7.5vh;
 	}
 	
-	.join-form-wrapper{
+	.join-form-wrapper {
 		padding: 0 35vh;
 	}
 	
@@ -30,11 +30,13 @@
 			<h1 class="title">구매자 회원가입</h1>
 			
 			<div class="join-form-wrapper">
-				<form action="/join/consumer" method="post" id="join-form">
-					<input type="email" name="email" class="form-control form-control-lg mb-1" placeholder="이메일" required/>
-					<input type="password" name="password" class="form-control form-control-lg mb-1" placeholder="비밀번호" required/>
-					<input type="password" id="password-check" class="form-control form-control-lg mb-1" placeholder="비밀번호 확인" required/>
-					<input type="text" name="name" class="form-control form-control-lg mb-3" placeholder="이름" required/>
+				<form action="/join/consumer" method="post" id="join-form" enctype="multipart/form-data">
+					<input type="email" name="email" class="form-control form-control-lg mb-1" placeholder="*이메일" required/>
+					<input type="password" name="password" class="form-control form-control-lg mb-1" placeholder="*비밀번호" required/>
+					<input type="password" id="password-check" class="form-control form-control-lg mb-1" placeholder="*비밀번호 확인" required/>
+					<input type="text" name="name" class="form-control form-control-lg mb-3" placeholder="*이름" required/>
+					<label for="profile-photo" class="form-label" style="display: block; text-align: start;">프로필사진</label>
+					<input type="file" name="profilePhotoFile" id="profile-photo" class="form-control form-control-lg mb-4"/>
 					<button type="submit" class="btn btn-primary btn-lg"> 회원가입 </button>
 				</form>
 			</div>

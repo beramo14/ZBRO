@@ -1,12 +1,19 @@
 package com.zbro.main.controller;
 
+import java.io.IOException;
+
+import org.hibernate.engine.transaction.spi.JoinStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zbro.main.service.MainService;
+import com.zbro.main.service.UserService;
 import com.zbro.model.ConsumerUser;
 import com.zbro.model.SellerUser;
 
@@ -19,7 +26,10 @@ public class MainController {
 	@Autowired
 	private MainService mainService;
 	
-	@RequestMapping("/")
+	@Autowired
+	private UserService userService;
+	
+	@GetMapping("/")
 	public String mainPage() {
 		
 		//sysout
@@ -66,12 +76,28 @@ public class MainController {
 	}
 	
 	
+	
 	@PostMapping("/join/consumer")
-	public String joinConsumer(ConsumerUser user) {
+	public String joinConsumer(ConsumerUser user, @RequestParam("profilePhotoFile") MultipartFile file, Model model) {
 		
 		log.info("### joinConsumer = {}", user);
 		
+		/*뷰단 & 여기 에서 이메일 중복확인*/
+		
 		/*join logic*/
+		String filename;
+		try {
+			filename = userService.profileImageSave(file);
+			user.setProfilePhoto(filename);
+			userService.consumerUserSave(user);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e.getStackTrace());
+			
+			model.addAttribute("response", "error");
+			return "redirect:/join/consumer";
+		}
+		
+		
 		
 		return "redirect:/login";
 	}
