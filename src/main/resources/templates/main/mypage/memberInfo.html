@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<th:block layout:fragment="customStyle">
+<style th:inline="css" type="text/css">
+
+</style>
+
+</th:block>
+<th:block layout:fragment="content">
+	
+	
+		<h1>회원 정보</h1>
+<!--         <div>
+            <div class="profile-image">
+                <img th:src="@{'/images/' + ${favorites[0].user.profilePhoto}}" alt="프로필">
+            </div>
+            <button>이미지 변경</button>
+        </div>
+        <div>
+            <label for="email">이메일:</label>
+            <span id="email" th:text="${favorites[0].user.email}"></span>
+        </div>		
+        <div>
+            <label for="name">이름:</label>
+            <span id="name" th:text="${favorites[0].user.name}"></span>
+        </div>
+        <div>
+            <label for="password">비밀번호 변경:</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <div>
+            <button>수정</button>
+            <button>탈퇴</button>
+        </div>	 -->
+</th:block>
+<th:block layout:fragment="customScript">
+	<script th:inline="javascript" type="text/javascript">
+	
+	</script>
+</th:block>
+
+<th:block th:include="navbar"></th:block>
+<th:block th:include="footer"></th:block>
+    
+    

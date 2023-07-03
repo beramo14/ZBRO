@@ -134,5 +134,5 @@ public class Room {
 	@Column(updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime createDate;
 
-	
+
 }

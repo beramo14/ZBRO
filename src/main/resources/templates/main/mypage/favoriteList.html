@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<th:block layout:fragment="customStyle">
+<style th:inline="css" type="text/css">
+		.sidebar {
+			    width: 300px; 
+			    position: fixed; 
+			    left: 0; 
+			    top: 200px; 
+			    bottom : 160px;
+				border-right: 1px solid #ccc; 
+				background-color: #ccc;
+
+
+			    
+			}        	
+       	
+			.sidebar ul li {
+				list-style-type: none;	
+			    font-size: 20px;
+			    margin-bottom: 20px;
+			}
+			
+			.sidebar ul li ul li {
+			    font-size: 18px;
+			}      	
+        	
+			.profile-image {
+			    width: 200px;
+			    height: 200px; 
+			    border-radius: 50%; 
+			    overflow: hidden; 
+			}      	
+			
+			.list-title {
+				font-size: 50PX;
+			}
+			
+			.list-button {
+				margin-left:1100px;
+			    padding: 10px 20px;
+			    font-size: 30px;
+			    color: #fff;
+			    border: none;
+			    border-radius: 5px;
+			    cursor: pointer;
+			}
+
+			.image-container {
+			    display: flex;
+			    flex-wrap: wrap;
+			}
+
+			.image-container > .comparison-item {
+			    flex-basis: 33.33%;
+			}	
+
+
+            .image-container img {
+                width: 370px;
+                height: 280px;
+                cursor: pointer;
+                margin-top: 30px;
+            }
+            
+			.image-wrapper {
+			    position: relative;
+			    display: inline-block;
+			}
+			
+			.image-wrapper i.bi-heart-fill {
+			    position: absolute;
+			    bottom: 0;
+			    right: 10px;
+			    font-size: 40px;
+			    color: #dc3545;
+			}  
+			
+			.favorite-under {
+		    	height: 300px;
+		    }		          
+
+</style>
+
+</th:block>
+<th:block layout:fragment="content">
+			
+	 <div class="sidebar">
+	    <ul class="side-ul">
+	        <li>
+	            <div class="profile-image">
+	                <img th:src="@{'/images/' + ${favorites[0].user.profilePhoto}}" alt="프로필">
+	            </div>
+	        </li>
+	        <li>
+	            <div class="favorite-name" th:text="${favorites[0].user.name}"></div>
+	        </li>
+		    <ul>
+		        <li><a th:href="@{/memberInfo}">회원정보</a></li>
+		        
+		        <li>커뮤니티
+		            <ul>
+	                   <li><a th:href="@{/contentList}">작성한 글 보기</a></li>
+	                   <li><a th:href="@{/commentList}">작성한 댓글 보기</a></li>
+		            </ul>
+		        </li>
+		        
+		        <li>찜목록
+		            <ul>
+	                    <li><a th:href="@{/favoriteList}">찜 목록 보기</a></li>
+	                    <li><a th:href="@{/favoriteCompare}">매물 비교</a></li>
+		            </ul>
+		        </li>
+		    </ul>
+	     </ul>
+	       
+	  
+	</div>    
+	
+	<div class="favorite-list">
+		<div class="list-title"> 찜목록 </div>
+		<a th:href="@{/favoriteCompare}" class="list-button">
+			<button th:href="@{/favoriteCompare}">매물비교</button>
+		</a>
+		<div class="image-container">
+		    <div th:each="favorite, status : ${favorites}" class="comparison-item">
+		        <span th:each="photo : ${roomPhotos[status.index]}">
+		            <a th:href="@{'/roomDetail/' + ${favorite.room.roomId}}">
+					<div class="image-wrapper">
+					    <a th:href="@{'/roomDetail/' + ${favorite.room.roomId}}">
+					        <img th:src="@{'/images/' + ${photo.fileName} + '.' + ${photo.imageType}}" alt="프로필">
+					    </a>
+					    <i class="bi bi-heart-fill" th:attr="data-favorite-id=${favorite.favoriteId}" onclick="deleteFavorite(event)"></i>
+					</div>
+		            </a>
+		        </span>
+		        <div class="favorite-info">
+		            <span class="favoriteCost" th:text="${#strings.equals(favorite.room.costType, '월세') ? (favorite.room.deposit != 0 ? (favorite.room.costType + ' ' + favorite.room.deposit + '/' + favorite.room.monthCost) : (favorite.room.costType + ' ' + favorite.room.monthCost)) : (favorite.room.costType + ' ' + favorite.room.deposit)}"></span>
+		            <span class="favoriteType" th:text="${favorite.room.type}"></span>
+		        </div>
+		        <span th:text="${#strings.substringAfter(favorite.room.address, '시 ')}"></span>
+		    </div>
+		</div>
+	</div>
+    
+	<div class="favorite-under">
+	</div>	    
+	    
+	    	
+</th:block>
+
+
+<th:block layout:fragment="customScript">
+	<script th:inline="javascript" type="text/javascript">
+	
+	function deleteFavorite(event) {
+	    event.stopPropagation();
+
+	    const favoriteId = event.target.getAttribute('data-favorite-id');
+
+	    const xhr = new XMLHttpRequest();
+	    xhr.open('DELETE', '/favorites/' + favoriteId, true);
+
+	    xhr.onload = function() {
+	        if (xhr.status === 200) {
+	            const favoriteItem = event.target.closest('.comparison-item');
+	            favoriteItem.remove();
+	        } else {
+	            console.log('Failed to delete favorite:', xhr.status);
+	        }
+	    };
+
+	    xhr.send();
+	}	
+	</script>
+</th:block>
+
+
+    

@@ -3,25 +3,59 @@
 <head>
     <th:block layout:fragment="customStyle">
         <style th:inline="css" type="text/css">
+        	.main-contents{
+        		margin-left: 200px; 
+        		width: 1300px;
+        	}
+        
+			.sidebar {
+			    width: 500px; 
+			    position: fixed; 
+			    left: 0; 
+			    top: 200px; 
+			    bottom : 160px;
+				border-right: 1px solid #ccc; 
+				
+
+
+			    
+			}        	
+       	
+			.sidebar ul li {
+				list-style-type: none;	
+			    font-size: 20px;
+			    margin-bottom: 20px;
+			}
+			
+			.sidebar ul li ul li {
+			    font-size: 18px;
+			}      	
+        	
+			.profile-image {
+			    width: 200px; /* 이미지의 너비 조정 */
+			    height: 200px; /* 이미지의 높이 조정 */
+			    border-radius: 50%; /* 동그란 모양으로 설정 */
+			    overflow: hidden; /* 이미지의 너비와 높이를 초과하는 부분은 숨김 */
+			}      	
+        	
             .comparison-item {
-                display: inline-block;
-                
+                display: inline-block;                
                 border: 1px solid #ccc;
-                padding: 10px;
-                position: relative;
-                width: 300px;
-                height: 700px;
+                padding: 10px;               
+                width: 320px;
+                height: 1700px;
                 vertical-align: top;
                 box-sizing: border-box;
                 margin-top: 40px;
                 left: 70px;
+                text-align: center;
 
             }
             
 
             .hidden-div {
                 display: none;
-                text-align: center;
+                
             }
 
             .favorite-item {
@@ -96,7 +130,7 @@
 
 	        .comparison-title {
 	            text-align: center;
-	            margin: 130px 0 100px;
+	            margin: 180px 0 100px;
 	        }
 	        
 	        .big-title {
@@ -109,62 +143,7 @@
 	            margin-top: 10px;
 	            color: #9C9A9A;
 	        }
-		    .hamburger-menu {
-                position: fixed;
-                top: 150px;
-                left: 50px;
-                width: 30px;
-                height: 30px;
-                cursor: pointer;
 
-            }
-
-            .hamburger-line {
-                position: absolute;
-                width: 100%;
-                height: 2px;
-                background-color: #000;
-                transition: all 0.3s ease;
-            }
-
-            .hamburger-line:nth-child(2) {
-                top: 12px;
-            }
-
-            .hamburger-line:nth-child(3) {
-                top: 24px;
-            }
-
-            .side-menu {
-                position: fixed;
-                top: 140px;
-                left: 0;
-                width: 300px;
-                height: 100%;
-                background-color: white;
-                transform: translateX(-300px);
-                transition: all 0.3s ease;
-                z-index: 998;
-                opacity: 0.9;
-               
-            }
-
-            .side-menu.open {
-                transform: translateX(0);
-            }
-
-            .side-menu-content {
-                padding: 20px;
-            }
-            .hamburger-menu.open {
-                display: none;
-            }
-			.close-button{
-				position: absolute; 
-				top: 15px; 
-				right: 35px;
-				font-size: 24px;
-			}
 			.favoriteCost{
 				font-size: 20px;
 			}
@@ -180,37 +159,81 @@
 				padding: 10px 20px;
 			}
 
-		.checkWrapSmall button {
-			margin-left: 1040px; 
-			border: none;
-    		padding: 8px;
-			border-radius: 15px;
-		} 
+			.checkWrapSmall button {
+				margin-left: 950px; 
+				border: none;
+	    		padding: 8px;
+				border-radius: 15px;
+			} 
+			.favorite-id {
+				display: none;
+			}
+			.custom-hr {        
+	        	border: 3px solid #ccc;
+	        	margin: 10px 0;
+	    	}
+			.memo{
+				 width: 210px;
+	             height: 150px;
+	             margin-bottom:10px; 
+			}    
+		    .bold-text {
+		        font-weight: bold;
+		    }
+		    .favorite-under {
+		    	height: 300px;
+		    }
+		    
+		    .comparison-item img {
+		    	width: 300px;
+                height: 200px;
+		    
+		    }
+		    		
         </style>
     </th:block>
 </head>
 
 <body>	
-
     <th:block layout:fragment="content">
-    	<!-- 햄버거 -->
-        <div class="hamburger-menu" onclick="toggleSideMenu()">
-            <div class="hamburger-line"></div>
-            <div class="hamburger-line"></div>
-            <div class="hamburger-line"></div>
-        </div>
-
-        <div class="side-menu" id="sideMenu">
-            <div class="side-menu-content">
-                <span class="close-button" onclick="toggleSideMenu()">X</span>
-                사이드메뉴다
+<div class="sidebar">
+    <ul class="side-ul">
+        <li>
+            <div class="profile-image">
+                <img th:src="@{'/images/' + ${favorites[0].user.profilePhoto}}" alt="프로필">
             </div>
-        </div>
-        
+        </li>
+        <li>
+            <div class="favorite-name" th:text="${favorites[0].user.name}"></div>
+        </li>
+	    <ul>
+	        <li><a th:href="@{/memberInfo}">회원정보</a></li>
+	        
+	        <li>커뮤니티
+	            <ul>
+                   <li><a th:href="@{/contentList}">작성한 글 보기</a></li>
+                   <li><a th:href="@{/commentList}">작성한 댓글 보기</a></li>
+	            </ul>
+	        </li>
+	        
+	        <li>찜목록
+	            <ul>
+                    <li><a th:href="@{/favoriteList}">찜 목록 보기</a></li>
+                    <li><a th:href="@{/favoriteCompare}">매물 비교</a></li>
+	            </ul>
+	        </li>
+	    </ul>
+     </ul>
+       
+  
+</div>
+
+    <div class="main-contents">
         <div class="comparison-title">
         	<div class="big-title">매물 비교</div>
         	<div class="small-title">한 눈에 비교하며 내게 맞는 방을 고르세요 </div>
         </div>
+        
 		<div class="checkWrapTitle">
 		    <div class="checkWrapBig">방 선택</div>
 		    <div class="checkWrapSmall">
@@ -220,63 +243,136 @@
 		</div>
         <div class="checkWrap">
             <div class="filter-arrow filter-arrow-left" id="filterLeftArrow" onclick="showPreviousFavorites()">&lt;</div>
-
+			<div class="filter-arrow filter-arrow-right" id="filterRightArrow" onclick="showNextFavorites()">&gt;</div>
+			
             <label th:each="favorite, status : ${favorites}" class="favorite-item">
-                <img src='/images/매물쓰리.JPEG' alt="이미지" class="small-image">
-                <input type="checkbox" name="favoriteIds" th:value="${favorite.favoriteId}" onchange="filterFavorites()"
-                    onclick="handleCheckboxClick(event)">
+ 		        <div th:each="photo : ${roomPhotos[status.index]}">
+		            <img th:src="@{'/images/' + ${photo.fileName} + '.' + ${photo.imageType}}" alt="프로필">	
+		        </div>
+                <input type="checkbox" name="favoriteIds" th:value="${favorite.favoriteId}" onchange="filterFavorites()">
                 <div>
-                    <span class="favoriteCost" th:text="${favorite.room.costType} + ' ' + ${favorite.room.deposit} + '/' + ${favorite.room.monthCost}"></span>
-                    <span class="favoriteType" th:text="${favorite.room.type}"></span>
+               
+				<span class="favoriteCost" th:text="${#strings.equals(favorite.room.costType, '월세') ? (favorite.room.deposit != 0 ?
+													(favorite.room.costType + ' ' + favorite.room.deposit + '/' + favorite.room.monthCost) 
+													: (favorite.room.costType + ' '  + favorite.room.monthCost)) 
+													: (favorite.room.costType + ' ' + favorite.room.deposit)}">
+			    </span>
+ 			
+			
+ 				<span class="favoriteType" th:text="${favorite.room.type}"></span> <br />
+ 				<span th:text="${#strings.substringAfter(favorite.room.address, '시 ')}"></span>
                 </div>
             </label>
 
-            <div class="filter-arrow filter-arrow-right" id="filterRightArrow" onclick="showNextFavorites()">&gt;</div>
         </div>
+	
+		<div id="comparisonContainer" class="hidden-div">
+		    <div th:each="favorite, status : ${favorites}" class="comparison-item">
+		    	<div class="favorite-building">
+				    <span th:text="${favorite.room.buildingName}"></span>
+	------------<button class="delete-button" onclick="deleteFavorite(this)">X</button>
+				</div>
+		    	<br />
+ 		        <div th:each="photo : ${roomPhotos[status.index]}">
+		            <img th:src="@{'/images/' + ${photo.fileName} + '.' + ${photo.imageType}}" alt="프로필">	
+		        </div>
+	    		<div class="favorite-address" th:text="${favorite.room.address}"></div>
+		        <div class="favorite-id" th:text="${favorite.favoriteId}"></div>
+		        <div class="favorite-type" th:text="${favorite.room.type}"></div>
+		        <div class="favorite-cost" >
+					<span th:text="${#strings.equals(favorite.room.costType, '월세') ? (favorite.room.deposit != 0 ?
+													(favorite.room.costType + ' ' + favorite.room.deposit + '/' + favorite.room.monthCost) 
+													: (favorite.room.costType + ' '  + favorite.room.monthCost)) 
+													: (favorite.room.costType + ' ' + favorite.room.deposit)}">
+			    	</span>		      
+			    </div>  
+				<div class="favorite-manageC" th:text="'관리비 매월 ' + ${favorite.room.manageCost} + '만원'"></div>
+		        <div class="favorite-floor" th:text="${favorite.room.roomFloor} + '층 / ' + ${favorite.room.totalFloor} + '층'"></div>
+		        <div class="favorite-size" th:text="${favorite.room.size} + ' ㎡'"></div>
+		        <div class="favorite-isroomIn" th:text="${favorite.room.isRoomIn ? '즉시 입주 가능' : '즉시 입주 불가'}"></div>
+		        <hr class = "custom-hr"/>	
+		        
+		        <div class="favorite-direction" th:text="${favorite.room.direction} + '향'"></div>
+		        <div class="favorite-parkingInfo" th:text="'주차장 ' + ${favorite.room.parkingInfo}"></div>
+		        <div class="favorite-isElevator" th:text="${favorite.room.isElevator ? '엘리베이터 있음' : '엘리베이터 없음'}"></div>
+		        <div class="favorite-heatInfo" th:text="${favorite.room.heatInfo}"></div>
+		        <div class="favorite-internetInfo" th:text="${favorite.room.internetInfo}"></div>
+		        <hr class = "custom-hr"/>
+		        
+		        <div class="favorite-genderInfo" th:text="${favorite.room.genderInfo}"></div>
+		        <div class="favorite-security" th:text="${favorite.room.securityInfo}"></div>
+		        <hr class = "custom-hr"/>
 
+
+				<div>
+				    <h3>공용옵션</h3>
+				    <div th:each="optionType : ${roomOptionTypes}" class="favorite-option-all-true">
+				        <strong th:text="${optionType.optionName}" th:if="${optionType.isShare == true && #strings.contains(roomOptions[__${status.index}__].![optionType.optionName], optionType.optionName)}"></strong>
+				        <span th:if="${optionType.isShare == false}"></span>
+				        <span th:text="${optionType.optionName}" th:unless="${optionType.isShare == true && #strings.contains(roomOptions[__${status.index}__].![optionType.optionName], optionType.optionName) || optionType.isShare == false}"></span>
+				    </div>
+				</div>
+				<hr class = "custom-hr"/>
+								
+				<div>
+				    <h3>방옵션</h3>
+				    <div th:each="optionType : ${roomOptionTypes}" class="favorite-option-all-false">
+				        <strong th:text="${optionType.optionName}" th:if="${optionType.isShare == false && #strings.contains(roomOptions[__${status.index}__].![optionType.optionName], optionType.optionName)}"></strong>
+				        <span th:if="${optionType.isShare == true}"></span>
+				        <span th:text="${optionType.optionName}" th:unless="${optionType.isShare == false && #strings.contains(roomOptions[__${status.index}__].![optionType.optionName], optionType.optionName) || optionType.isShare == true}"></span>
+				    </div>
+				</div>
+				<hr class = "custom-hr"/>		                		        
+		        <div>
+		        	<h3>제공식사</h3>
+					<div class="favorite-food" th:if="${not #strings.isEmpty(favorite.room.foodOffer)}">
+					    <span th:text="${favorite.room.foodOffer}"></span>
+					</div>
+					<div class="favorite-food" th:if="${#strings.isEmpty(favorite.room.foodOffer)}">
+					    <span>-</span>
+					</div>
+				</div>
+				
+				<div>
+			        <h3>제공비품</h3>
+					<div class="favorite-amenity" th:if="${not #strings.isEmpty(favorite.room.amenityOffer)}">
+					    <span th:text="${favorite.room.amenityOffer}"></span>
+					</div>
+					<div class="favorite-amenity" th:if="${#strings.isEmpty(favorite.room.amenityOffer)}">
+					    <span>-</span>
+					</div>
+				</div>
+				
+				<hr class = "custom-hr"/>
+				
+				
+		        <div>
+		            <h3>메모</h3>
+		            <div class="favorite-memo">
+		                <form class="memo-form">
+		                    <input type="hidden" name="favoriteId" th:value="${favorite.favoriteId}" />
+		                    <input type="text" class="memo" name="memo" placeholder="메모할 사항" th:value="${favorite.memo}" /><br />
+		                    <button class="memo-button" type="button" onclick="saveMemo(this)">저장</button>
+		                </form>
+		            </div>
+		        </div>
+		        
+               
+		    </div>
+		</div>
 		
-        <div id="comparisonContainer" class="hidden-div" >
-        	
-            <div th:each="favorite, status : ${favorites}" class="comparison-item">
-            
-                <div class="favorite-id" th:text="${favorite.favoriteId}"></div>
-                <div class="favorite-type" th:text="${favorite.room.type}"></div>
-                <div class="favorite-intro" th:text="${favorite.room.intro}"></div>
-                <div class="favorite-description" th:text="${favorite.room.description}"></div>
-                <div class="favorite-building-name" th:text="${favorite.room.buildingName}"></div>
-                <div class="favorite-address" th:text="${favorite.room.address}"></div>
-                <div class="favorite-room-number" th:text="${favorite.room.roomNumber}"></div>
-                <div class="favorite-month-cost" th:text="${favorite.room.monthCost}"></div>
-                <div class="favorite-deposit" th:text="${favorite.room.deposit}"></div>
-                <div class="favorite-manage-cost" th:text="${favorite.room.manageCost}"></div>
-                <div class="favorite-cost-type" th:text="${favorite.room.costType}"></div>
-                <div class="favorite-size" th:text="${favorite.room.size}"></div>
-                <div class="favorite-direction" th:text="${favorite.room.direction}"></div>
-                <div class="favorite-transport-info" th:text="${favorite.room.transportInfo}"></div>
-                <div class="favorite-total-floor" th:text="${favorite.room.totalFloor}"></div>
-                <div class="favorite-room-floor" th:text="${favorite.room.roomFloor}"></div>
-                <div class="favorite-is-room-in" th:text="${favorite.room.isRoomIn}"></div>
-                <div class="favorite-security-info" th:text="${favorite.room.securityInfo}"></div>
-                <div class="favorite-is-elevator" th:text="${favorite.room.isElevator}"></div>
-                <div class="favorite-heat-info" th:text="${favorite.room.heatInfo}"></div>
-                <div class="favorite-parking-info" th:text="${favorite.room.parkingInfo}"></div>
-                <div class="favorite-internet-info" th:text="${favorite.room.internetInfo}"></div>
-                <div class="favorite-gender-info" th:text="${favorite.room.genderInfo}"></div>
-                <div class="favorite-food-offer" th:text="${favorite.room.foodOffer}"></div>
-                <div class="favorite-amenity-offer" th:text="${favorite.room.amenityOffer}"></div>
-            </div>
-        </div>
+		<div class="favorite-under">
+		</div>
+	</div>	
     </th:block>
-
+	
+	
+	
+	
+	
     <th:block layout:fragment="customScript">
         <script th:inline="javascript" type="text/javascript">
         
-        function toggleSideMenu() {
-            var sideMenu = document.getElementById("sideMenu");
-            var hamburgerMenu = document.querySelector(".hamburger-menu");
-            sideMenu.classList.toggle("open");
-            hamburgerMenu.classList.toggle("open");
-        }
         
             var currentIndex = 0;
             var favorites = document.getElementsByClassName("favorite-item");
@@ -375,6 +471,21 @@
 
             // 초기 로딩 시 첫 4개의 즐겨찾기 항목을 표시합니다.
             updateFavoriteVisibility();
+            
+            function saveMemo(button) {
+                var form = button.closest(".memo-form");
+                var formData = new FormData(form);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/saveMemo");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                        alert("메모가 저장되었습니다!");
+                    }
+                };
+                xhr.send(formData);
+            }
+            
         </script>
     </th:block>
 </html>
