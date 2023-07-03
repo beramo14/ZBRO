@@ -1,4 +1,5 @@
 
+/*########## 상위 ##########*/
 aside {
 	width: 240px;
 	min-width: 240px;
@@ -22,20 +23,22 @@ aside {
 	width: 100%;
 }
 
-.profile-wrapper{
+
+/*########## 프로필 ##########*/
+.profile-wrapper {
 	padding: 30px 0;
 	border-top: 1px solid lightgray;
 	border-bottom: 1px solid lightgray;
 	text-align: center;
 }
 
-img.profile-image{
+.profile-wrapper img.profile-image {
 	width: 80px;
 	height: 80px;
 	border-radius: 50%;
 }
 
-p.username {
+.profile-wrapper p.username {
 	padding: 0;
 	margin: 0;
 	margin-top: 5px;
@@ -43,12 +46,14 @@ p.username {
 	font-weight: bold;
 }
 
-span.admission-info {
+.profile-wrapper span.admission-info {
 	color: gray;
 	font-size: 12px;
 	
 }
 
+
+/*########## 로고 ##########*/
 .logo-wrapper {
 	display: flex;
     flex-direction: row;
@@ -57,16 +62,18 @@ span.admission-info {
     align-items: baseline;
 }
 
-img.logo {
+.logo-wrapper img.logo {
 	width: 110px;
 }
 
-a.go-home {
+.logo-wrapper a.go-home {
 	font-size: 11px;
 	text-decoration: none;
 	color: gray;
 }
 
+
+/*########## 메뉴 ##########*/
 .menu-wrapper .menu{
 	margin-top: 18px;
 	padding: 0 5px;
