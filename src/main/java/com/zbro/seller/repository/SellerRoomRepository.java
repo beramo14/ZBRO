@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.zbro.model.Room;
 
-public interface RoomRepository extends JpaRepository<Room, Long>{
+public interface SellerRoomRepository extends JpaRepository<Room, Long>{
 	
 }

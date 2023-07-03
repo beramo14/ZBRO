@@ -2,9 +2,13 @@ package com.zbro.main.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.zbro.main.service.MainService;
+import com.zbro.model.ConsumerUser;
+import com.zbro.model.SellerUser;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,10 +43,61 @@ public class MainController {
 		
 		
 	}
-	@RequestMapping("/roomdetailrefix")
-	public String Getlayout() {
-		
-		return "main/roomdetailrefix";
-		
+	
+	
+	@GetMapping("/join/seller")
+	public String joinSellerView() {
+		return "/join/seller_join";
 	}
+	
+	@PostMapping("/join/seller")
+	public String joinSeller(SellerUser user) {
+		
+		log.info("### joinConsumer = {}", user);
+		
+		/*join logic*/
+		
+		return "redirect:/"; //셀러 메인 페이지로 수정해야함
+	}
+	
+	@GetMapping("/join/consumer")
+	public String joinConsumerView() {
+		return "/join/consumer_join";
+	}
+	
+	
+	@PostMapping("/join/consumer")
+	public String joinConsumer(ConsumerUser user) {
+		
+		log.info("### joinConsumer = {}", user);
+		
+		/*join logic*/
+		
+		return "redirect:/login";
+	}
+	
+	
+	@GetMapping("/login")
+	public String loginSelectView() {
+		
+		return "login/login_select";
+	}
+	
+	@GetMapping("/login/consumer")
+	public String loginConsumerView() {
+		
+		return "login/consumer_login";
+	}
+	
+	@PostMapping("/login/consumer")
+	public String loginConsumer(ConsumerUser user) {
+		log.info("### loginConsumer = {}", user);
+		
+		/*Login logic*/
+		
+		return "redirect:/";
+	}
+	
+	
+	
 }

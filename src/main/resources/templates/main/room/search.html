@@ -1,71 +1,72 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/search_layout}">
 <th:block layout:fragment="customStyle">
+	<link href="/style/main/room/room_search.css" rel="stylesheet" type="text/css" />
 	<style th:inline="css" type="text/css">
-		.search-main-wrapper {
-			margin: 10px 20px;
-			border: 1px solid lightgray;
-			padding: 10px;
-		}
-		
-		.search-wrapper {
-			margin-bottom: 10px;
-		}
-		
-		.search-result-wrapper {
-			height: 77vh;
-			display: flex;
-		}
-		
-		.room-list {
-			width: 25%;
-			border: 1px solid blue;
-			overflow-y: scroll;
-		}
-		
-		.map-wrapper {
-			height: 100%;
-			width: 75%;
-			border: 1px solid red;
-		}
-		
-		.room-item {
-			height: 100%;
-			border: 1px solid green;
-			margin: 5px;
-			padding: 10px;
-			height: 150px;
-		}
 	</style>
 </th:block>
 <th:block layout:fragment="content">
 	
-	
 	<div class="search-main-wrapper">
 		<div class="search-wrapper">
-			<form action="" class="form-inline">
-				<input type="text" class="form-control" style="width: 200px; float:left;"/>
-				<button type="button" class="btn btn-outline-primary">검색</button>
+			<form action="#" class="search-form" style="display: flex;">
+				<div style="width:auto; position:relative;">
+					<button type="button" class="search-word-reset-button" onclick="searchWordReset()"><i class="bi bi-x"></i></button>
+					<input type="text" name="searchWord" class="form-control me-1" style="width: 200px;" th:value="${roomSearchDTO.searchWord}"/>
+				</div>
+				<button type="submit" class="btn btn-outline-primary me-5">검색</button>
+				<select name="type" class="form-select me-1" style="width: 120px;">
+					<option value="none" th:selected="${roomSearchDTO.type.toString()} == 'none'">-유형-</option>
+					<option value="원룸" th:selected="${roomSearchDTO.type.toString()} == '원룸'">원룸</option>
+					<option value="오피스텔" th:selected="${roomSearchDTO.type.toString()} == '오피스텔'">오피스텔</option>
+					<option value="고시원" th:selected="${roomSearchDTO.type.toString()} == '고시원'">고시원</option>
+				</select>
+				
+				<select name="costType" class="form-select" style="width: 120px; ">
+					<option value="none" th:selected="${roomSearchDTO.costType.toString() == 'none'}">-전/월세-</option>
+					<option value="월세" th:selected="${roomSearchDTO.costType.toString() == '월세'}">월세</option>
+					<option value="전세" th:selected="${roomSearchDTO.costType.toString() == '전세'}">전세</option>
+				</select>
 			</form>
 		</div>
 		
 		<div class="search-result-wrapper">
 			<div class="room-list">
-				<div class="room-item">
-				</div>
-				<div class="room-item">
-				</div>
-				<div class="room-item">
-				</div>
-				<div class="room-item">
-				</div>
-				<div class="room-item">
-				</div>
-				<div class="room-item">
-				</div>
-				<div class="room-item">
-				</div>
-				<div class="room-item">
+			
+				<div class="room-item" th:classappend="'room-'+${room.roomId}" th:each="room : ${rooms}">
+					<div class="room-item-wrapper">
+						<input type="hidden" class="address" th:value="${room.address}" th:data="${room.roomId}"/>
+					    <div class="room-photo-wrapper">
+				    		<div class="favorite-button" th:classappend="'favorite-room-'+${room.roomId}">
+				    			<button type="button" onclick="doFavorite(this)" th:if="${room.isFavorite == false}" th:data-room="${room.roomId}">
+				    				<i class="bi bi-heart"></i>
+				    			</button>
+				    			<button type="button" onclick="doUnfavorite(this)" th:if="${room.isFavorite == true}" th:data-favorite="${room.favoriteId}" th:data-room="${room.roomId}">
+				    				<i class="bi bi-heart-fill"></i>
+				    			</button>
+			    			</div>
+					    	<div class="image-wrapper"></div>
+					        <img src="https://picsum.photos/300/200" th:alt="${room.address}" class="room-image" />
+					    </div>
+					    
+					    <div class="room-info-wrapper" th:onclick="|location.href='@{/room/detail(roomId=${room.roomId})}'|">
+				            <p class="room-cost">
+				                <span th:text="${room.costType}">월세</span>
+				                <th:block th:if="${room.costType.toString() == '월세'}">
+				                	<th:block th:if="${room.deposit != 0}" >
+						                <span th:text="${room.deposit}">1000</span>
+						                <span>/</span>
+				                	</th:block>
+					                <span th:text="${room.monthCost}">30</span>
+				                </th:block>
+				                <th:block th:if="${room.costType.toString() == '전세'}">
+				                	<span th:text="${room.deposit}">1000</span>
+				                </th:block>
+				            </p>
+					        <p class="room-item-type" th:text="${room.type}">원룸</p>
+					        <p class="room-item-intro" th:text="${room.intro}"></p>
+					    </div>
+					</div>
 				</div>
 				
 			</div>
@@ -77,32 +78,63 @@
 	
 </th:block>
 <th:block layout:fragment="customScript">
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b2dd20bb2f4a2bd31a676e25dd5a0ef0"></script>
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b2dd20bb2f4a2bd31a676e25dd5a0ef0&libraries=services"></script>
+	<script type="text/javascript" src="/script/main/room/room_search.js"></script>
 	<script th:inline="javascript" type="text/javascript">
-		$(document).ready(function () {
+		function doUnfavorite(e){
+			let favId = e.attributes["data-favorite"].value;
+			
+			$.ajax({
+				type: "post",
+				url: '/room/unfavorite',
+				data: {"favoriteId":favId},
+				success: function(res) {
+					if(res == "success") {
+						console.log("unfavorite(favId="+favId+") : "+res);
+						favoriteToggle(e, false);
+					} else {
+						console.error("unfavorite failed... (favId="+favId+")");
+					}
+				},
+				error: function(error) {
+					console.log(error);
+				}
+			});
 		
-			var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-		    var options = { //지도를 생성할 때 필요한 기본 옵션
-	    		center: new kakao.maps.LatLng(33.450701, 126.570667),
-		        level: 3 //지도의 레벨(확대, 축소 정도)
-		    };
+		}
 		
-		    var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+		function doFavorite(e){
+			let roomId = e.attributes["data-room"].value;
+			
+			$.ajax({
+				type: "post",
+				url: '/room/favorite',
+				data: {"roomId":roomId},
+				success:function(res) {
+					if(res != null && res != "") {
+						console.log("favorited success! (favId="+res+")");
+						favoriteToggle(e, true, res);
+					} else {
+						console.error("favorited failed... (room"+res+")");						
+					}
+				},
+				error: function(error) {
+					console.error(error);
+				}
+			});
+			
+		}
 		
-		    var markerPosition  = new kakao.maps.LatLng(33.450701, 126.570667); 
-		
-		    // 마커를 생성합니다
-		    var marker = new kakao.maps.Marker({
-		        position: markerPosition
-		    });
-		
-		    // 마커가 지도 위에 표시되도록 설정합니다
-		    marker.setMap(map);
-		});
+		const heartElement = "<i class='bi bi-heart'></i>";
+		const heartFillElement = "<i class='bi bi-heart-fill'></i>";
+		function favoriteToggle(e, faved, favId) {
+			if(faved == true) {
+				e.setAttribute("data-favorite", favId);
+				e.innerHTML = heartFillElement;
+			} else if(faved == false) {
+				e.removeAttribute("data-favorite");
+				e.innerHTML = heartElement;
+			}
+		}
 	</script>
 </th:block>
-
-<th:block th:include="navbar"></th:block>
-<th:block th:include="footer"></th:block>
-    
-    
