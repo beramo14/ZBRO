@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class CommunityController {
 	
+	
 	@GetMapping("/post_list")
 	public String postListView() {
 		return "/main/community/post_list";
