@@ -4,7 +4,7 @@
 <style th:inline="css" type="text/css">
 	
 	.login-select-main {
-		margin: 140px 20px 0;
+		margin: 140px 20px 100px;
 	}
 	
 	.login-select-wrapper {
@@ -16,7 +16,7 @@
 	}
 	
 	.join-form-wrapper {
-		padding: 0 35vh;
+		padding: 0 350px;
 	}
 	
 	
@@ -31,7 +31,10 @@
 			
 			<div class="join-form-wrapper">
 				<form action="/join/consumer" method="post" id="join-form" enctype="multipart/form-data">
-					<input type="email" name="email" class="form-control form-control-lg mb-1" placeholder="*이메일" required/>
+					<div class="d-flex mb-1" style="gap: 10px; flex-direction: row; flex-wrap: nowrap;">
+						<input type="email" name="email" class="form-control form-control-lg" style="width:75%" placeholder="*이메일" required/>
+						<button type="button" class="btn btn-lg btn-success" style="width:25%" id="user-exists-check-button">중복 확인</button>
+					</div>
 					<input type="password" name="password" class="form-control form-control-lg mb-1" placeholder="*비밀번호" required/>
 					<input type="password" id="password-check" class="form-control form-control-lg mb-1" placeholder="*비밀번호 확인" required/>
 					<input type="text" name="name" class="form-control form-control-lg mb-3" placeholder="*이름" required/>
@@ -54,8 +57,31 @@
 					alert("비밀번호가 맞지 않습니다.");
 					$("#password-check").focus();
 				}
+			});
+			
+			
+			$("#user-exists-check-button").click(function() {
+				const emailElement = $("input[name='email']");
+				let email = emailElement.val();
+				$.ajax({
+					method: "POST",
+					url: "/join/check/exists",
+					data: {"email":email},
+					success: function(res) {
+						console.log(res);
+						if(res == false) {
+							
+						} else if(res == true) {
+							alert("이미 사용중인 이메일입니다.");
+							emailElement.val(null);
+							emailElement.focus();
+						}
+					}
+				})
+				
 				
 			});
+			
 		});
 	</script>
 </th:block>

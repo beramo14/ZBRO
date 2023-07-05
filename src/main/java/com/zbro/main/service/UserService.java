@@ -2,6 +2,7 @@ package com.zbro.main.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,14 @@ public class UserService {
 
 	public void consumerUserSave(ConsumerUser user) {
 		consumerRepository.save(user);
+	}
+
+	public boolean consumerUserExistsCheck(String email) {
+		
+		Optional<ConsumerUser> findedUser = consumerRepository.findByEmail(email);
+		
+		return findedUser.isPresent();
+		
 	}
 
 }

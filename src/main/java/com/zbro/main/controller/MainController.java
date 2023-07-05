@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.hibernate.engine.transaction.spi.JoinStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,10 +85,8 @@ public class MainController {
 		
 		/*뷰단 & 여기 에서 이메일 중복확인*/
 		
-		/*join logic*/
-		String filename;
 		try {
-			filename = userService.profileImageSave(file);
+			String filename = userService.profileImageSave(file);
 			user.setProfilePhoto(filename);
 			userService.consumerUserSave(user);
 		} catch (Exception e) {
@@ -97,9 +96,14 @@ public class MainController {
 			return "redirect:/join/consumer";
 		}
 		
-		
-		
 		return "redirect:/login";
+	}
+	
+	@PostMapping("/join/check/exists")
+	public ResponseEntity<?> consumerUserExistsCheck(@RequestParam("email") String email) {
+		boolean isUserExists = userService.consumerUserExistsCheck(email);
+		
+		return ResponseEntity.ok().body(isUserExists);
 	}
 	
 	
