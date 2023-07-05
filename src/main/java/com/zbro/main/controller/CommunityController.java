@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.zbro.dto.PageInfo;
 import com.zbro.main.service.CommunityService;
 import com.zbro.model.Community;
+import com.zbro.type.Category;
 import com.zbro.type.PostType;
 
 @Controller
@@ -25,7 +26,7 @@ public class CommunityController {
 	private CommunityService commuService;
 	
 	@RequestMapping("/post_list")
-	public String listView(Model model,
+	public String postList(Model model,
 							@RequestParam(defaultValue = "0") int page,
 							@RequestParam(defaultValue = "10") int pageSize,
 							@RequestParam(defaultValue = "자취") String categoryType,
@@ -66,11 +67,23 @@ public class CommunityController {
 		model.addAttribute("sw", searchWord);
 		model.addAttribute("ct", categoryType);
 		model.addAttribute("type", type);
+		model.addAttribute("categories", Category.values());
 		
 		
 		return "/main/community/post_list";
 	}
+
 	
+	@RequestMapping("/post_add")
+	public String postAdd(Model model,
+							@RequestParam String type,
+							@RequestParam String categoryType) {
+		
+		model.addAttribute("type", type);
+		model.addAttribute("ct", categoryType);
+		model.addAttribute("categories", Category.values());
+		return "/main/community/post_add";
+	}
 	
 
 }

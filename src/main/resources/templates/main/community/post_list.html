@@ -13,11 +13,12 @@
 	<span th:if="${type}=='질문'" th:text="Question"></span>
 	<h1 th:text="${type}"></h1>
 	<br />
-	<ul id="categoty" style="color:gray;">
-		<li><a th:href="@{/post_list(categoryType='자취', type=${type})}" th:text="자취"></a></li>
-		<li><a th:href="@{/post_list(categoryType='이사', type=${type})}" th:text="이사"></a></li>
-		<li><a th:href="@{/post_list(categoryType='부동산', type=${type})}" th:text="부동산"></a></li>
+	<ul id="category">
+	    <li th:each="category : ${categories}" th:style="(${category.name()} == ${ct}) ? 'color: black' : 'color: gray'" >
+	        <a th:href="@{/post_list(categoryType=${category}, type=${type})}" th:text="${category}" ></a>
+	    </li>
 	</ul>
+	
 	<br />
 	<h4><span th:text="${type}"/>게시판 - <span th:text="${ct}"/></h4>
 	<div>
@@ -92,6 +93,9 @@
 			</div>
 		</div>
 	</div>
+	
+	<a th:href="@{/post_add(type=${type}, categoryType=${ct})}" class="btn">글쓰기</a>
+
 </th:block>
 	
 <th:block layout:fragment="customScript">
