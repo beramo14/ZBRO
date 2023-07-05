@@ -72,7 +72,10 @@ public class MainController {
 	}
 	
 	@GetMapping("/join/consumer")
-	public String joinConsumerView() {
+	public String joinConsumerView(@RequestParam(value="response", required=false, defaultValue= "") String response) {
+		
+		log.info("### join/consumer response : {}",response);
+		
 		return "/join/consumer_join";
 	}
 	
@@ -83,7 +86,12 @@ public class MainController {
 		
 		log.info("### joinConsumer = {}", user);
 		
-		/*뷰단 & 여기 에서 이메일 중복확인*/
+		//Todo... 백단에서 이메일 체크 후 중복시 회원가입으로 redirect할때 프론트에서 오류 처리
+		boolean isUserExists = userService.consumerUserExistsCheck(user.getEmail());
+		if(isUserExists == true) {
+			model.addAttribute("response", "error");
+			return "redirect:/join/consumer";
+		}
 		
 		try {
 			String filename = userService.profileImageSave(file);
