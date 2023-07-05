@@ -50,8 +50,16 @@
 			<h1 class="title">판매자 회원가입</h1>
 			
 			<div class="join-form-wrapper">
-				<form action="/join/seller" method="post" id="join-form">
-					<input type="email" name="email" class="form-control form-control-lg mb-1" placeholder="이메일" required/>
+				<form action="/join/seller" method="post" id="join-form" enctype="multipart/form-data">
+					<div class="email-input-wrapper mb-1">
+						<div class="d-flex" style="gap: 10px; flex-direction: row; flex-wrap: nowrap;">
+							<input type="hidden" id="email-check" value="false"/>
+							<input type="email" name="email" class="form-control form-control-lg" style="width:75%" placeholder="*이메일" required/>
+							<button type="button" class="btn btn-lg btn-success" style="width:25%" id="user-exists-check-button">중복 확인</button>
+						</div>
+						<p class="email-check-message email-able-message">사용가능한 이메일입니다.</p>
+						<p class="email-check-message email-exist-message">이미 사용중인 이메일 입니다.</p>
+					</div>
 					<input type="password" name="password" class="form-control form-control-lg mb-1" placeholder="비밀번호" required/>
 					<input type="password" id="password-check" class="form-control form-control-lg mb-1" placeholder="비밀번호 확인" required/>
 					<input type="text" name="name" class="form-control form-control-lg mb-3" placeholder="이름" required/>
@@ -64,7 +72,7 @@
 						<input type="text" name="tel3" class="form-control form-control-lg tel-input" required>
 					</div>
 					
-					<div class="mb-4">
+					<div class="mb-1">
 						<div class="form-control form-control-lg isbiz-input-wrapper mb-1">
 							<span class="">사업자</span>
 							<div>
@@ -78,6 +86,8 @@
 						</div>
 						<input type="text" name="brokerName" class="form-control form-control-lg" placeholder="부동산명" style="display:none;"/>
 					</div>
+					<label for="profile-photo" class="form-label" style="display: block; text-align: start;">프로필사진</label>
+					<input type="file" name="profilePhotoFile" id="profile-photo" class="form-control form-control-lg mb-4"/>
 					
 					<button type="submit" class="btn btn-primary btn-lg mb-1"> 회원가입 </button>
 					<p>판매자 승인 후 이용 가능합니다.</p>
