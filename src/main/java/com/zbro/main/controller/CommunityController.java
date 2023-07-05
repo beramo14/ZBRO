@@ -24,22 +24,24 @@ public class CommunityController {
 	@Autowired
 	private CommunityService commuService;
 	
-	@RequestMapping("/tips")
-	public String tipListView(Model model,
+	@RequestMapping("/post_list")
+	public String listView(Model model,
 							@RequestParam(defaultValue = "0") int page,
 							@RequestParam(defaultValue = "10") int pageSize,
 							@RequestParam(defaultValue = "자취") String categoryType,
 							@RequestParam(defaultValue = "title") String searchType,
-							@RequestParam(defaultValue = "") String searchWord) {
+							@RequestParam(defaultValue = "") String searchWord,
+							@RequestParam(defaultValue = "꿀팁") String type) {
+		PostType postType = PostType.valueOf(type);
 		
-		Pageable pageable = PageRequest.of(page, pageSize, Sort.by("postId").ascending());
-		Page<Community> pageResult = commuService.getPosts(pageable, searchType, searchWord, PostType.꿀팁, categoryType);
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by("postId").descending());
+		Page<Community> pageResult = commuService.getPosts(pageable, searchType, searchWord, postType, categoryType);
 		
-		List<Community> tipPostList = pageResult.getContent();
+		List<Community> postList = pageResult.getContent();
 		
 		// 페이징 확인
-		for(Community tip:tipPostList) {
-			System.out.println(tip.toString());
+		for(Community post:postList) {
+			System.out.println(post.toString());
 		}
 		
 		// 쿼리실행 후 총 게시물 수
@@ -63,15 +65,12 @@ public class CommunityController {
 		model.addAttribute("st", searchType);
 		model.addAttribute("sw", searchWord);
 		model.addAttribute("ct", categoryType);
+		model.addAttribute("type", type);
 		
 		
-		return "/main/community/tip_list";
+		return "/main/community/post_list";
 	}
 	
 	
-	@GetMapping("/questions")
-	public String questionListView(Model model) {
-		return "/main/community/question_list";
-	}
 
 }

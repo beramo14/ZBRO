@@ -24,7 +24,7 @@ public class CommunityService {
 		} else if(searchType.equalsIgnoreCase("content")) {
 			return commuRepo.findByContentContainingAndTypeAndCategoryType(searchWord, type, categoryType, pageable);
 		} else if(searchType.equalsIgnoreCase("user")) {
-			return commuRepo.findByUserContainingAndTypeAndCategoryType(searchWord, type, categoryType, pageable);
+			return commuRepo.findByUser_NameContainingAndTypeAndCategoryType(searchWord, type, categoryType, pageable);
 		} else {
 	        return commuRepo.findByTypeAndCategoryType(type, categoryType, pageable);
 	    }

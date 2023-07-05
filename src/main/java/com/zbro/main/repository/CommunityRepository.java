@@ -13,8 +13,8 @@ public interface CommunityRepository extends JpaRepository<Community, Long>{
 			Pageable pageable);
 	Page<Community> findByContentContainingAndTypeAndCategoryType(String searchWord, PostType type, String categoryType,
 			Pageable pageable);
-	Page<Community> findByUserContainingAndTypeAndCategoryType(String searchWord, PostType type, String categoryType,
-			Pageable pageable);
+	Page<Community> findByUser_NameContainingAndTypeAndCategoryType(String searchWord, PostType type,
+			String categoryType, Pageable pageable);
 	Page<Community> findByTypeAndCategoryType(PostType type, String categoryType, Pageable pageable);
 
 }
