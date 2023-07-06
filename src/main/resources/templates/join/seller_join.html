@@ -40,6 +40,20 @@
 	    gap: 12vh;
 	}
 	
+	.email-check-message {
+		text-align: left;
+		margin: 0;
+		display: none;
+	}
+	
+	p.email-able-message {
+		color: darkgreen;
+	}
+	
+	p.email-exist-message {
+		color: red;
+	}
+	
 </style>
 
 </th:block>
@@ -124,10 +138,18 @@
 			/**/
 			$("#join-form").submit( function(e) {
 				
+				if(document.getElementById("email-check").value == "false") {
+					e.preventDefault();
+					alert("이메일 중복확인 해주세요.");
+					$("input[name='email']").focus();
+					return;
+				}
+				
 				if( $("input[name='password']").val() != $("#password-check").val() ) {
 					e.preventDefault();
 					alert("비밀번호가 맞지 않습니다.");
 					$("#password-check").focus();
+					return;
 				}
 				
 				let tel1 = $("input[name='tel1']");
@@ -135,6 +157,7 @@
 					e.preventDefault();
 					alert("연락처의 첫번째는 2에서 4자리까지만 입력할 수 있습니다.");
 					te1.focus();
+					return;
 				}
 				
 				let tel2 = $("input[name='tel2']");
@@ -142,6 +165,7 @@
 					e.preventDefault();
 					alert("연락처의 중간은 4자리가 입력되어야합니다.");
 					tel2.focus();
+					return;
 				}
 				
 				let tel3 = $("input[name='tel3']");
@@ -149,9 +173,44 @@
 					e.preventDefault();
 					alert("연락처의 끝은 4자리가 입력되어야합니다.");
 					tel3.focus();
+					return;
 				}
 				
-				
+			});
+			
+			$("input[name='email']").change(function() {
+				$(".email-check-message").hide();
+			});
+			
+			$("#user-exists-check-button").click(function() {
+				const emailElement = $("input[name='email']");
+				let email = emailElement.val();
+				if(email == "") {
+					alert("이메일을 입력해주세요.");
+					emailElement.focus();
+					document.getElementById("email-check").value = "false";
+				} else {
+					$.ajax({
+						method: "POST",
+						url: "/join/seller/check/exists",
+						data: {"email":email},
+						success: function(res) {
+							console.log(res);
+							$(".email-check-message").hide();
+							if(res == false) {
+								document.getElementById("email-check").value = "true";
+								$(".email-able-message").show();
+							} else if(res == true) {
+								document.getElementById("email-check").value = "false";
+								$(".email-exist-message").show();
+								emailElement.val(null);
+								emailElement.focus();
+							} else {
+								console.log("알수없는 메시지 : ", res);
+							}
+						}
+					});
+				}
 			});
 			
 		});

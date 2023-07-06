@@ -57,19 +57,13 @@ public class MainController {
 	
 	
 	@GetMapping("/join/seller")
-	public String joinSellerView() {
+	public String joinSellerView(@RequestParam(value="response", required=false, defaultValue= "") String response) {
+		
+		log.info("### join/seller response : {}",response);
+		
 		return "/join/seller_join";
 	}
 	
-	@PostMapping("/join/seller")
-	public String joinSeller(SellerUser user) {
-		
-		log.info("### joinConsumer = {}", user);
-		
-		/*join logic*/
-		
-		return "redirect:/"; //셀러 메인 페이지로 수정해야함
-	}
 	
 	@GetMapping("/join/consumer")
 	public String joinConsumerView(@RequestParam(value="response", required=false, defaultValue= "") String response) {
@@ -107,9 +101,42 @@ public class MainController {
 		return "redirect:/login";
 	}
 	
-	@PostMapping("/join/check/exists")
+	@PostMapping("/join/seller")
+	public String joinSeller(SellerUser user, @RequestParam("profilePhotoFile") MultipartFile file, Model model) {
+		
+		log.info("### joinSeller = {}", user);
+		
+		//Todo... 백단에서 이메일 체크 후 중복시 회원가입으로 redirect할때 프론트에서 오류 처리
+		boolean isUserExists = userService.sellerUserExistsCheck(user.getEmail());
+		if(isUserExists == true) {
+			model.addAttribute("response", "error");
+			return "redirect:/join/seller";
+		}
+		
+		try {
+			String filename = userService.profileImageSave(file);
+			user.setProfilePhoto(filename);
+			userService.sellerUserSave(user);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e.getStackTrace());
+			
+			model.addAttribute("response", "error");
+			return "redirect:/join/seller";
+		}
+		
+		return "redirect:/login";
+	}
+	
+	@PostMapping("/join/consumer/check/exists")
 	public ResponseEntity<?> consumerUserExistsCheck(@RequestParam("email") String email) {
 		boolean isUserExists = userService.consumerUserExistsCheck(email);
+		
+		return ResponseEntity.ok().body(isUserExists);
+	}
+	
+	@PostMapping("/join/seller/check/exists")
+	public ResponseEntity<?> sellerUserExistsCheck(@RequestParam("email") String email) {
+		boolean isUserExists = userService.sellerUserExistsCheck(email);
 		
 		return ResponseEntity.ok().body(isUserExists);
 	}

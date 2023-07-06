@@ -102,7 +102,7 @@
 				} else {
 					$.ajax({
 						method: "POST",
-						url: "/join/check/exists",
+						url: "/join/consumer/check/exists",
 						data: {"email":email},
 						success: function(res) {
 							console.log(res);
@@ -121,8 +121,6 @@
 						}
 					});
 				}
-				
-				
 			});
 			
 		});

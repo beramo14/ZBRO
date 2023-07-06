@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zbro.main.repository.ConsumerUserRepository;
+import com.zbro.main.repository.SellerUserRepository;
 import com.zbro.model.ConsumerUser;
+import com.zbro.model.SellerUser;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +23,9 @@ public class UserService {
 	
 	@Autowired
 	private ConsumerUserRepository consumerRepository;
+	
+	@Autowired
+	private SellerUserRepository sellerRepository;
 	
 	@Value("${file.images.profile-photo}")
 	private String fileProfilePhotoPath;
@@ -53,6 +58,17 @@ public class UserService {
 		Optional<ConsumerUser> findedUser = consumerRepository.findByEmail(email);
 		
 		return findedUser.isPresent();
+		
+	}
+
+	public boolean sellerUserExistsCheck(String email) {
+		Optional<ConsumerUser> findedUser = sellerRepository.findByEmail(email);
+		
+		return findedUser.isPresent();
+	}
+
+	public void sellerUserSave(SellerUser user) {
+		sellerRepository.save(user);
 		
 	}
 
