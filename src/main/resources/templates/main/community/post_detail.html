@@ -1,13 +1,37 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-	<title>Insert title here</title>
-</head>
-<body>
-	post detail
-</body>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<meta charset="UTF-8" />
+
+
+<th:block layout:fragment="content">
+	<span th:if="${type}=='꿀팁'" th:text="Tip"></span>
+	<span th:if="${type}=='질문'" th:text="Question"></span>
+	<h1 th:text="${type}"></h1>
+	<br />
+	<ul id="category">
+	    <li th:each="category : ${categories}" th:style="(${category.name()} == ${ct}) ? 'color: black' : 'color: gray'" >
+	        <a th:href="@{/post_list(categoryType=${category}, type=${type})}" th:text="${category}" ></a>
+	    </li>
+	</ul>
+	<br />
+	
+	<h2 th:text="${post.Title}"/>
+	<span th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd')}"/>
+	<span th:text="${post.user.name}"/>
+	<span th:text="'조회수 ' + ${post.viewCount}"/>
+	
+	<hr />
+	<span th:text="${post.content}"/>
+	<hr />
+	
+	<a th:href="@{/post_list(type=${type}, categoryType=${ct})}" class="btn">목록</a>
+	<!-- 작성한 유저, 관리자만 볼 수 있는 버튼 -->
+	<a th:href="@{/post_revise(postId=${post.postId})}" class="btn">수정</a>
+	<a th:href="@{/post_delete(postId=${post.postId})}" class="btn">삭제</a>
+	<!--  -->
+</th:block>
+
+
+<th:block layout:fragment="customScript">
+</th:block>
 </html>

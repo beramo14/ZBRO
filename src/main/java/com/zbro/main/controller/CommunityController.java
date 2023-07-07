@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.zbro.dto.PageInfo;
 import com.zbro.main.service.CommunityService;
@@ -93,11 +94,68 @@ public class CommunityController {
 						  @RequestParam String categoryType,
 						  @RequestParam String title,
 						  @RequestParam String content,
-						  @RequestParam(defaultValue = "1") long user) {
+						  @RequestParam(defaultValue = "1") long user,
+						  RedirectAttributes redirectAttributes) {
 		PostType postType = PostType.valueOf(type);
 		
 		commuService.postInsert(postType, categoryType, title, content, user);
-		return "/main/community/post_add_success";
+		
+		redirectAttributes.addAttribute("type", type);
+		redirectAttributes.addAttribute("categoryType", categoryType);
+		return "redirect:post_list";
+	}
+	
+	
+	
+	@GetMapping("/post_detail")
+	public String postDetail(Model model,
+							 @RequestParam Long postId) {
+		
+//		commuService.addViewCount(postId);
+		Community community = commuService.getPost(postId);
+		
+		model.addAttribute("post", community);
+		model.addAttribute("type", community.getType());
+		model.addAttribute("ct", community.getCategoryType());
+		model.addAttribute("categories", Category.values());
+		
+		return "/main/community/post_detail";
+	}
+	
+	
+	
+	@GetMapping("/post_revise")
+	public String postReviseView(Model model,
+								 @RequestParam Long postId) {
+		
+		Community community = commuService.getPost(postId);
+		model.addAttribute("post", community);
+		model.addAttribute("type", community.getType());
+		model.addAttribute("ct", community.getCategoryType());
+		model.addAttribute("categories", Category.values());
+		
+		return "/main/community/post_revise";
+	}
+	
+	
+	
+	@PostMapping("/post_revise")
+	public String postRevise(@RequestParam String type,
+						  	 @RequestParam String categoryType,
+						  	 @RequestParam Long postId,
+						  	 @RequestParam String title,
+						  	 @RequestParam String content,
+						  	 @RequestParam(defaultValue = "1") long user,
+						  	 RedirectAttributes redirectAttributes) {
+		
+		PostType postType = PostType.valueOf(type);
+		
+		commuService.postRevise(postType, categoryType, postId, title, content, user);
+		
+		redirectAttributes.addAttribute("type", type);
+		redirectAttributes.addAttribute("categoryType", categoryType);
+		
+		return "redirect:post_list";
 	}
 	
 

@@ -1,6 +1,7 @@
 package com.zbro.main.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,36 @@ public class CommunityService {
 		Community community = new Community();
 		community.setType(postType);
 		community.setCategoryType(categoryType);
+		community.setTitle(title);
+		community.setContent(content);
+		community.setUser(user);
+		
+		commuRepo.save(community);
+	}
+
+
+	public Community getPost(Long postId) {
+		Optional<Community> findPost = commuRepo.findById(postId);
+		
+		if(findPost.isPresent()) {
+			Community post = findPost.get();
+			post.setViewCount(post.getViewCount()+1);
+			commuRepo.save(post);
+			return post;
+		}
+		else return null;
+	}
+
+
+	public void postRevise(PostType postType, String categoryType, Long postId, String title, String content,
+			long userId) {
+		ConsumerUser user = new ConsumerUser();
+		user.setConsumerId(userId);
+		
+		Community community = new Community();
+		community.setType(postType);
+		community.setCategoryType(categoryType);
+		community.setPostId(postId);
 		community.setTitle(title);
 		community.setContent(content);
 		community.setUser(user);
