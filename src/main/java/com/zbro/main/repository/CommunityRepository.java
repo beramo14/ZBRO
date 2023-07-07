@@ -16,5 +16,5 @@ public interface CommunityRepository extends JpaRepository<Community, Long>{
 	Page<Community> findByUser_NameContainingAndTypeAndCategoryType(String searchWord, PostType type,
 			String categoryType, Pageable pageable);
 	Page<Community> findByTypeAndCategoryType(PostType type, String categoryType, Pageable pageable);
-
+	
 }

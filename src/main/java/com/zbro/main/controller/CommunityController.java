@@ -10,12 +10,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.zbro.dto.PageInfo;
 import com.zbro.main.service.CommunityService;
 import com.zbro.model.Community;
+import com.zbro.model.ConsumerUser;
 import com.zbro.type.Category;
 import com.zbro.type.PostType;
 
@@ -74,8 +76,8 @@ public class CommunityController {
 	}
 
 	
-	@RequestMapping("/post_add")
-	public String postAdd(Model model,
+	@GetMapping("/post_add")
+	public String postAddView(Model model,
 							@RequestParam String type,
 							@RequestParam String categoryType) {
 		
@@ -83,6 +85,19 @@ public class CommunityController {
 		model.addAttribute("ct", categoryType);
 		model.addAttribute("categories", Category.values());
 		return "/main/community/post_add";
+	}
+	
+	
+	@PostMapping("/post_add")
+	public String postAdd(@RequestParam String type,
+						  @RequestParam String categoryType,
+						  @RequestParam String title,
+						  @RequestParam String content,
+						  @RequestParam(defaultValue = "1") long user) {
+		PostType postType = PostType.valueOf(type);
+		
+		commuService.postInsert(postType, categoryType, title, content, user);
+		return "/main/community/post_add_success";
 	}
 	
 

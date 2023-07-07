@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.zbro.main.repository.CommunityRepository;
 import com.zbro.model.Community;
+import com.zbro.model.ConsumerUser;
 import com.zbro.type.PostType;
 
 @Service
@@ -28,6 +29,22 @@ public class CommunityService {
 		} else {
 	        return commuRepo.findByTypeAndCategoryType(type, categoryType, pageable);
 	    }
+	}
+
+
+	public void postInsert(PostType postType, String categoryType, String title, String content, long userId) {
+		ConsumerUser user = new ConsumerUser();
+		user.setConsumerId(userId);
+		
+		// 나머지 매개변수를 사용하여 Community 객체 생성 및 저장
+		Community community = new Community();
+		community.setType(postType);
+		community.setCategoryType(categoryType);
+		community.setTitle(title);
+		community.setContent(content);
+		community.setUser(user);
+		
+		commuRepo.save(community);
 	}
 
 }
