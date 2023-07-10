@@ -1,21 +1,85 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/mypage_layout}">
 <th:block layout:fragment="customStyle">
 <style th:inline="css" type="text/css">
+	ul.nav-tabs {
+	    margin-bottom: 20px;
+	}
+	
+	ul.nav-tabs li.nav-item {
+	    display: inline-block;
+	    margin-right: 10px;
+	}
+	
+	ul.nav-tabs li.nav-item a.nav-link {
+	    font-size: 16px;
+	    padding: 10px 20px;
+	    border-radius: 5px;
+	}
+	
+	table#communityTable {
+	    width: 100%;
+	    margin-top: 20px;
+	}
+	
+	table#communityTable th,
+	table#communityTable td {
+	    padding: 10px;
 
+	}	
 </style>
 
 </th:block>
+
 <th:block layout:fragment="content">
-			
- <div>작성한 글 보기</div>   	
+
+    <div>작성한 글 보기</div>
+    <div>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="filterData('꿀팁')">꿀팁</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="filterData('질문')">질문</a>
+            </li>
+        </ul>
+    </div>
+
+    <table id="communityTable">
+        <tr th:each="community : ${communities}" th:attr="data-type=${community.type}">
+            <td>
+                <a th:href="@{/community/{id}(id=${community.postId})}">
+                    <span th:text="${community.title}"></span>
+                </a>
+            </td>
+            <td th:text="${#temporals.format(community.createDate, 'yyyy-MM-dd')}"></td>
+        </tr>
+    </table> 
+           
 </th:block>
 
 
 <th:block layout:fragment="customScript">
-	<script th:inline="javascript" type="text/javascript">
+<script th:inline="javascript" type="text/javascript">
 
-	</script>
+window.addEventListener('DOMContentLoaded', (event) => {
+    filterData('꿀팁');
+});
+
+function filterData(type) {
+    var rows = document.getElementById("communityTable").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+    for (var i = 0; i < rows.length; i++) {
+        var communityType = rows[i].getAttribute("data-type");
+
+        if (type === communityType) {
+            rows[i].style.display = "table-row";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+}
+</script>
 </th:block>
 
 

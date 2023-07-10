@@ -1,42 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/mypage_layout}">
 <head>
     <th:block layout:fragment="customStyle">
         <style th:inline="css" type="text/css">
         	.main-contents{
         		margin-left: 200px; 
         		width: 1300px;
-        	}
-        
-			.sidebar {
-			    width: 500px; 
-			    position: fixed; 
-			    left: 0; 
-			    top: 200px; 
-			    bottom : 160px;
-				border-right: 1px solid #ccc; 
-				
-
-
-			    
-			}        	
-       	
-			.sidebar ul li {
-				list-style-type: none;	
-			    font-size: 20px;
-			    margin-bottom: 20px;
-			}
-			
-			.sidebar ul li ul li {
-			    font-size: 18px;
-			}      	
-        	
-			.profile-image {
-			    width: 200px; /* 이미지의 너비 조정 */
-			    height: 200px; /* 이미지의 높이 조정 */
-			    border-radius: 50%; /* 동그란 모양으로 설정 */
-			    overflow: hidden; /* 이미지의 너비와 높이를 초과하는 부분은 숨김 */
-			}      	
+        	}    	
         	
             .comparison-item {
                 display: inline-block;                
@@ -180,9 +150,6 @@
 		    .bold-text {
 		        font-weight: bold;
 		    }
-		    .favorite-under {
-		    	height: 300px;
-		    }
 		    
 		    .comparison-item img {
 		    	width: 300px;
@@ -196,37 +163,6 @@
 
 <body>	
     <th:block layout:fragment="content">
-<div class="sidebar">
-    <ul class="side-ul">
-        <li>
-            <div class="profile-image">
-                <img th:src="@{'/images/' + ${favorites[0].user.profilePhoto}}" alt="프로필">
-            </div>
-        </li>
-        <li>
-            <div class="favorite-name" th:text="${favorites[0].user.name}"></div>
-        </li>
-	    <ul>
-	        <li><a th:href="@{/memberInfo}">회원정보</a></li>
-	        
-	        <li>커뮤니티
-	            <ul>
-                   <li><a th:href="@{/contentList}">작성한 글 보기</a></li>
-                   <li><a th:href="@{/commentList}">작성한 댓글 보기</a></li>
-	            </ul>
-	        </li>
-	        
-	        <li>찜목록
-	            <ul>
-                    <li><a th:href="@{/favoriteList}">찜 목록 보기</a></li>
-                    <li><a th:href="@{/favoriteCompare}">매물 비교</a></li>
-	            </ul>
-	        </li>
-	    </ul>
-     </ul>
-       
-  
-</div>
 
     <div class="main-contents">
         <div class="comparison-title">
@@ -246,9 +182,8 @@
 			<div class="filter-arrow filter-arrow-right" id="filterRightArrow" onclick="showNextFavorites()">&gt;</div>
 			
             <label th:each="favorite, status : ${favorites}" class="favorite-item">
- 		        <div th:each="photo : ${roomPhotos[status.index]}">
-		            <img th:src="@{'/images/' + ${photo.fileName} + '.' + ${photo.imageType}}" alt="프로필">	
-		        </div>
+				 <img th:src="@{/room/photo(roomId=${favorite.room.roomId})}" class="room-image" />
+					   
                 <input type="checkbox" name="favoriteIds" th:value="${favorite.favoriteId}" onchange="filterFavorites()">
                 <div>
                
@@ -270,12 +205,10 @@
 		    <div th:each="favorite, status : ${favorites}" class="comparison-item">
 		    	<div class="favorite-building">
 				    <span th:text="${favorite.room.buildingName}"></span>
-	------------<button class="delete-button" onclick="deleteFavorite(this)">X</button>
+	------------<button class="delete-button">X</button>
 				</div>
 		    	<br />
- 		        <div th:each="photo : ${roomPhotos[status.index]}">
-		            <img th:src="@{'/images/' + ${photo.fileName} + '.' + ${photo.imageType}}" alt="프로필">	
-		        </div>
+				<img th:src="@{/room/photo(roomId=${favorite.room.roomId})}" class="room-image" />
 	    		<div class="favorite-address" th:text="${favorite.room.address}"></div>
 		        <div class="favorite-id" th:text="${favorite.favoriteId}"></div>
 		        <div class="favorite-type" th:text="${favorite.room.type}"></div>
@@ -361,8 +294,6 @@
 		    </div>
 		</div>
 		
-		<div class="favorite-under">
-		</div>
 	</div>	
     </th:block>
 	
@@ -393,6 +324,12 @@
                             selectedFavoriteIds.push(checkboxes[i].value);
                         } else {
                             checkboxes[i].checked = false; // 4개를 초과해서 선택한 경우 체크 해제
+                        }
+                    } else {
+                        // 체크박스가 선택되지 않은 경우에도 selectedFavoriteIds 배열에서 해당 값을 제거
+                        var index = selectedFavoriteIds.indexOf(checkboxes[i].value);
+                        if (index > -1) {
+                            selectedFavoriteIds.splice(index, 1);
                         }
                     }
                 }
@@ -486,6 +423,44 @@
                 xhr.send(formData);
             }
             
+         // 삭제 버튼 클릭 이벤트 핸들러
+document.addEventListener('DOMContentLoaded', function() {
+  var deleteButtons = document.querySelectorAll('.delete-button');
+
+  deleteButtons.forEach(function(deleteButton) {
+    deleteButton.addEventListener('click', function() {
+      var comparisonItem = deleteButton.closest('.comparison-item');
+      var favoriteIdElement = comparisonItem.querySelector('.favorite-id');
+      var favoriteId = favoriteIdElement.textContent;
+      var checkbox = document.querySelector('input[type="checkbox"][name="favoriteIds"][value="' + favoriteId + '"]');
+      
+      if (checkbox) {
+        checkbox.checked = false;
+        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      if (comparisonItem) {
+        comparisonItem.classList.add('hidden-div');
+      }
+    });
+  });
+
+  var checkboxes = document.getElementsByName('favoriteIds');
+
+  checkboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      var favoriteId = checkbox.value;
+      var comparisonItem = document.querySelector('.comparison-item .favorite-id[th:text="' + favoriteId + '"]').closest('.comparison-item');
+
+      if (checkbox.checked && comparisonItem) {
+        comparisonItem.classList.remove('hidden-div');
+      }
+    });
+  });
+});
+
+         
+         
         </script>
     </th:block>
 </html>

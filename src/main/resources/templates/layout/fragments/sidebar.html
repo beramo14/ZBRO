@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+
+<th:block th:fragment="sidebar">
+<style th:inline="css" type="text/css">
+		.sidebar {
+			    width: 300px; 
+			    position: fixed; 
+			    left: 0; 
+			    top: 200px; 
+			    bottom : 160px;
+				border-right: 1px solid #ccc; 
+				background-color: #ccc;
+
+
+			    
+			}        	
+       	
+			.sidebar ul li {
+				list-style-type: none;	
+			    font-size: 20px;
+			    margin-bottom: 20px;
+			}
+			
+			.sidebar ul li ul li {
+			    font-size: 18px;
+			}      	
+        	
+			.consumer-image {
+			    width: 200px;
+			    height: 200px; 
+			    border-radius: 50%; 
+			    overflow: hidden; 
+			}  	
+</style>
+	 <div class="sidebar">
+	    <ul class="side-ul">
+	        <li>
+	            <div class="consumer-image">
+	                <img th:src="@{'/images/' + ${consumerUser.profilePhoto}}" alt="프로필">
+	            </div>
+	        </li>
+	        <li>
+	            <div class="consumer-name" th:text="${consumerUser.name}"></div>
+	        </li>
+		    <ul>
+		        <li><a th:href="@{/memberInfo}">회원정보</a></li>
+		        
+		        <li>커뮤니티
+		            <ul>
+	                   <li><a th:href="@{/contentList}">작성한 글 보기</a></li>
+	                   <li><a th:href="@{/commentList}">작성한 댓글 보기</a></li>
+		            </ul>
+		        </li>
+		        
+		        <li>찜목록
+		            <ul>
+	                    <li><a th:href="@{/favoriteList}">찜 목록 보기</a></li>
+	                    <li><a th:href="@{/favoriteCompare}">매물 비교</a></li>
+		            </ul>
+		        </li>
+		    </ul>
+	     </ul>
+	       
+	  
+	</div>
+
+</th:block>
+
+</html>
