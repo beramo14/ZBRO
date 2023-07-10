@@ -69,20 +69,24 @@
 				</div>
 				<h4>상세정보</h4>
 				<div th:each="room : ${room}">
-
-					<li>방종류:<span th:text="${room.type}"></span></li>
-					<li>방층:<span th:text="${room.roomFloor}"></span> /건물층:<span th:text="${room.totalFloor}"></span></li>
-					<li>호수:<span th:text="${room.roomNumber}"></span></li>
-					<li>면적:<span th:text="${room.size}"></span></li>
-					<li>방향:<span th:text="${room.direction}"></span></li>
-					<li>엘리베이터:<span th:text="${room.isElevator}"></span></li>
-					<li>냉난방:<span th:text="${room.heatInfo}"></span></li>
-					<li>인터넷:<span th:text="${room.internetInfo}"></span></li>
+					<ul>
+						<li>방종류:<span th:text="${room.type}"></span></li>
+						<li>방층:<span th:text="${room.roomFloor}"></span> /건물층:<span
+							th:text="${room.totalFloor}"></span></li>
+						<li>호수:<span th:text="${room.roomNumber}"></span></li>
+						<li>면적:<span th:text="${room.size}"></span></li>
+						<li>방향:<span th:text="${room.direction}"></span></li>
+						<li>엘리베이터:<span th:text="${room.isElevator}"></span></li>
+						<li>냉난방:<span th:text="${room.heatInfo}"></span></li>
+						<li>인터넷:<span th:text="${room.internetInfo}"></span></li>
+					</ul>
 					<th:blcok th:if="${room.type}== '고시원'">
 						<li>남여층 분리:<span th:text="${room.genderInfo}"></span></li>
 					</th:blcok>
 					<th:blcok th:unless="${room.type} != '고시원'"></th:blcok>
+					<ul>
 					<li>안전시설:<span th:text="${room.securityInfo}"></span></li>
+					
 				</div>
 				<h4>옵션 및 서비스</h4>
 				<div>
@@ -123,9 +127,13 @@
 			<!--상세소개 종료  -->
 
 			<!--같은 건물 다른방  -->
-			<div>
-				<h4>판매자의 다른 매물</h4>
-				<p> 다른 매물 표시할 자리입니다.</p>
+			<h4>판매자의 다른 매물</h4>
+			<div th:each= "roomsame : ${roomsame}">
+				<span th:text= "${roomsame.roomId}"></span>
+				<p th:text= "${roomsame.monthCost}+${roomsame.deposit}">월세</p>
+				<p th:text= "${roomsame.type}">룸타입 들어갈거</p>
+				<p th:text= "${roomsame.address}">주소 들어갈거임</p>
+				
 			</div>
 			<!--같은 건물 다른방 종료  -->
 
@@ -160,33 +168,29 @@
 		</div>
 		<!-- 전체를 묶어줄 종료 -->
 		<!--사이드 메뉴  -->
-		<div>
-			<div style="postion: static;">
+		<div style="postion: static;">
+			<button>공유버튼</button>
+			<div th:each="room : ${room}">
+				<div th:text="${room.buildingName}"></div>
 				<div>
-					<div>
-						<button>공유버튼</button>
-					</div>
-					<div>건물명</div>
-					<div>
-						<h1>가격</h1>
-						<p>주소</p>
-					</div>
-					<ul>
-						<li>방구조</li>
-						<li>면적</li>
-						<li>층수</li>
-						<li>관리비</li>
-					</ul>
-					<div>
-						<p>판매부동산</p>
-					</div>
-					<div>
-						<div>
-							<button>
-								<span>연락처보기</span>
-							</button>
-						</div>
-					</div>
+					<h1 th:text="${room.monthCost}+${room.deposit}">월세:</h1>
+					<p th:text="${room.address}"></p>
+				</div>
+				<ul>
+					<li th:text="${room.type}"></li>
+					<li th:text="${room.size}"></li>
+					<li th:text="${room.roomFloor}+${room.totalFloor}">층수</li>
+					<li th:text="${room.manageCost}">관리비</li>
+				</ul>
+				<p th:text="${room.seller.brokerName}">판매부동산</p> 
+			</div>
+			<div>
+			</div>
+			<div>
+				<div>
+					<button>
+						<span>연락처보기</span>
+					</button>
 				</div>
 			</div>
 		</div>
@@ -213,9 +217,10 @@
 		// 마커 생성하기
 		// 주소-좌표 변환 객체를 생성합니다
 var geocoder = new kakao.maps.services.Geocoder();
-
+// 주소를 객체에 담아옵니다. script단에서 thymeleaf사용법 참고!
+var address = [[ ${room.address} ]];
 // 주소로 좌표를 검색합니다
-geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function(result, status) {
+geocoder.addressSearch(address, function(result, status) {
 
     // 정상적으로 검색이 완료됐으면 
      if (status === kakao.maps.services.Status.OK) {
@@ -230,7 +235,7 @@ geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function
 
         // 인포윈도우로 장소에 대한 설명을 표시합니다
         var infowindow = new kakao.maps.InfoWindow({
-            content: '<div style="width:150px;text-align:center;padding:6px 0;">골떄리네</div>'
+            content: '<div style="width:150px;text-align:center;padding:6px 0;">골때리네</div>'
         });
         infowindow.open(map, marker);
 

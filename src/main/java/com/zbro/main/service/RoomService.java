@@ -10,6 +10,7 @@ import com.zbro.main.repository.RoomOptionRepository;
 import com.zbro.main.repository.RoomRepository;
 import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
+import com.zbro.model.SellerUser;
 
 @Service
 public class RoomService {
@@ -19,6 +20,8 @@ public class RoomService {
 	
 	@Autowired
 	RoomOptionRepository roomOptionRepository;
+	
+	
 	
 
 
@@ -40,7 +43,12 @@ public class RoomService {
 		List<RoomOption> getRoomOption = roomOptionRepository.findByRoom(room);
 		return getRoomOption;
 	}
-	 
+	
+	public List<Room> findBySellerId(SellerUser selleruser) {
+		List<Room> roomsame = roomRepository.findBySeller(selleruser);
+		
+		return roomsame;
+	}
 	
 	
 	

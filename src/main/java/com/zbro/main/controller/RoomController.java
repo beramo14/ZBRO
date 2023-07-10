@@ -13,6 +13,7 @@ import com.zbro.main.repository.RoomOptionRepository;
 import com.zbro.main.service.RoomService;
 import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
+import com.zbro.model.SellerUser;
 
 @Controller
 @RequestMapping("/room")
@@ -29,26 +30,18 @@ public class RoomController {
 	}
 	
 	
-	
-//	@RequestMapping("/roomdetailrefix/{roomId}")
-//	public String Getlayout(@PathVariable("roomId") Long roomId, Model model) {
-//	    Optional<Room> roomOptional = roomService.findById(roomId);
-//	    if (roomOptional.isPresent()) {
-//	        Room room = roomOptional.get();
-//	        model.addAttribute("room", room);
-//	        
-//	    }
-//	    return "main/room/roomdetailrefix";
-//	}
-	
-	@RequestMapping("/roomdetailrefix/{roomId}")
-	public String Getlayout(@PathVariable("roomId") Long roomId, Model model) {
+	@RequestMapping("/detail/{roomId}")
+	public String detailView(@PathVariable("roomId") Long roomId, Model model) {
 	    Room room = roomService.findById(roomId);
+	    SellerUser selleruser = new SellerUser();
+	    selleruser.setSellerId(room.getSeller().getSellerId());
+	    List<Room> roomsame = roomService.findBySellerId(selleruser);
 	    List<RoomOption> roomOption = roomService.getroomOption(room);
+	    
 	        model.addAttribute("room", room);
+	        model.addAttribute("roomsame", roomsame);
 	        model.addAttribute("roomOptions", roomOption);
-	        System.out.println(roomOption);
-	    return "main/room/roomdetailrefix";
+	    return "main/room/detail";
 	}
 
 
