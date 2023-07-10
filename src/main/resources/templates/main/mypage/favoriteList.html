@@ -2,26 +2,23 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/mypage_layout}">
 <th:block layout:fragment="customStyle">
 <style th:inline="css" type="text/css">   	
+	
+	
+	
+			.main-content-wrapper {
+				width: 100%;
+			}
 			
 			.list-title {
 				font-size: 50PX;
 			}
 			
-			.list-button {
-				margin-left:1100px;
-			    padding: 10px 20px;
-			    font-size: 30px;
-			    color: #fff;
-			    border: none;
-			    border-radius: 5px;
-			    cursor: pointer;
-			}
 
 			.image-container {
-			    display: flex;
-			    flex-wrap: wrap;			    
-			    padding-right: 300px;
-			    padding-left: 250px;
+		        display: flex;
+			    flex-wrap: wrap;
+			    flex-direction: row;
+			    justify-content: center;			    
 			}
 
 			.image-container > .comparison-item {
@@ -57,9 +54,9 @@
 
 	<div class="favorite-list" >
 		<div class="list-title"> 찜목록 </div>
-		<a th:href="@{/favoriteCompare}" class="list-button">
-			<button>매물비교</button>
-		</a>
+		<div style="text-align: right;">
+			<a th:href="@{/favoriteCompare}" class="btn btn-danger">매물비교</a>
+		</div>
 		<div class="image-container">
 		    <div th:each="favorite, status : ${favorites}" class="comparison-item">
 	            <a th:href="@{'/roomDetail/' + ${favorite.room.roomId}}">
