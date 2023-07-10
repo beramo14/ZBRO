@@ -158,5 +158,21 @@ public class CommunityController {
 		return "redirect:post_list";
 	}
 	
+	
+	
+	@GetMapping("/post_delete")
+	public String postDelete(@RequestParam Long postId,
+							 @RequestParam String type,
+							 @RequestParam String categoryType,
+							 RedirectAttributes redirectAttributes) {
+		
+		commuService.postDelete(postId);
+		
+		redirectAttributes.addAttribute("type", type);
+		redirectAttributes.addAttribute("categoryType", categoryType);
+		
+		return "redirect:post_list";
+	}
+	
 
 }

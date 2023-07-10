@@ -78,4 +78,9 @@ public class CommunityService {
 		commuRepo.save(community);
 	}
 
+
+	public void postDelete(Long postId) {
+		commuRepo.deleteById(postId);
+	}
+
 }

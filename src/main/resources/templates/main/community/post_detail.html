@@ -27,7 +27,7 @@
 	<a th:href="@{/post_list(type=${type}, categoryType=${ct})}" class="btn">목록</a>
 	<!-- 작성한 유저, 관리자만 볼 수 있는 버튼 -->
 	<a th:href="@{/post_revise(postId=${post.postId})}" class="btn">수정</a>
-	<a th:href="@{/post_delete(postId=${post.postId})}" class="btn">삭제</a>
+	<a th:href="@{/post_delete(postId=${post.postId}, type=${type}, categoryType=${ct})}" class="btn">삭제</a>
 	<!--  -->
 </th:block>
 
