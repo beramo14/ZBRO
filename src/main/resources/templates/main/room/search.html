@@ -115,7 +115,7 @@
 						console.log("favorited success! (favId="+res+")");
 						favoriteToggle(e, true, res);
 					} else {
-						console.error("favorited failed... (room"+res+")");						
+						console.error("favorited failed... (room"+roomId+")");						
 					}
 				},
 				error: function(error) {
@@ -125,16 +125,20 @@
 			
 		}
 		
+		
 		const heartElement = "<i class='bi bi-heart'></i>";
 		const heartFillElement = "<i class='bi bi-heart-fill'></i>";
 		function favoriteToggle(e, faved, favId) {
 			if(faved == true) {
 				e.setAttribute("data-favorite", favId);
+				e.setAttribute("onclick", "doUnfavorite(this);");
 				e.innerHTML = heartFillElement;
 			} else if(faved == false) {
 				e.removeAttribute("data-favorite");
+				e.setAttribute("onclick", "doFavorite(this);");
 				e.innerHTML = heartElement;
 			}
 		}
+		
 	</script>
 </th:block>
