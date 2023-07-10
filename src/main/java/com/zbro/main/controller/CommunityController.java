@@ -1,22 +1,28 @@
 package com.zbro.main.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.zbro.dto.CommentDto;
 import com.zbro.dto.PageInfo;
 import com.zbro.main.service.CommunityService;
+import com.zbro.model.Comment;
 import com.zbro.model.Community;
 import com.zbro.model.ConsumerUser;
 import com.zbro.type.Category;
@@ -174,5 +180,50 @@ public class CommunityController {
 		return "redirect:post_list";
 	}
 	
+	
+	
+	/*		댓글 관련		*/
+	@PostMapping("/comment_add")
+	public ResponseEntity<?> commentAdd(@RequestBody CommentDto commentDto) {
+//		Comment comment = new Comment();
+//		Community post = commuService.getPostInComment(commentDto.getPostId());
+//		ConsumerUser user = commuService.getUser(commentDto.getUserId());
+//		
+//		
+//		comment.setContent(commentDto.getContent());
+//		comment.setPost(post);
+//		comment.setUser(user);
+		
+		commuService.addComment(commentDto);
+		
+		return ResponseEntity.ok().build();
+	}
+	
+	
+	@GetMapping("/get_comments")
+	public ResponseEntity<?> getComments(
+										 @RequestParam("postId") Long postId
+										 ) {
+		List<Comment> comments = commuService.getComment(postId);	//postId의 댓글목록 가져오기
+		for(Comment comment:comments) {
+			System.out.println(comment.toString());
+		}
+		
+		List<CommentDto> commentDtos = new ArrayList<>();
+	    for (Comment comment : comments) {
+	        CommentDto commentDto = new CommentDto();
+	        commentDto.setContent(comment.getContent());
+	        commentDto.setPostId(postId);
+	        commentDto.setUserId(comment.getUser().getConsumerId());
+	        commentDto.setUserName(comment.getUser().getName());
+	        commentDto.setProfilePhoto(comment.getUser().getProfilePhoto());
+	        commentDto.setCreateDate(comment.getCreateDate());
+	        System.out.println(commentDto.toString());
+	        commentDtos.add(commentDto);
+	    }							
+		
+		 
+	    return ResponseEntity.ok(commentDtos);
+	}
 
 }

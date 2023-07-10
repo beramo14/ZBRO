@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 라이브러리를 사용하기 위해 추가 -->
 <meta charset="UTF-8" />
+
+
+
+<th:block layout:fragment="customStyle">
+<style th:inline="css" type="text/css">
+
+	#commentsList > div {
+		margin-right: 20px
+	}
+	
+</style>
+</th:block>
+
 
 
 <th:block layout:fragment="content">
@@ -29,9 +43,115 @@
 	<a th:href="@{/post_revise(postId=${post.postId})}" class="btn">수정</a>
 	<a th:href="@{/post_delete(postId=${post.postId}, type=${type}, categoryType=${ct})}" class="btn">삭제</a>
 	<!--  -->
+	
+	<br /><br />
+	<h4 th:text="'댓글 '"/>
+	
+	<!-- 댓글 작성 -->
+	<div>
+		<!-- <div th:if="${뫄뫄 != null}"> -->
+			<textarea name="" id="content" cols="80" rows="5" placeholder="댓글을 작성하세요"></textarea>
+			<button id="btnReply">등록</button>
+		<!-- </div> -->
+	</div>
+	
+	<!-- 댓글 목록 출력 -->
+	<div id="listReply"></div>
 </th:block>
+
 
 
 <th:block layout:fragment="customScript">
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			
+			// 댓글작성 버튼클릭 시
+		 	$("#btnReply").click(function() {
+	            var content = $("#content").val(); // 작성한 댓글
+	            var postId = [[${post.postId}]]; // 게시글 ID
+	            var userId = '2'
+	            
+            	var commentDto = {
+                    content: content,
+                    postId: postId,
+                    userId: userId
+                };
+
+	            $.ajax({
+	                type: "POST",
+	                url: "/comment_add", // 댓글작성을 처리하는 컨트롤러 경로
+	                data: JSON.stringify(commentDto),
+	                contentType: "application/json",
+	                success: function(result) {	//댓글작성 성공
+	                	console.log('댓글작성 성공')
+			        	loadComments();
+	                },
+	                error: function(error) {	//댓글작성 실패
+	                	console.log('댓글작성 실패')
+	                }
+	            });
+	        });
+			
+			//댓글목록 가져오기
+	        loadComments();
+		});
+		
+		
+		function loadComments() {
+			var postId = [[${post.postId}]];
+			
+			$.ajax({
+				type: "GET",
+				url: "get_comments", //댓글목록 가져오는 컨트롤러 경로
+				data: { postId: postId },
+				success: function(result) {	//댓글목록 가져오기 성공
+					console.log('댓글목록 가져오기 성공')
+	                // 받은 데이터를 반복문으로 돌면서 각 댓글을 HTML로 생성하여 목록에 추가 처리
+	                var listReply = $("#listReply");
+	                listReply.empty(); // 이전 댓글 목록 초기화
+	                
+	                function padZero(num) {
+	                    return num < 10 ? '0' + num : num;
+	                }
+	
+	                for (var i = 0; i < result.length; i++) {
+	                    var comment = result[i];
+	                    var content = comment.content;
+	                    var userId = comment.userId;
+	                    var userName = comment.userName;
+	                    var createDate = new Date(comment.createDate);
+	                    var formattedDate = createDate.getFullYear() + '-' + padZero(createDate.getMonth() + 1) + '-' + padZero(createDate.getDate());
+	                    var profilePhoto = comment.profilePhoto;
+	                    
+	                    // 댓글 HTML 생성 및 목록에 추가
+	                    /* var commentHtml = '<div>' + content + ' - ' + userId + '</div>'; */
+	                   	var commentHtml = '<div id="commentsList" style="display: flex;"> <div>profilePhoto</div> <div> <div>' + userName + '</div>'
+	                   					+ '<span>' + content + '</span> <div style="display: flex"> <span style="margin-right:10px">' + formattedDate + '</span>'
+	                   					+ '<div>답글</div> </div> </div> <div> <span>수정</span> <span> ｜ </span> <span>삭제</span> </div> </div>'
+	                    listReply.append(commentHtml);
+	                }
+	            },
+	            error: function(error) {
+					console.log('댓글목록 가져오기 실패')
+	            }
+			})
+		}
+	</script>
 </th:block>
 </html>
+<div id="commentsList" style="display: flex;">
+	<div>profilePhoto</div>
+	<div>
+		<div>userName</div>
+		<span>content</span>
+		<div style="display: flex">
+			<span style="margin-right:10px">formattedDate</span>
+			<div>답글</div>
+		</div>
+	</div>
+	<div>
+		<span>수정</span>
+		<span> ｜ </span>
+		<span>삭제</span>
+	</div>
+</div>

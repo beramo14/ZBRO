@@ -8,7 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.zbro.dto.CommentDto;
+import com.zbro.main.repository.CommentRepository;
 import com.zbro.main.repository.CommunityRepository;
+import com.zbro.main.repository.ConsumerUserRepository;
+import com.zbro.model.Comment;
 import com.zbro.model.Community;
 import com.zbro.model.ConsumerUser;
 import com.zbro.type.PostType;
@@ -18,6 +22,10 @@ public class CommunityService {
 	
 	@Autowired
 	private CommunityRepository commuRepo;
+	@Autowired
+	private ConsumerUserRepository consumerUserRepo;
+	@Autowired
+	private CommentRepository commentRepo;
 
 	
 	public Page<Community> getPosts(Pageable pageable, String searchType, String searchWord, PostType type, String categoryType) {
@@ -82,5 +90,44 @@ public class CommunityService {
 	public void postDelete(Long postId) {
 		commuRepo.deleteById(postId);
 	}
+	
+	
+//	public Community getPostInComment(Long postId) {
+//		Optional<Community> findPost = commuRepo.findById(postId);
+//		if(findPost.isPresent()) return findPost.get();
+//		else return null;
+//	}
+//
+//
+//	public ConsumerUser getUser(Long userId) {
+//		Optional<ConsumerUser> findUser = consumerUserRepo.findById(userId);
+//		
+//		if(findUser.isPresent()) return findUser.get();
+//		else return null;
+//	}
+
+
+	public List<Comment> getComment(Long postId) {
+		Optional<Community> post = commuRepo.findById(postId);
+		System.out.println(post.get());
+		
+		return commentRepo.findAllByPost(post.get());
+	}
+
+
+	public void addComment(CommentDto commentDto) {
+		Optional<Community> post = commuRepo.findById(commentDto.getPostId());
+		Optional<ConsumerUser> user = consumerUserRepo.findById(commentDto.getUserId());
+		
+		if(post.isPresent() && user.isPresent()) {
+			Comment comment = new Comment();
+			comment.setContent(commentDto.getContent());
+			comment.setPost(post.get());
+			comment.setUser(user.get());
+			
+			commentRepo.save(comment);
+		}
+	}
+
 
 }
