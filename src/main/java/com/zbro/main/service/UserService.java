@@ -27,27 +27,15 @@ public class UserService {
 	@Autowired
 	private SellerUserRepository sellerRepository;
 	
+	@Value("${file.biz}")
+	private String fileBizPath;
+	
 	@Value("${file.images.profile-photo}")
 	private String fileProfilePhotoPath;
 	
 	@Value("${file.images.profile-default-file}")
 	private String defaultProfileFileName;
-
-	public String profileImageSave(MultipartFile file) throws IllegalStateException, IOException {
-		if (!file.isEmpty()) {
-    		UUID uuid = UUID.randomUUID();
-    		String fileName = uuid.toString()+"_"+file.getOriginalFilename();
-    		
-    		log.info("original file name = {}", file.getOriginalFilename());
-    		log.info("final file Name = {}", fileName);
-    		
-    		file.transferTo(new File(fileProfilePhotoPath+fileName));
-    		
-    		return fileName;
-		} else {
-			return defaultProfileFileName;
-		}
-	}
+	
 
 	public void consumerUserSave(ConsumerUser user) {
 		consumerRepository.save(user);
@@ -62,7 +50,7 @@ public class UserService {
 	}
 
 	public boolean sellerUserExistsCheck(String email) {
-		Optional<ConsumerUser> findedUser = sellerRepository.findByEmail(email);
+		Optional<SellerUser> findedUser = sellerRepository.findByEmail(email);
 		
 		return findedUser.isPresent();
 	}
@@ -70,6 +58,41 @@ public class UserService {
 	public void sellerUserSave(SellerUser user) {
 		sellerRepository.save(user);
 		
+	}
+	
+	
+	
+	
+	public String profileImageSave(MultipartFile profilePhotoFile) throws IllegalStateException, IOException {
+		if (!profilePhotoFile.isEmpty()) {
+    		UUID uuid = UUID.randomUUID();
+    		String fileName = uuid.toString()+"_"+profilePhotoFile.getOriginalFilename();
+    		
+    		log.info("original file name = {}", profilePhotoFile.getOriginalFilename());
+    		log.info("final file Name = {}", fileName);
+    		
+    		profilePhotoFile.transferTo(new File(fileProfilePhotoPath+fileName));
+    		
+    		return fileName;
+		} else {
+			return defaultProfileFileName;
+		}
+	}
+
+	public String bizFileSave(MultipartFile bizScanFile) throws IllegalStateException, IOException {
+		if (!bizScanFile.isEmpty()) {
+    		UUID uuid = UUID.randomUUID();
+    		String fileName = uuid.toString()+"_"+bizScanFile.getOriginalFilename();
+    		
+    		log.info("original file name = {}", bizScanFile.getOriginalFilename());
+    		log.info("final file Name = {}", fileName);
+    		
+    		bizScanFile.transferTo(new File(fileBizPath+fileName));
+    		
+    		return fileName;
+		} else {
+			throw new RuntimeException("bizScanFile is not File!");
+		}
 	}
 
 }

@@ -9,5 +9,5 @@ import com.zbro.model.SellerUser;
 
 public interface SellerUserRepository extends JpaRepository<SellerUser, Long> {
 
-	Optional<ConsumerUser> findByEmail(String email);
+	Optional<SellerUser> findByEmail(String email);
 }

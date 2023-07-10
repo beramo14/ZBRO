@@ -102,7 +102,7 @@ public class MainController {
 	}
 	
 	@PostMapping("/join/seller")
-	public String joinSeller(SellerUser user, @RequestParam("profilePhotoFile") MultipartFile file, Model model) {
+	public String joinSeller(SellerUser user, @RequestParam("profilePhotoFile") MultipartFile profilePhotoFile, @RequestParam("bizScanFile") MultipartFile bizScanFile, Model model) {
 		
 		log.info("### joinSeller = {}", user);
 		
@@ -114,8 +114,14 @@ public class MainController {
 		}
 		
 		try {
-			String filename = userService.profileImageSave(file);
-			user.setProfilePhoto(filename);
+			//강제 비승인 처리
+			user.setAdmission(false);
+			
+			String profileImageFilename = userService.profileImageSave(profilePhotoFile);
+			user.setProfilePhoto(profileImageFilename);
+			String bizFilename = userService.bizFileSave(bizScanFile);
+			user.setBizFile(bizFilename);
+			
 			userService.sellerUserSave(user);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getStackTrace());

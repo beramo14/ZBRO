@@ -17,7 +17,7 @@
 	}
 	
 	.join-form-wrapper{
-		padding: 0 35vh;
+		padding: 0 350px;
 	}
 	
 	.tel-input-wrapper {
@@ -74,33 +74,37 @@
 						<p class="email-check-message email-able-message">사용가능한 이메일입니다.</p>
 						<p class="email-check-message email-exist-message">이미 사용중인 이메일 입니다.</p>
 					</div>
-					<input type="password" name="password" class="form-control form-control-lg mb-1" placeholder="비밀번호" required/>
-					<input type="password" id="password-check" class="form-control form-control-lg mb-1" placeholder="비밀번호 확인" required/>
-					<input type="text" name="name" class="form-control form-control-lg mb-3" placeholder="이름" required/>
+					<input type="password" name="password" class="form-control form-control-lg mb-1" placeholder="*비밀번호" required/>
+					<input type="password" id="password-check" class="form-control form-control-lg mb-1" placeholder="*비밀번호 확인" required/>
+					<input type="text" name="name" class="form-control form-control-lg mb-3" placeholder="*이름" required/>
 					
-					<div class="tel-input-wrapper mb-5">
-						<input type="text" name="tel1" class="form-control form-control-lg tel-input" placeholder="연락처" required>
+					<div class="tel-input-wrapper mb-4">
+						<input type="text" name="tel1" class="form-control form-control-lg tel-input" placeholder="*연락처" required>
 						<span>-</span>
 						<input type="text" name="tel2" class="form-control form-control-lg tel-input" required>
 						<span>-</span>
 						<input type="text" name="tel3" class="form-control form-control-lg tel-input" required>
 					</div>
 					
-					<div class="mb-1">
+					<div class="mb-2">
 						<div class="form-control form-control-lg isbiz-input-wrapper mb-1">
 							<span class="">사업자</span>
 							<div>
 								<input type="radio" name="isBiz" id="isBizTrue" class="form-check-input" value="true"/>
-								<label for="isBizTrue" class="form-check-label">예</label>
+								<label for="isBizTrue" class="form-check-label" style="margin-left: -5px;">예</label>
 							</div>
 							<div>
 								<input type="radio" name="isBiz" id="isBizFalse" class="form-check-input" value="false" checked/>
-								<label for="isBizFalse" class="form-check-label">아니요</label>
+								<label for="isBizFalse" class="form-check-label" style="margin-left: -5px;">아니요</label>
 							</div>
 						</div>
-						<input type="text" name="brokerName" class="form-control form-control-lg" placeholder="부동산명" style="display:none;"/>
+						<div class="biz-input-wrapper mb-4 form-control" style="display: none;">
+							<input type="text" name="brokerName" class="form-control form-control-lg mb-1" placeholder="*부동산명"/>
+							<label for="biz-scan-file" class="form-label" style="display: block; text-align: start; margin:0;">*사업자 등록증</label>
+							<input type="file" name="bizScanFile" id="biz-scan-file" class="form-control form-control-lg mb-1" required/>
+						</div>
 					</div>
-					<label for="profile-photo" class="form-label" style="display: block; text-align: start;">프로필사진</label>
+					<label for="profile-photo" class="form-label" style="display: block; text-align: start; margin:0;">프로필사진</label>
 					<input type="file" name="profilePhotoFile" id="profile-photo" class="form-control form-control-lg mb-4"/>
 					
 					<button type="submit" class="btn btn-primary btn-lg mb-1"> 회원가입 </button>
@@ -118,20 +122,30 @@
 			
 			/*초기값 설정*/
 			 if($("input[name='isBiz']:checked").val() == "true"){
-				$("input[name='brokerName']").show();
+				$("div.biz-input-wrapper").show();
+				$("input[name='brokerName']").attr("required", true);
+				$("input[name='bizScanFile']").attr("required", true);
 			 } else if($("input[name='isBiz']:checked").val() == "false") {
-				$("input[name='brokerName']").hide();
+				$("div.biz-input-wrapper").hide();
 				$("input[name='brokerName']").val(null);
+				$("input[name='bizScanFile']").val(null);
+				$("input[name='brokerName']").attr("required", false);
+				$("input[name='bizScanFile']").attr("required", false);
 			 }
-			
-			
+
+
 			/*사업자 여부에 따라 부동산명 표시 여부*/
 			$("input[name='isBiz']").change(function(e){
 				if(e.target.value == 'true') {
-					$("input[name='brokerName']").show();
+					$("div.biz-input-wrapper").show();
+					$("input[name='brokerName']").attr("required", true);
+					$("input[name='bizScanFile']").attr("required", true);
 				} else if(e.target.value == 'false') {
-					$("input[name='brokerName']").hide();
+					$("div.biz-input-wrapper").hide();
 					$("input[name='brokerName']").val(null);
+					$("input[name='bizScanFile']").val(null);
+					$("input[name='brokerName']").attr("required", false);
+					$("input[name='bizScanFile']").attr("required", false);
 				}
 			});
 			
@@ -203,7 +217,6 @@
 							} else if(res == true) {
 								document.getElementById("email-check").value = "false";
 								$(".email-exist-message").show();
-								emailElement.val(null);
 								emailElement.focus();
 							} else {
 								console.log("알수없는 메시지 : ", res);
