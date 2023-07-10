@@ -3,14 +3,16 @@
 <head>
 	<meta charset="UTF-8">
 	<title>지브로 - 1인가구 생활공간 중계 플랫폼</title>
-	<th:block th:replace="layout/fragments/style :: style"></th:block>
+	<th:block th:replace="layout/fragments/mypage/style :: style"></th:block>
 	<th:block layout:fragment="customStyle"></th:block>
 </head>
 <body>
 	<th:block th:replace="layout/fragments/navbar :: navbar"></th:block>
-	<th:block th:replace="layout/fragments/sidebar :: sidebar"></th:block>
 	<div class="main-wrapper">
-		<th:block layout:fragment="content"></th:block>
+		<th:block th:replace="layout/fragments/mypage/sidebar :: sidebar"></th:block>
+		<div class="main-content-wrapper">
+			<th:block layout:fragment="content"></th:block>
+		</div>
 	</div>
 	<th:block th:replace="layout/fragments/footer :: footer"></th:block>
 	<th:block th:replace="layout/fragments/script :: script"></th:block>
