@@ -84,17 +84,10 @@ public class MypageController {
 	@GetMapping("/favoriteList")
 	public String favoriteListPage(Model model) {
 		List<Favorite> favorites = mypageService.getFavoritesByUserConsumerId();
-		List<List<RoomPhoto>> roomPhotos = new ArrayList<>();
 		ConsumerUser consumerUser = mypageService.getConsumerUser();
 		
-        for (Favorite favorite : favorites) {
-         
-            List<RoomPhoto> photos = mypageService.getRoomPhotosByRoomId(favorite.getRoom().getRoomId());
-            roomPhotos.add(photos);
-        }
                       
-        model.addAttribute("favorites", favorites);
-        model.addAttribute("roomPhotos", roomPhotos); 
+        model.addAttribute("favorites", favorites);  
         model.addAttribute("consumerUser", consumerUser);
 
         return "main/mypage/favoriteList";

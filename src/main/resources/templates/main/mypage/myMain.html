@@ -13,10 +13,11 @@
 
 
             .image-container img {
-                width: 370px;
-                height: 280px;
+                width: 230px;
+                height: 160px;
                 cursor: pointer;
                 margin-top: 30px;
+                margin-right : 10px;
             }
             
 			.image-wrapper {
@@ -28,42 +29,116 @@
 			    position: absolute;
 			    bottom: 0;
 			    right: 10px;
-			    font-size: 40px;
+			    font-size: 30px;
 			    color: #dc3545;
 			}  
+			
+			.favorite-list{
+				margin-bottom:100px;
+			}
 				          
 
 </style>
 
 </th:block>
 <th:block layout:fragment="content">
-	
-    <h2>마이페이지 메인</h2>
-		<div class="image-container">
-		    <div th:each="favorite, status : ${favorites}" th:if="${status.index &lt; 3}" class="comparison-item">
-		        <span th:each="photo : ${roomPhotos[status.index]}">
-		            <a th:href="@{'/roomDetail/' + ${favorite.room.roomId}}">
-					<div class="image-wrapper">
-					    <a th:href="@{'/roomDetail/' + ${favorite.room.roomId}}">
-					        <!-- <img th:src="@{'/images/' + ${photo.fileName}}" alt="프로필"> -->
-					        <img th:src="@{/room/photo(roomId=${favorite.room.roomId})}" class="room-image" />
-					    </a>
-					    <i class="bi bi-heart-fill" th:attr="data-favorite-id=${favorite.favoriteId}" onclick="deleteFavorite(event)"></i>
-					</div>
-		            </a>
-		        </span>
-		        <div class="favorite-info">
-		            <span class="favoriteCost" th:text="${#strings.equals(favorite.room.costType, '월세') ? (favorite.room.deposit != 0 ? (favorite.room.costType + ' ' + favorite.room.deposit + '/' + favorite.room.monthCost) : (favorite.room.costType + ' ' + favorite.room.monthCost)) : (favorite.room.costType + ' ' + favorite.room.deposit)}"></span>
-		            <span class="favoriteType" th:text="${favorite.room.type}"></span>
-		        </div>
-		        <span th:text="${#strings.substringAfter(favorite.room.address, '시 ')}"></span>
-		    </div>
-		</div>
 
+	<div class="favorite-list">
+            <div class="list-title"> 찜목록 </div>		
+            <a th:href="@{/favoriteList}" class="list-button">
+                <button>더보기</button>
+            </a>
+			<div class="image-container">
+			    <div th:each="favorite, status : ${favorites}" th:if="${status.index &lt; 3}" class="comparison-item">
+			        <span th:each="photo : ${roomPhotos[status.index]}">
+			            <a th:href="@{'/roomDetail/' + ${favorite.room.roomId}}">
+						<div class="image-wrapper">
+						    <a th:href="@{'/roomDetail/' + ${favorite.room.roomId}}">
+	
+						        <img th:src="@{/room/photo(roomId=${favorite.room.roomId})}" class="room-image" />
+						    </a>
+						    <i class="bi bi-heart-fill" th:attr="data-favorite-id=${favorite.favoriteId}" onclick="deleteFavorite(event)"></i>
+						</div>
+			            </a>
+			        </span>
+			        <div class="favorite-info">
+			            <span class="favoriteCost" th:text="${#strings.equals(favorite.room.costType, '월세') ? (favorite.room.deposit != 0 ? (favorite.room.costType + ' ' + favorite.room.deposit + '/' + favorite.room.monthCost) : (favorite.room.costType + ' ' + favorite.room.monthCost)) : (favorite.room.costType + ' ' + favorite.room.deposit)}"></span>
+			            <span class="favoriteType" th:text="${favorite.room.type}"></span>
+			        </div>
+			        <span th:text="${#strings.substringAfter(favorite.room.address, '시 ')}"></span>
+			    </div>
+			</div>
+	</div>
+	
+	<div></div>
+    <div>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="filterData('꿀팁')">꿀팁</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="filterData('질문')">질문</a>
+            </li>
+        </ul>
+    </div>
+    
+    <table id="communityTable">
+        <tr th:each="community : ${communities}" th:attr="data-type=${community.type}">
+            <td>
+                <a th:href="@{/community/{id}(id=${community.postId})}">
+                    <span th:text="${community.title}"></span>
+                </a>
+            </td>
+            <td th:text="${#temporals.format(community.createDate, 'yyyy-MM-dd')}"></td>
+        </tr>
+    </table> 
+
+           
+           
+           
+</th:block>
+	
+	
 </th:block>
 <th:block layout:fragment="customScript">
 	<script th:inline="javascript" type="text/javascript">
+	function deleteFavorite(event) {
+	    event.stopPropagation();
+
+	    const favoriteId = event.target.getAttribute('data-favorite-id');
+
+	    const xhr = new XMLHttpRequest();
+	    xhr.open('DELETE', '/favorites/' + favoriteId, true);
+
+	    xhr.onload = function() {
+	        if (xhr.status === 200) {
+	            const favoriteItem = event.target.closest('.comparison-item');
+	            favoriteItem.remove();
+	        } else {
+	            console.log('Failed to delete favorite:', xhr.status);
+	        }
+	    };
+
+	    xhr.send();
+	}
 	
+	window.addEventListener('DOMContentLoaded', (event) => {
+	    filterData('꿀팁');
+	});
+
+	function filterData(type) {
+	    var rows = document.getElementById("communityTable").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+	    for (var i = 0; i < rows.length; i++) {
+	        var communityType = rows[i].getAttribute("data-type");
+
+	        if (type === communityType) {
+	            rows[i].style.display = "table-row";
+	        } else {
+	            rows[i].style.display = "none";
+	        }
+	    }
+	}
 	</script>
 </th:block>
 
