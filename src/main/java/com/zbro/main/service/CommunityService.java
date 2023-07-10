@@ -71,7 +71,7 @@ public class CommunityService {
 
 
 	public void postRevise(PostType postType, String categoryType, Long postId, String title, String content,
-			long userId) {
+			long userId, int viewCount) {
 		ConsumerUser user = new ConsumerUser();
 		user.setConsumerId(userId);
 		
@@ -82,6 +82,7 @@ public class CommunityService {
 		community.setTitle(title);
 		community.setContent(content);
 		community.setUser(user);
+		community.setViewCount(viewCount);
 		
 		commuRepo.save(community);
 	}

@@ -151,12 +151,13 @@ public class CommunityController {
 						  	 @RequestParam Long postId,
 						  	 @RequestParam String title,
 						  	 @RequestParam String content,
+						  	 @RequestParam int viewCount,
 						  	 @RequestParam(defaultValue = "1") long user,
 						  	 RedirectAttributes redirectAttributes) {
 		
 		PostType postType = PostType.valueOf(type);
 		
-		commuService.postRevise(postType, categoryType, postId, title, content, user);
+		commuService.postRevise(postType, categoryType, postId, title, content, user, viewCount);
 		
 		redirectAttributes.addAttribute("type", type);
 		redirectAttributes.addAttribute("categoryType", categoryType);

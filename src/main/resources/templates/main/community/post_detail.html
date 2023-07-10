@@ -50,7 +50,7 @@
 	<!-- 댓글 작성 -->
 	<div>
 		<!-- <div th:if="${뫄뫄 != null}"> -->
-			<textarea name="" id="content" cols="80" rows="5" placeholder="댓글을 작성하세요"></textarea>
+			<textarea name="" id="content" cols="80" rows="5" placeholder="댓글을 작성하세요" required></textarea>
 			<button id="btnReply">등록</button>
 		<!-- </div> -->
 	</div>
@@ -71,25 +71,28 @@
 	            var postId = [[${post.postId}]]; // 게시글 ID
 	            var userId = '2'
 	            
-            	var commentDto = {
-                    content: content,
-                    postId: postId,
-                    userId: userId
-                };
+	            if (content !== "") {
+	            	var commentDto = {
+	                    content: content,
+	                    postId: postId,
+	                    userId: userId
+	                };
 
-	            $.ajax({
-	                type: "POST",
-	                url: "/comment_add", // 댓글작성을 처리하는 컨트롤러 경로
-	                data: JSON.stringify(commentDto),
-	                contentType: "application/json",
-	                success: function(result) {	//댓글작성 성공
-	                	console.log('댓글작성 성공')
-			        	loadComments();
-	                },
-	                error: function(error) {	//댓글작성 실패
-	                	console.log('댓글작성 실패')
-	                }
-	            });
+		            $.ajax({
+		                type: "POST",
+		                url: "/comment_add", // 댓글작성을 처리하는 컨트롤러 경로
+		                data: JSON.stringify(commentDto),
+		                contentType: "application/json",
+		                success: function(result) {	//댓글작성 성공
+		                	console.log('댓글작성 성공')
+				        	loadComments();
+		                	$("#content").val("");
+		                },
+		                error: function(error) {	//댓글작성 실패
+		                	console.log('댓글작성 실패')
+		                }
+		            });
+	            }
 	        });
 			
 			//댓글목록 가져오기
@@ -127,7 +130,7 @@
 	                    /* var commentHtml = '<div>' + content + ' - ' + userId + '</div>'; */
 	                   	var commentHtml = '<div id="commentsList" style="display: flex;"> <div>profilePhoto</div> <div> <div>' + userName + '</div>'
 	                   					+ '<span>' + content + '</span> <div style="display: flex"> <span style="margin-right:10px">' + formattedDate + '</span>'
-	                   					+ '<div>답글</div> </div> </div> <div> <span>수정</span> <span> ｜ </span> <span>삭제</span> </div> </div>'
+	                   					+ '<div>답글</div> </div> </div> <div> <span id="commentEdit" class="btn">수정</span> <span> ｜ </span> <span id="commentDel" class="btn">삭제</span> </div> </div>'
 	                    listReply.append(commentHtml);
 	                }
 	            },
