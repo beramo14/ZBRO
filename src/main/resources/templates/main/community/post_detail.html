@@ -47,6 +47,9 @@
 	<br /><br />
 	<h4 th:text="'댓글 '"/>
 	
+	<!-- 댓글 목록 출력 -->
+	<div id="listReply"></div>
+	
 	<!-- 댓글 작성 -->
 	<div>
 		<!-- <div th:if="${뫄뫄 != null}"> -->
@@ -54,15 +57,22 @@
 			<button id="btnReply">등록</button>
 		<!-- </div> -->
 	</div>
-	
-	<!-- 댓글 목록 출력 -->
-	<div id="listReply"></div>
 </th:block>
 
 
 
 <th:block layout:fragment="customScript">
 	<script th:inline="javascript">
+	/*
+		[ data 보내는 방식 ]
+		
+		POST : data: JSON.stringify(객체명) : 객체를 JSON문자열로 변환해 데이터로 전달. 
+											  객체의 속성들이 JSON형식으로 직렬화되어 서버로 전송됨
+											  복잡한 데이터전송에 유용
+		GET : data : { key : value } 		: JavaScript객체 리터럴형태로 데이터 전달.
+											  ex) ?commentId=13과 같은 형태로 URL에 파라미터가 추가됨
+											  간단한 데이터/단일값 전달에 유용
+	*/
 		$(document).ready(function() {
 			
 			// 댓글작성 버튼클릭 시
@@ -95,11 +105,62 @@
 	            }
 	        });
 			
-			//댓글목록 가져오기
+			// 삭제버튼 클릭시
+		 	$(document).on("click", ".commentDel", function() {
+		 		var result = confirm("댓글을 삭제하시겠습니까?");
+		 	    var commentId = $(this).siblings("input[type='hidden']").val();
+				
+		 		if(result) {
+			 	    $.ajax({
+			 	    	type: "GET",
+			 	    	url: "/comment_delete",
+			 	    	data: { commentId: commentId },
+			 	    	success : function(result) {
+			 	    		console.log('댓글삭제 성공 - '+ commentId);
+			 	    		loadComments();
+			 	    	},
+			 	    	error : function(error) {
+			 	    		console.log('댓글삭제 실패');
+			 	    	}
+			 	    })
+		 		}
+		 	});
+			
+		 	
+			// 수정 버튼 클릭
+		 	var isEditMode = false; // 수정 폼이 열려있는지 여부를 저장하는 변수
+			$(document).on("click", ".commentEdit", function() {
+				if(isEditMode) {
+					cancelEditMode();
+				}
+				
+				var commentContent = $(this).parent().siblings().find("span.commentContent").text();
+				var editForm = '<div class="editForm">'
+	                 + '<textarea name="editContent" cols="80" rows="5" required>' + commentContent + '</textarea>'
+	                 + '<button class="btnCancelEdit">취소</button>'
+	                 + '<button class="btnSaveEdit">등록</button>'
+	                 + '</div>'; 
+                
+                $(this).parent().parent().parent().append(editForm);
+                $(this).closest('.thisComment').hide();
+                isEditMode = true;
+			})
+			
+			$(document).on("click", ".btnCancelEdit", function() {
+				cancelEditMode();
+			});
+		 	
 	        loadComments();
 		});
 		
 		
+		function cancelEditMode() {
+			$(".editForm").remove();
+			$(".thisComment").show();
+			isEditMode = false;
+		}
+											  
+		// 댓글목록 가져오기
 		function loadComments() {
 			var postId = [[${post.postId}]];
 			
@@ -125,12 +186,13 @@
 	                    var createDate = new Date(comment.createDate);
 	                    var formattedDate = createDate.getFullYear() + '-' + padZero(createDate.getMonth() + 1) + '-' + padZero(createDate.getDate());
 	                    var profilePhoto = comment.profilePhoto;
+	                    var commentId = comment.commentId;
 	                    
 	                    // 댓글 HTML 생성 및 목록에 추가
-	                    /* var commentHtml = '<div>' + content + ' - ' + userId + '</div>'; */
-	                   	var commentHtml = '<div id="commentsList" style="display: flex;"> <div>profilePhoto</div> <div> <div>' + userName + '</div>'
-	                   					+ '<span>' + content + '</span> <div style="display: flex"> <span style="margin-right:10px">' + formattedDate + '</span>'
-	                   					+ '<div>답글</div> </div> </div> <div> <span id="commentEdit" class="btn">수정</span> <span> ｜ </span> <span id="commentDel" class="btn">삭제</span> </div> </div>'
+       					var commentHtml = '<div class="commentsList"> <div class="thisComment" style="display: flex;"> <div>profilePhoto</div> <div> <div>' + userName + '</div>'
+                        + '<span class="commentContent">' + content + '</span> <div style="display: flex"> <span style="margin-right:10px">' + formattedDate + '</span>'
+                        + '<div>답글</div> </div> </div> <div> <input type="hidden" id="commentId" value="' + commentId + '" /> <span class="commentEdit btn">수정</span> <span> ｜ </span> <span class="commentDel btn">삭제</span> </div> </div> </div>';
+
 	                    listReply.append(commentHtml);
 	                }
 	            },
@@ -142,19 +204,22 @@
 	</script>
 </th:block>
 </html>
-<div id="commentsList" style="display: flex;">
-	<div>profilePhoto</div>
-	<div>
-		<div>userName</div>
-		<span>content</span>
-		<div style="display: flex">
-			<span style="margin-right:10px">formattedDate</span>
-			<div>답글</div>
+<div class="commentsList">
+	<div class="thisComment" style="display: flex;">
+		<div>profilePhoto</div>
+		<div>
+			<div>userName</div>
+			<span class="commentContent">content</span>
+			<div style="display: flex">
+				<span style="margin-right:10px">formattedDate</span>
+				<div>답글</div>
+			</div>
 		</div>
-	</div>
-	<div>
-		<span>수정</span>
-		<span> ｜ </span>
-		<span>삭제</span>
+		<div>
+			<input type="hidden" id="commentId" value="commentId" />
+			<span class="commentEdit btn">수정</span>
+			<span> ｜ </span>
+			<span class="commentDel btn">삭제</span>
+		</div>
 	</div>
 </div>

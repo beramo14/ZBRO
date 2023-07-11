@@ -12,4 +12,5 @@ public class CommentDto {
     private String userName;
     private String profilePhoto;
     private LocalDateTime createDate;
+    private Long commentId;
 }

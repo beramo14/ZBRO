@@ -186,25 +186,13 @@ public class CommunityController {
 	/*		댓글 관련		*/
 	@PostMapping("/comment_add")
 	public ResponseEntity<?> commentAdd(@RequestBody CommentDto commentDto) {
-//		Comment comment = new Comment();
-//		Community post = commuService.getPostInComment(commentDto.getPostId());
-//		ConsumerUser user = commuService.getUser(commentDto.getUserId());
-//		
-//		
-//		comment.setContent(commentDto.getContent());
-//		comment.setPost(post);
-//		comment.setUser(user);
-		
 		commuService.addComment(commentDto);
-		
 		return ResponseEntity.ok().build();
 	}
 	
 	
 	@GetMapping("/get_comments")
-	public ResponseEntity<?> getComments(
-										 @RequestParam("postId") Long postId
-										 ) {
+	public ResponseEntity<?> getComments(@RequestParam("postId") Long postId) {
 		List<Comment> comments = commuService.getComment(postId);	//postId의 댓글목록 가져오기
 		for(Comment comment:comments) {
 			System.out.println(comment.toString());
@@ -219,12 +207,20 @@ public class CommunityController {
 	        commentDto.setUserName(comment.getUser().getName());
 	        commentDto.setProfilePhoto(comment.getUser().getProfilePhoto());
 	        commentDto.setCreateDate(comment.getCreateDate());
+	        commentDto.setCommentId(comment.getCommentId());
 	        System.out.println(commentDto.toString());
 	        commentDtos.add(commentDto);
 	    }							
 		
 		 
 	    return ResponseEntity.ok(commentDtos);
+	}
+	
+	
+	@GetMapping("/comment_delete")
+	public ResponseEntity<?> commentDel(@RequestParam("commentId") Long commentId) {
+		commuService.delComment(commentId);
+		return ResponseEntity.ok().build();
 	}
 
 }

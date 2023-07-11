@@ -91,21 +91,6 @@ public class CommunityService {
 	public void postDelete(Long postId) {
 		commuRepo.deleteById(postId);
 	}
-	
-	
-//	public Community getPostInComment(Long postId) {
-//		Optional<Community> findPost = commuRepo.findById(postId);
-//		if(findPost.isPresent()) return findPost.get();
-//		else return null;
-//	}
-//
-//
-//	public ConsumerUser getUser(Long userId) {
-//		Optional<ConsumerUser> findUser = consumerUserRepo.findById(userId);
-//		
-//		if(findUser.isPresent()) return findUser.get();
-//		else return null;
-//	}
 
 
 	public List<Comment> getComment(Long postId) {
@@ -128,6 +113,11 @@ public class CommunityService {
 			
 			commentRepo.save(comment);
 		}
+	}
+
+
+	public void delComment(Long commentId) {
+		commentRepo.deleteById(commentId);
 	}
 
 
