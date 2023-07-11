@@ -222,5 +222,14 @@ public class CommunityController {
 		commuService.delComment(commentId);
 		return ResponseEntity.ok().build();
 	}
+	
+	
+	@GetMapping("/comment_revise")
+	public ResponseEntity<?> commentRevise(@RequestParam("commentId") Long commentId,
+										   @RequestParam("content") String content) {
+		
+		commuService.reviseComment(commentId, content);
+		return ResponseEntity.ok().build();
+	}
 
 }

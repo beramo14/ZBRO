@@ -1,5 +1,7 @@
 package com.zbro.main.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,6 +120,25 @@ public class CommunityService {
 
 	public void delComment(Long commentId) {
 		commentRepo.deleteById(commentId);
+	}
+
+
+	public void reviseComment(Long commentId, String content) {
+		Optional<Comment> comment = commentRepo.findById(commentId);
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+		String formattedDateTime = LocalDateTime.now().format(formatter);
+		
+		Comment reviseComment = new Comment();
+		reviseComment.setCommentId(commentId);
+		reviseComment.setContent(content);
+		reviseComment.setCreateDate(comment.get().getCreateDate());
+		reviseComment.setParent(comment.get().getParent());
+		reviseComment.setPost(comment.get().getPost());
+		reviseComment.setUpdateDate(LocalDateTime.parse(formattedDateTime, formatter));
+		reviseComment.setUser(comment.get().getUser());
+		
+		commentRepo.save(reviseComment);
 	}
 
 

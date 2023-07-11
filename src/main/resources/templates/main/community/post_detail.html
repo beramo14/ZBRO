@@ -48,13 +48,14 @@
 	<h4 th:text="'댓글 '"/>
 	
 	<!-- 댓글 목록 출력 -->
-	<div id="listReply"></div>
+	<div id="commentList"></div>
 	
 	<!-- 댓글 작성 -->
+	<hr />
 	<div>
 		<!-- <div th:if="${뫄뫄 != null}"> -->
-			<textarea name="" id="content" cols="80" rows="5" placeholder="댓글을 작성하세요" required></textarea>
-			<button id="btnReply">등록</button>
+			<textarea name="" class="content" cols="80" rows="5" placeholder="댓글을 작성하세요" required></textarea>
+			<button class="commentAdd">등록</button>
 		<!-- </div> -->
 	</div>
 </th:block>
@@ -76,8 +77,8 @@
 		$(document).ready(function() {
 			
 			// 댓글작성 버튼클릭 시
-		 	$("#btnReply").click(function() {
-	            var content = $("#content").val(); // 작성한 댓글
+		 	$(".commentAdd").click(function() {
+	            var content = $(".content").val(); // 작성한 댓글
 	            var postId = [[${post.postId}]]; // 게시글 ID
 	            var userId = '2'
 	            
@@ -96,7 +97,7 @@
 		                success: function(result) {	//댓글작성 성공
 		                	console.log('댓글작성 성공')
 				        	loadComments();
-		                	$("#content").val("");
+		                	$(".content").val("");
 		                },
 		                error: function(error) {	//댓글작성 실패
 		                	console.log('댓글작성 실패')
@@ -130,15 +131,15 @@
 			// 수정 버튼 클릭
 		 	var isEditMode = false; // 수정 폼이 열려있는지 여부를 저장하는 변수
 			$(document).on("click", ".commentEdit", function() {
-				if(isEditMode) {
-					cancelEditMode();
-				}
+				if(isEditMode) cancelEditMode();
 				
 				var commentContent = $(this).parent().siblings().find("span.commentContent").text();
+				var commentId = $(this).closest('.thisComment').find('.commentId').val();
 				var editForm = '<div class="editForm">'
-	                 + '<textarea name="editContent" cols="80" rows="5" required>' + commentContent + '</textarea>'
-	                 + '<button class="btnCancelEdit">취소</button>'
-	                 + '<button class="btnSaveEdit">등록</button>'
+					 + '<input type="hidden" name="commentId" value="' + commentId + '"/>'
+	                 + '<textarea class="content" name="content" cols="80" rows="5" required>' + commentContent + '</textarea>'
+	                 + '<button class="cancelEdit">취소</button>'
+	                 + '<button class="saveEdit">등록</button>'
 	                 + '</div>'; 
                 
                 $(this).parent().parent().parent().append(editForm);
@@ -146,18 +147,74 @@
                 isEditMode = true;
 			})
 			
-			$(document).on("click", ".btnCancelEdit", function() {
+			// 수정 취소
+			$(document).on("click", ".cancelEdit", function() {
 				cancelEditMode();
 			});
 		 	
+		 	// 수정 등록버튼
+			$(document).on("click", ".saveEdit", function() {
+	            var content = $(".content").val();
+	            var commentId = $(".commentId").val();
+	            
+	            if (content !== "") {
+
+		            $.ajax({
+		                type: "GET",
+		                url: "/comment_revise", // 댓글작성을 처리하는 컨트롤러 경로
+		                data: { content:content, commentId:commentId},
+		                contentType: "application/json",
+		                success: function(result) {
+		                	console.log('댓글수정 성공')
+		                	loadComments();
+		                	cancelEditMode();
+		                },
+		                error: function(error) {
+		                	console.log('댓글수정 실패')
+		                }
+		            });
+	            }
+	        });
+		 	
+		 	// 답글버튼 클릭
+		 	var isReplyMode = false;
+		 	$(document).on("click", ".addReply", function() {
+		 		console.log('isReplyMode : '+isReplyMode);
+		 		if(isReplyMode) cancelReplyMode();
+		 		
+		 		/* var parentId = //부모요소 id */
+		 		var editForm =
+		 		'<div class="replyForm"> <input type="hidden" value=""/>'
+				+'<textarea name="" class="content" cols="80" rows="5" placeholder="답글을 작성하세요" required></textarea>'
+				+'<button class="cancelReply">취소</button>'
+				+'<button class="replyAdd">등록</button> </div>'
+				
+				$(this).closest('.commentsList').append(editForm);
+				isReplyMode = true;
+		 	});
+		 	
+		 	// 답글 취소
+			$(document).on("click", ".cancelReply", function() {
+				cancelReplyMode();
+			});
+		 	
+		 	
 	        loadComments();
 		});
+											  
 		
-		
+		// 댓글수정 입력란 remove, 기존댓글 보여주기
 		function cancelEditMode() {
 			$(".editForm").remove();
 			$(".thisComment").show();
 			isEditMode = false;
+		}
+		
+		// 답글 입력란 remove
+		function cancelReplyMode() {
+			$(".replyForm").remove();
+			isReplyMode = false;
+			console.log('isReplyMode : '+isReplyMode);
 		}
 											  
 		// 댓글목록 가져오기
@@ -171,8 +228,8 @@
 				success: function(result) {	//댓글목록 가져오기 성공
 					console.log('댓글목록 가져오기 성공')
 	                // 받은 데이터를 반복문으로 돌면서 각 댓글을 HTML로 생성하여 목록에 추가 처리
-	                var listReply = $("#listReply");
-	                listReply.empty(); // 이전 댓글 목록 초기화
+	                var commentList = $("#commentList");
+	                commentList.empty(); // 이전 댓글 목록 초기화
 	                
 	                function padZero(num) {
 	                    return num < 10 ? '0' + num : num;
@@ -191,16 +248,16 @@
 	                    // 댓글 HTML 생성 및 목록에 추가
        					var commentHtml = '<div class="commentsList"> <div class="thisComment" style="display: flex;"> <div>profilePhoto</div> <div> <div>' + userName + '</div>'
                         + '<span class="commentContent">' + content + '</span> <div style="display: flex"> <span style="margin-right:10px">' + formattedDate + '</span>'
-                        + '<div>답글</div> </div> </div> <div> <input type="hidden" id="commentId" value="' + commentId + '" /> <span class="commentEdit btn">수정</span> <span> ｜ </span> <span class="commentDel btn">삭제</span> </div> </div> </div>';
+                        + '<div class="addReply btn">답글</div> </div> </div> <div> <input type="hidden" class="commentId" value="' + commentId + '" /> <span class="commentEdit btn">수정</span> <span> ｜ </span> <span class="commentDel btn">삭제</span> </div> </div> </div>';
 
-	                    listReply.append(commentHtml);
+	                    commentList.append(commentHtml);
 	                }
 	            },
 	            error: function(error) {
 					console.log('댓글목록 가져오기 실패')
 	            }
 			})
-		}
+		} // 댓글목록 가져오기
 	</script>
 </th:block>
 </html>
@@ -212,14 +269,14 @@
 			<span class="commentContent">content</span>
 			<div style="display: flex">
 				<span style="margin-right:10px">formattedDate</span>
-				<div>답글</div>
+				<div class="addReply btn">답글</div>
 			</div>
 		</div>
 		<div>
-			<input type="hidden" id="commentId" value="commentId" />
+			<input type="hidden" class="commentId" value="' + commentId + '" />
 			<span class="commentEdit btn">수정</span>
 			<span> ｜ </span>
 			<span class="commentDel btn">삭제</span>
 		</div>
 	</div>
-</div>
+</div>'
