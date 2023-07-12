@@ -106,12 +106,20 @@ public class CommunityService {
 	public void addComment(CommentDto commentDto) {
 		Optional<Community> post = commuRepo.findById(commentDto.getPostId());
 		Optional<ConsumerUser> user = consumerUserRepo.findById(commentDto.getUserId());
+		System.out.println("------------------------");
+		System.out.println(commentDto.getParentId());
+		System.out.println("------------------------");
 		
 		if(post.isPresent() && user.isPresent()) {
 			Comment comment = new Comment();
 			comment.setContent(commentDto.getContent());
 			comment.setPost(post.get());
 			comment.setUser(user.get());
+			if(commentDto.getParentId() != 0L) {
+				Optional<Comment> parentCommentOptional = commentRepo.findById(commentDto.getParentId());
+				Comment parentComment = parentCommentOptional.get();
+				comment.setParent(parentComment);
+			}
 			
 			commentRepo.save(comment);
 		}

@@ -76,7 +76,7 @@
 	*/
 		$(document).ready(function() {
 			
-			// 댓글작성 버튼클릭 시
+			// 댓글작성 버튼클릭
 		 	$(".commentAdd").click(function() {
 	            var content = $(".content").val(); // 작성한 댓글
 	            var postId = [[${post.postId}]]; // 게시글 ID
@@ -106,10 +106,10 @@
 	            }
 	        });
 			
-			// 삭제버튼 클릭시
+			// 삭제 버튼클릭
 		 	$(document).on("click", ".commentDel", function() {
 		 		var result = confirm("댓글을 삭제하시겠습니까?");
-		 	    var commentId = $(this).siblings("input[type='hidden']").val();
+		 		var commentId = $(this).closest('.commentsList').find('.commentId').val();
 				
 		 		if(result) {
 			 	    $.ajax({
@@ -128,34 +128,33 @@
 		 	});
 			
 		 	
-			// 수정 버튼 클릭
+			// 수정 버튼클릭
 		 	var isEditMode = false; // 수정 폼이 열려있는지 여부를 저장하는 변수
 			$(document).on("click", ".commentEdit", function() {
 				if(isEditMode) cancelEditMode();
 				
 				var commentContent = $(this).parent().siblings().find("span.commentContent").text();
-				var commentId = $(this).closest('.thisComment').find('.commentId').val();
+				var commentId = $(this).closest('.commentsList').find('.commentId').val();
 				var editForm = '<div class="editForm">'
-					 + '<input type="hidden" name="commentId" value="' + commentId + '"/>'
 	                 + '<textarea class="content" name="content" cols="80" rows="5" required>' + commentContent + '</textarea>'
 	                 + '<button class="cancelEdit">취소</button>'
 	                 + '<button class="saveEdit">등록</button>'
 	                 + '</div>'; 
                 
-                $(this).parent().parent().parent().append(editForm);
+	            $(this).closest('.commentsList').append(editForm);
                 $(this).closest('.thisComment').hide();
                 isEditMode = true;
 			})
 			
-			// 수정 취소
+			// 수정취소 버튼클릭
 			$(document).on("click", ".cancelEdit", function() {
 				cancelEditMode();
 			});
 		 	
-		 	// 수정 등록버튼
+		 	// 수정등록 버튼클릭
 			$(document).on("click", ".saveEdit", function() {
 	            var content = $(".content").val();
-	            var commentId = $(".commentId").val();
+	            var commentId = $(this).closest('.commentsList').find('.commentId').val();
 	            
 	            if (content !== "") {
 
@@ -176,27 +175,69 @@
 	            }
 	        });
 		 	
-		 	// 답글버튼 클릭
+		 	// 답글 버튼클릭
 		 	var isReplyMode = false;
-		 	$(document).on("click", ".addReply", function() {
-		 		console.log('isReplyMode : '+isReplyMode);
+		 	$(document).on("click", ".commentReply", function() {
 		 		if(isReplyMode) cancelReplyMode();
 		 		
-		 		/* var parentId = //부모요소 id */
+		 		var parentId = $(this).closest('.commentsList').find('.commentId').val();
 		 		var editForm =
-		 		'<div class="replyForm"> <input type="hidden" value=""/>'
+		 		'<div class="replyForm">'
 				+'<textarea name="" class="content" cols="80" rows="5" placeholder="답글을 작성하세요" required></textarea>'
 				+'<button class="cancelReply">취소</button>'
-				+'<button class="replyAdd">등록</button> </div>'
+				+'<button class="saveReply">등록</button> </div>'
 				
 				$(this).closest('.commentsList').append(editForm);
 				isReplyMode = true;
 		 	});
 		 	
-		 	// 답글 취소
+		 	// 답글취소 버튼클릭
 			$(document).on("click", ".cancelReply", function() {
 				cancelReplyMode();
 			});
+		 	
+		 	
+		 	
+		 	
+		 	
+		 	
+		 	
+		 	// 답글등록 버튼클릭
+		 	$(document).on("click", ".saveReply", function() {
+		 		var content = $(".content").val(); // 작성한 댓글
+	            var postId = [[${post.postId}]]; // 게시글 ID
+	            var userId = '2'
+	            var parentId = $(this).closest('.commentsList').find('.commentId').val();
+	            
+	            if (content !== "") {
+	            	var commentDto = {
+	                    content: content,
+	                    postId: postId,
+	                    userId: userId,
+	                    parentId: parentId
+	                };
+
+		            $.ajax({
+		                type: "POST",
+		                url: "/comment_add", // 댓글작성을 처리하는 컨트롤러 경로
+		                data: JSON.stringify(commentDto),
+		                contentType: "application/json",
+		                success: function(result) {	//댓글작성 성공
+		                	console.log('답글작성 성공')
+				        	loadComments();
+		                	$(this).closest(".content").remove();
+		                },
+		                error: function(error) {	//댓글작성 실패
+		                	console.log('답글작성 실패')
+		                }
+		            });
+	            }
+		 	})
+		 	
+		 	
+		 	
+		 	
+		 	
 		 	
 		 	
 	        loadComments();
@@ -214,7 +255,6 @@
 		function cancelReplyMode() {
 			$(".replyForm").remove();
 			isReplyMode = false;
-			console.log('isReplyMode : '+isReplyMode);
 		}
 											  
 		// 댓글목록 가져오기
@@ -244,11 +284,13 @@
 	                    var formattedDate = createDate.getFullYear() + '-' + padZero(createDate.getMonth() + 1) + '-' + padZero(createDate.getDate());
 	                    var profilePhoto = comment.profilePhoto;
 	                    var commentId = comment.commentId;
+	                    var parentId = comment.parentId
+	                    if(parentId === 0) parentId = '';
 	                    
 	                    // 댓글 HTML 생성 및 목록에 추가
-       					var commentHtml = '<div class="commentsList"> <div class="thisComment" style="display: flex;"> <div>profilePhoto</div> <div> <div>' + userName + '</div>'
+       					var commentHtml = '<div class="commentsList"> <input type="hidden" class="commentId" value="' + commentId + '" /> <input type="hidden" class="parentId" value="' + parentId + '" /> <div class="thisComment" style="display: flex;"> <div>profilePhoto</div> <div> <div>' + userName + '</div>'
                         + '<span class="commentContent">' + content + '</span> <div style="display: flex"> <span style="margin-right:10px">' + formattedDate + '</span>'
-                        + '<div class="addReply btn">답글</div> </div> </div> <div> <input type="hidden" class="commentId" value="' + commentId + '" /> <span class="commentEdit btn">수정</span> <span> ｜ </span> <span class="commentDel btn">삭제</span> </div> </div> </div>';
+                        + '<div class="commentReply btn">답글</div> </div> </div> <div> <span class="commentEdit btn">수정</span> <span> ｜ </span> <span class="commentDel btn">삭제</span> </div> </div> </div>';
 
 	                    commentList.append(commentHtml);
 	                }
@@ -261,22 +303,3 @@
 	</script>
 </th:block>
 </html>
-<div class="commentsList">
-	<div class="thisComment" style="display: flex;">
-		<div>profilePhoto</div>
-		<div>
-			<div>userName</div>
-			<span class="commentContent">content</span>
-			<div style="display: flex">
-				<span style="margin-right:10px">formattedDate</span>
-				<div class="addReply btn">답글</div>
-			</div>
-		</div>
-		<div>
-			<input type="hidden" class="commentId" value="' + commentId + '" />
-			<span class="commentEdit btn">수정</span>
-			<span> ｜ </span>
-			<span class="commentDel btn">삭제</span>
-		</div>
-	</div>
-</div>'

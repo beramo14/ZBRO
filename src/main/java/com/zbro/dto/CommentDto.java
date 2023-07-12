@@ -13,4 +13,5 @@ public class CommentDto {
     private String profilePhoto;
     private LocalDateTime createDate;
     private Long commentId;
+    private Long parentId;
 }

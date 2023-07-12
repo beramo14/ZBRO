@@ -208,6 +208,9 @@ public class CommunityController {
 	        commentDto.setProfilePhoto(comment.getUser().getProfilePhoto());
 	        commentDto.setCreateDate(comment.getCreateDate());
 	        commentDto.setCommentId(comment.getCommentId());
+	        if(comment.getParent() != null) {
+	        	commentDto.setParentId(comment.getParent().getCommentId());
+	        }
 	        System.out.println(commentDto.toString());
 	        commentDtos.add(commentDto);
 	    }							
