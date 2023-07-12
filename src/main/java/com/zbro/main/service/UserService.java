@@ -82,7 +82,7 @@ public class UserService {
 		if(sellerUser.getProfilePhoto() != null) {
 			findedSellerUser.setProfilePhoto(sellerUser.getProfilePhoto());
 		}
-		log.info("@@@@@@@@@@@@@@@@test : {}", sellerUser.isBiz());
+		
 		//판매자 승인되지않은 경우에만 수정
 		if(findedSellerUser.isAdmission() == false) {
 			if(findedSellerUser.isBiz() == true) {
