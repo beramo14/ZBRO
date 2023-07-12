@@ -56,6 +56,10 @@
 			color: red;
 		}
 		
+		.info-input{
+			display:none;	
+		}
+		
 		
 	</style>
 </th:block>
@@ -72,7 +76,7 @@
 							<img src="/seller/profile/photo?sellerId=1" alt="프로필사진_수정" id="profile-image" class="profile-image"/>
 						</div>
 						
-						<label for="profilePhotoFile" class="form-label btn btn-outline-secondary">이미지 변경</label>
+						<label for="profilePhotoFile" class="form-label btn btn-outline-secondary info-input">이미지 변경</label>
 						<input type="file" name="profilePhotoFile" id="profilePhotoFile" style="display:none;"/>
 					</div>
 					
@@ -85,18 +89,20 @@
 					<div class="row mb-3">
 						<label for="name" class="col-form-label col-sm-3">이름</label>
 						<div class="col-sm-9">
-							<input type="text" name="name" class="form-control" placeholder="*이름" th:value="${sellerUser.name}" required/>
+							<p class="info-text" th:text="${sellerUser.name}"></p>
+							<input type="text" name="name" class="form-control info-input" placeholder="*이름" th:value="${sellerUser.name}" required/>
 						</div>
 					</div>
 					
 					<div class="row mb-3">
 						<label for="email" class="col-sm-3">연락처</label>
-						<div class="tel-input-wrapper col-sm-9">
-							<input type="text" name="tel1" class="form-control tel-input" th:value="${sellerUser.tel1}" placeholder="*연락처" required>
+						<p class="info-text col-sm-9" th:text="${sellerUser.tel1+'-'+sellerUser.tel2+'-'+sellerUser.tel3}"></p>
+						<div class="tel-input-wrapper col-sm-9 info-input">
+							<input type="text" name="tel1" class="form-control tel-input info-input" th:value="${sellerUser.tel1}" placeholder="*연락처" required>
 							<span>-</span>
-							<input type="text" name="tel2" class="form-control tel-input" th:value="${sellerUser.tel2}" required>
+							<input type="text" name="tel2" class="form-control tel-input info-input" th:value="${sellerUser.tel2}" required>
 							<span>-</span>
-							<input type="text" name="tel3" class="form-control tel-input" th:value="${sellerUser.tel3}" required>
+							<input type="text" name="tel3" class="form-control tel-input info-input" th:value="${sellerUser.tel3}" required>
 						</div>
 					</div>
 					
@@ -105,20 +111,21 @@
 						<div class="col-sm-9">
 							<div class="form-control isbiz-input-wrapper mb-1">
 								<span>사업자 여부</span>
-								<div>
+								<div class=" info-input">
 									<input type="radio" name="isBiz" id="isBizTrue" class="form-check-input" value="true" th:checked="${sellerUser.isBiz == true}" th:disabled="${sellerUser.admission == true}"/>
 									<label for="isBizTrue" class="form-check-label" style="margin-left: -5px;">예</label>
 								</div>
-								<div>
+								<div class=" info-input">
 									<input type="radio" name="isBiz" id="isBizFalse" class="form-check-input" value="false" th:checked="${sellerUser.isBiz == false}" th:disabled="${sellerUser.admission == true}"/>
 									<label for="isBizFalse" class="form-check-label" style="margin-left: -5px;">아니요</label>
 								</div>
 							</div>
 							<div class="biz-input-wrapper mb-4 form-control" style="display: none;">
 								<label for="email">*부동산 명</label>
-								<input type="text" name="brokerName" class="form-control mb-1" placeholder="*부동산명" th:value="${sellerUser.brokerName}" th:disabled="${sellerUser.admission == true}"/>
+								<p class="info-text" th:text="${sellerUser.brokerName}"></p>
+								<input type="text" name="brokerName" class="form-control info-input mb-1" placeholder="*부동산명" th:value="${sellerUser.brokerName}" th:disabled="${sellerUser.admission == true}"/>
 								<label for="biz-scan-file" class="form-label" style="display: block; text-align: start; margin:0;">*사업자 등록증<span th:if="${sellerUser.bizFile}" style="color:darkorange">(파일교체)</span></label>
-								<input type="file" name="bizScanFile" id="biz-scan-file" class="form-control mb-1" required th:disabled="${sellerUser.admission == true}"/>
+								<input type="file" name="bizScanFile" id="biz-scan-file" class="form-control info-input mb-1" required th:disabled="${sellerUser.admission == true}"/>
 								<div th:if="${sellerUser.bizFile}" style="width:100%;">
 									<span>기존 파일 : </span><span th:text="${sellerUser.bizFile}">파일명.jpg</span>
 									<a th:href="@{/download/seller/bizfile(sellerId=${sellerUser.sellerId})}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary">다운로드</a>
@@ -129,8 +136,10 @@
 					<span th:if="${sellerUser.admission == true}"></span>
 					
 					<div style="text-align: center;">
-						<button type="submit" class="btn btn-primary me-3">수정</button>
-						<button type="button" class="btn btn-secondary">탈퇴</button>
+						<button type="button" id="modify-button" class="btn btn-primary me-3">수정</button>
+						<button type="submit" id="save-button" class="btn btn-success d-none me-3">저장</button>
+						<a id="cancle-button" class="btn btn-secondary d-none" href="javascript:window.location.reload(true)">취소</a>
+						<button type="button" id="delete-button" class="btn btn-secondary">탈퇴</button>
 					</div>
 				</form>
 		</div>
@@ -140,6 +149,16 @@
 <th:block layout:fragment="customScript">
 	<script th:inline="javascript" type="text/javascript">
 		$(document).ready(() => {
+			
+			$("input[name='isBiz']:checked").parent().show();
+			$("#modify-button").click(function() {
+				$(".info-text, #delete-button").hide();
+				$(".info-input").removeClass("info-input");
+				$("#save-button, #cancle-button").removeClass("d-none");
+				$(this).addClass("d-none");
+			});
+			
+			
 			
 			$("#profilePhotoFile").change(function() {
 				const file = this.files[0];
@@ -157,13 +176,13 @@
 			 if($("input[name='isBiz']:checked").val() == "true") {
 				$("div.biz-input-wrapper").show();
 				$("input[name='brokerName']").attr("required", true);
-				$("input[name='bizScanFile']").attr("required", true);
+				//$("input[name='bizScanFile']").attr("required", true);
 			 } else if($("input[name='isBiz']:checked").val() == "false") {
 				$("div.biz-input-wrapper").hide();
 				$("input[name='brokerName']").val(null);
 				$("input[name='bizScanFile']").val(null);
 				$("input[name='brokerName']").attr("required", false);
-				$("input[name='bizScanFile']").attr("required", false);
+				//$("input[name='bizScanFile']").attr("required", false);
 			 }
 
 
