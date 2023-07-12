@@ -97,28 +97,39 @@ public class CommunityService {
 
 	public List<Comment> getComment(Long postId) {
 		Optional<Community> post = commuRepo.findById(postId);
-		System.out.println(post.get());
+//		System.out.println(post.get());
 		
 		return commentRepo.findAllByPost(post.get());
+	}
+	
+	
+	public Comment getThisComment(Long commentId) {
+		return commentRepo.findById(commentId).get();
+	}
+	
+	
+	public List<Comment> getAllComments() {
+		return commentRepo.findAll();
 	}
 
 
 	public void addComment(CommentDto commentDto) {
 		Optional<Community> post = commuRepo.findById(commentDto.getPostId());
 		Optional<ConsumerUser> user = consumerUserRepo.findById(commentDto.getUserId());
-		System.out.println("------------------------");
-		System.out.println(commentDto.getParentId());
-		System.out.println("------------------------");
 		
 		if(post.isPresent() && user.isPresent()) {
 			Comment comment = new Comment();
 			comment.setContent(commentDto.getContent());
 			comment.setPost(post.get());
 			comment.setUser(user.get());
-			if(commentDto.getParentId() != 0L) {
+			if(commentDto.getParentId() != null) {
 				Optional<Comment> parentCommentOptional = commentRepo.findById(commentDto.getParentId());
 				Comment parentComment = parentCommentOptional.get();
 				comment.setParent(parentComment);
+				
+				//commentType 설정
+				int parentTypePlus = (parentCommentOptional.get().getCommentType())+1;
+				comment.setCommentType(parentTypePlus);
 			}
 			
 			commentRepo.save(comment);
@@ -148,6 +159,5 @@ public class CommunityService {
 		
 		commentRepo.save(reviseComment);
 	}
-
 
 }

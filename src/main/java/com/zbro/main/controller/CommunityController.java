@@ -1,7 +1,9 @@
 package com.zbro.main.controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +85,7 @@ public class CommunityController {
 	}
 
 	
+	
 	@GetMapping("/post_add")
 	public String postAddView(Model model,
 							@RequestParam String type,
@@ -93,6 +96,7 @@ public class CommunityController {
 		model.addAttribute("categories", Category.values());
 		return "/main/community/post_add";
 	}
+	
 	
 	
 	@PostMapping("/post_add")
@@ -117,7 +121,6 @@ public class CommunityController {
 	public String postDetail(Model model,
 							 @RequestParam Long postId) {
 		
-//		commuService.addViewCount(postId);
 		Community community = commuService.getPost(postId);
 		
 		model.addAttribute("post", community);
@@ -183,6 +186,7 @@ public class CommunityController {
 	
 	
 	
+	
 	/*		댓글 관련		*/
 	@PostMapping("/comment_add")
 	public ResponseEntity<?> commentAdd(@RequestBody CommentDto commentDto) {
@@ -191,40 +195,123 @@ public class CommunityController {
 	}
 	
 	
+	
+//	@GetMapping("/get_comments")
+//	public ResponseEntity<?> getComments(@RequestParam("postId") Long postId) {
+//		List<Comment> comments = commuService.getComment(postId);	//postId의 댓글목록 가져오기
+//		
+//		List<CommentDto> commentDtos = new ArrayList<>();
+//		
+//		for (Comment comment : comments) {
+//		    if (comment.getParent() == null) {
+//		        // 부모 댓글인 경우
+//		        CommentDto commentDto = new CommentDto();
+//		        commentDto.setContent(comment.getContent());
+//		        commentDto.setPostId(postId);
+//		        commentDto.setUserId(comment.getUser().getConsumerId());
+//		        commentDto.setUserName(comment.getUser().getName());
+//		        commentDto.setProfilePhoto(comment.getUser().getProfilePhoto());
+//		        commentDto.setCreateDate(comment.getCreateDate());
+//		        commentDto.setCommentId(comment.getCommentId());
+//		        if (comment.getParent() != null) {
+//	                commentDto.setParentId(comment.getParent().getCommentId());
+//	            }
+//		        commentDtos.add(commentDto);
+//		        sortChildComments(comment, comments, commentDtos, postId);
+//		    }
+//		}
+//		
+//	    return ResponseEntity.ok(commentDtos);
+//	}
+//	
+//	private void sortChildComments(Comment parentComment, List<Comment> comments, List<CommentDto> commentDtos, Long postId) {
+//	    for (Comment comment : comments) {
+//	        if (comment.getParent() == parentComment) {
+//	            CommentDto commentDto = new CommentDto();
+//	            commentDto.setContent(comment.getContent());
+//	            commentDto.setPostId(postId);
+//	            commentDto.setUserId(comment.getUser().getConsumerId());
+//	            commentDto.setUserName(comment.getUser().getName());
+//	            commentDto.setProfilePhoto(comment.getUser().getProfilePhoto());
+//	            commentDto.setCreateDate(comment.getCreateDate());
+//	            commentDto.setCommentId(comment.getCommentId());
+//	            if (comment.getParent() != null) {
+//	                commentDto.setParentId(comment.getParent().getCommentId());
+//	            }
+//	            commentDtos.add(commentDto);
+//	            sortChildComments(comment, comments, commentDtos, postId);
+//	        }
+//	    }
+//	}
 	@GetMapping("/get_comments")
 	public ResponseEntity<?> getComments(@RequestParam("postId") Long postId) {
-		List<Comment> comments = commuService.getComment(postId);	//postId의 댓글목록 가져오기
-		for(Comment comment:comments) {
-			System.out.println(comment.toString());
-		}
-		
-		List<CommentDto> commentDtos = new ArrayList<>();
+	    List<Comment> comments = commuService.getComment(postId); // postId의 댓글목록 가져오기
+	    
+	    List<CommentDto> commentDtos = new ArrayList<>();
+	    
 	    for (Comment comment : comments) {
-	        CommentDto commentDto = new CommentDto();
-	        commentDto.setContent(comment.getContent());
-	        commentDto.setPostId(postId);
-	        commentDto.setUserId(comment.getUser().getConsumerId());
-	        commentDto.setUserName(comment.getUser().getName());
-	        commentDto.setProfilePhoto(comment.getUser().getProfilePhoto());
-	        commentDto.setCreateDate(comment.getCreateDate());
-	        commentDto.setCommentId(comment.getCommentId());
-	        if(comment.getParent() != null) {
-	        	commentDto.setParentId(comment.getParent().getCommentId());
+	        if (comment.getParent() == null) {
+	            // 부모 댓글인 경우
+	            CommentDto commentDto = createCommentDto(comment, postId);
+	            commentDtos.add(commentDto);
+	            sortChildComments(comment, comments, commentDtos, postId);
 	        }
-	        System.out.println(commentDto.toString());
-	        commentDtos.add(commentDto);
-	    }							
-		
-		 
+	    }
+	    
 	    return ResponseEntity.ok(commentDtos);
 	}
+	
+	private void sortChildComments(Comment parentComment, List<Comment> comments, List<CommentDto> commentDtos, Long postId) {
+	    for (Comment comment : comments) {
+	        if (comment.getParent() == parentComment) {
+	            CommentDto commentDto = createCommentDto(comment, postId);
+	            commentDtos.add(commentDto);
+	            sortChildComments(comment, comments, commentDtos, postId);
+	        }
+	    }
+	}
+	
+	private CommentDto createCommentDto(Comment comment, Long postId) {
+	    CommentDto commentDto = new CommentDto();
+	    commentDto.setContent(comment.getContent());
+	    commentDto.setPostId(postId);
+	    commentDto.setUserId(comment.getUser().getConsumerId());
+	    commentDto.setUserName(comment.getUser().getName());
+	    commentDto.setProfilePhoto(comment.getUser().getProfilePhoto());
+	    commentDto.setCreateDate(comment.getCreateDate());
+	    commentDto.setCommentId(comment.getCommentId());
+	    if (comment.getParent() != null) {
+	        commentDto.setParentId(comment.getParent().getCommentId());
+	    }
+	    return commentDto;
+	}
+	
 	
 	
 	@GetMapping("/comment_delete")
 	public ResponseEntity<?> commentDel(@RequestParam("commentId") Long commentId) {
+		Comment thisComment = commuService.getThisComment(commentId);
+		List<Comment> allComments = commuService.getAllComments();
+		
+		delChildComment(thisComment, allComments);
+		System.out.println("삭제된 댓글 : " + thisComment.getCommentId());
 		commuService.delComment(commentId);
+		
+		
 		return ResponseEntity.ok().build();
 	}
+	
+	private void delChildComment(Comment parentComment, List<Comment> allComments) {
+		for(Comment comment:allComments) {
+			if(comment.getParent() != null && parentComment.getCommentId() == comment.getParent().getCommentId()) {
+				System.out.println(parentComment.getCommentId()+"의 자식답글 : "+comment.getCommentId());
+				delChildComment(comment, allComments);
+				System.out.println("삭제된 댓글 : " + comment.getCommentId());
+				commuService.delComment(comment.getCommentId());
+			}
+		}
+	}
+	
 	
 	
 	@GetMapping("/comment_revise")
@@ -234,5 +321,6 @@ public class CommunityController {
 		commuService.reviseComment(commentId, content);
 		return ResponseEntity.ok().build();
 	}
-
+	
 }
+
