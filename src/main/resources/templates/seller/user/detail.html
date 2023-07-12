@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/seller_layout}">
+<th:block layout:fragment="customStyle">
+	<style th:inline="css" type="text/css">
+		.user-detail-wrapper {
+			margin: 30px auto;
+			width: 600px
+		}
+		
+		div.profile-image-wrapper {
+			width: 120px;
+			height: 120px;
+			margin: 0 auto;
+			margin-bottom: 15px;
+			border-radius: 50%;
+			overflow: hidden;
+		}
+		
+		div.profile-image-wrapper > img.profile-image {
+			width: 120px;
+			height: 120px;
+			object-fit: cover;
+		}
+		
+		.tel-input-wrapper {
+			display: flex;
+		    flex-direction: row;
+		    flex-wrap: nowrap;
+		    justify-content: space-between;
+		    align-items: center;
+		}
+		
+		input.tel-input {
+			width: 130px;
+		}
+		
+		.isbiz-input-wrapper {
+			display: flex!important;
+		    flex-direction: row;
+		    flex-wrap: nowrap;
+		    align-items: center;
+		    gap: 12vh;
+		}
+		
+		.email-check-message {
+			text-align: left;
+			margin: 0;
+			display: none;
+		}
+		
+		p.email-able-message {
+			color: darkgreen;
+		}
+		
+		p.email-exist-message {
+			color: red;
+		}
+		
+		
+	</style>
+</th:block>
+<th:block layout:fragment="content">
+	
+	<div class="content">
+		
+		<h2>회원정보</h2>
+		<div class="user-detail-wrapper">
+			<form action="/seller/user/update" method="post" id="update-form" enctype="multipart/form-data">
+					
+					<div style="text-align: center; margin-bottom: 40px;">
+						<div class="profile-image-wrapper">
+							<img src="/seller/profile/photo?sellerId=1" alt="프로필사진_수정" id="profile-image" class="profile-image"/>
+						</div>
+						
+						<label for="profilePhotoFile" class="form-label btn btn-outline-secondary">이미지 변경</label>
+						<input type="file" name="profilePhotoFile" id="profilePhotoFile" style="display:none;"/>
+					</div>
+					
+					<div class="row mb-2">
+						<label for="email" class="col-sm-3">이메일</label>
+						<p th:text="${sellerUser.email}" class="col-sm-9"></p>
+					</div>
+					
+					
+					<div class="row mb-3">
+						<label for="name" class="col-form-label col-sm-3">이름</label>
+						<div class="col-sm-9">
+							<input type="text" name="name" class="form-control" placeholder="*이름" th:value="${sellerUser.name}" required/>
+						</div>
+					</div>
+					
+					<div class="row mb-3">
+						<label for="email" class="col-sm-3">연락처</label>
+						<div class="tel-input-wrapper col-sm-9">
+							<input type="text" name="tel1" class="form-control tel-input" th:value="${sellerUser.tel1}" placeholder="*연락처" required>
+							<span>-</span>
+							<input type="text" name="tel2" class="form-control tel-input" th:value="${sellerUser.tel2}" required>
+							<span>-</span>
+							<input type="text" name="tel3" class="form-control tel-input" th:value="${sellerUser.tel3}" required>
+						</div>
+					</div>
+					
+					<div class="row mb-3">
+						<label class="col-sm-3">사업자 정보</label>
+						<div class="col-sm-9">
+							<div class="form-control isbiz-input-wrapper mb-1">
+								<span>사업자 여부</span>
+								<div>
+									<input type="radio" name="isBiz" id="isBizTrue" class="form-check-input" value="true" th:checked="${sellerUser.isBiz == true}" th:disabled="${sellerUser.admission == true}"/>
+									<label for="isBizTrue" class="form-check-label" style="margin-left: -5px;">예</label>
+								</div>
+								<div>
+									<input type="radio" name="isBiz" id="isBizFalse" class="form-check-input" value="false" th:checked="${sellerUser.isBiz == false}" th:disabled="${sellerUser.admission == true}"/>
+									<label for="isBizFalse" class="form-check-label" style="margin-left: -5px;">아니요</label>
+								</div>
+							</div>
+							<div class="biz-input-wrapper mb-4 form-control" style="display: none;">
+								<label for="email">*부동산 명</label>
+								<input type="text" name="brokerName" class="form-control mb-1" placeholder="*부동산명" th:value="${sellerUser.brokerName}" th:disabled="${sellerUser.admission == true}"/>
+								<label for="biz-scan-file" class="form-label" style="display: block; text-align: start; margin:0;">*사업자 등록증<span th:if="${sellerUser.bizFile}" style="color:darkorange">(파일교체)</span></label>
+								<input type="file" name="bizScanFile" id="biz-scan-file" class="form-control mb-1" required th:disabled="${sellerUser.admission == true}"/>
+								<div th:if="${sellerUser.bizFile}" style="width:100%;">
+									<span>기존 파일 : </span><span th:text="${sellerUser.bizFile}">파일명.jpg</span>
+									<a th:href="@{/download/seller/bizfile(sellerId=${sellerUser.sellerId})}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary">다운로드</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<span th:if="${sellerUser.admission == true}"></span>
+					
+					<div style="text-align: center;">
+						<button type="submit" class="btn btn-primary me-3">수정</button>
+						<button type="button" class="btn btn-secondary">탈퇴</button>
+					</div>
+				</form>
+		</div>
+	</div>
+	
+</th:block>
+<th:block layout:fragment="customScript">
+	<script th:inline="javascript" type="text/javascript">
+		$(document).ready(() => {
+			
+			$("#profilePhotoFile").change(function() {
+				const file = this.files[0];
+		        if (file) {
+					let reader = new FileReader();
+					reader.onload = function(event) {
+						console.log(event.target.result);
+						$("#profile-image").attr("src",event.target.result);
+					}
+					reader.readAsDataURL(file);
+		        }
+			});
+			
+			/*초기값 설정*/
+			 if($("input[name='isBiz']:checked").val() == "true") {
+				$("div.biz-input-wrapper").show();
+				$("input[name='brokerName']").attr("required", true);
+				$("input[name='bizScanFile']").attr("required", true);
+			 } else if($("input[name='isBiz']:checked").val() == "false") {
+				$("div.biz-input-wrapper").hide();
+				$("input[name='brokerName']").val(null);
+				$("input[name='bizScanFile']").val(null);
+				$("input[name='brokerName']").attr("required", false);
+				$("input[name='bizScanFile']").attr("required", false);
+			 }
+
+
+			/*사업자 여부에 따라 부동산명 표시 여부*/
+			$("input[name='isBiz']").change(function(e){
+				if(e.target.value == 'true') {
+					$("div.biz-input-wrapper").show();
+					$("input[name='brokerName']").attr("required", true);
+					$("input[name='bizScanFile']").attr("required", true);
+				} else if(e.target.value == 'false') {
+					$("div.biz-input-wrapper").hide();
+					$("input[name='brokerName']").val(null);
+					$("input[name='bizScanFile']").val(null);
+					$("input[name='brokerName']").attr("required", false);
+					$("input[name='bizScanFile']").attr("required", false);
+				}
+			});
+			
+			
+			$("#update-form").submit( function(e) {
+				
+				let tel1 = $("input[name='tel1']");
+				if( (tel1.val().length >= 2 && tel1.val().length <= 4) === false ){
+					e.preventDefault();
+					alert("연락처의 첫번째는 2에서 4자리까지만 입력할 수 있습니다.");
+					te1.focus();
+					return;
+				}
+				
+				let tel2 = $("input[name='tel2']");
+				if(tel2.val().length !== 4 ) {
+					e.preventDefault();
+					alert("연락처의 중간은 4자리가 입력되어야합니다.");
+					tel2.focus();
+					return;
+				}
+				
+				let tel3 = $("input[name='tel3']");
+				if(tel3.val().length !== 4 ) {
+					e.preventDefault();
+					alert("연락처의 끝은 4자리가 입력되어야합니다.");
+					tel3.focus();
+					return;
+				}
+				
+				/*
+				
+				let formData = new FormData(this);
+				$.ajax({
+					url: "/seller/user/update",
+					type: "POST",
+					data: formData,
+					cache: false,
+					processData: false,
+					contentType: false,
+					success: function(data){
+						console.log("request success! : ", data);
+					},
+				});
+				*/
+				/*
+				
+				let formData = $(this).serialize();
+        	let type = $("#modify-form-type").val();
+        	
+        	$.ajax({
+				type: "post",
+				url: '/'+type+'/modify',
+				data: formData,
+				processData: false,
+				success: function (response) {
+					console.log(response);
+					alert("수정되었습니다.");
+					$("#modify-modal-close").click();
+					location.reload();
+				},
+				error: function (error) {
+					console.log(error);
+					alert("수정실패");
+					$("#modify-modal-close").click();
+				}
+			});
+				*/
+				
+			});
+			
+			
+		});
+	</script>
+</th:block>
+
+    
+    

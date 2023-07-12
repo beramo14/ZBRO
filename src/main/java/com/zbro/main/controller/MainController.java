@@ -1,9 +1,11 @@
 package com.zbro.main.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.hibernate.engine.transaction.spi.JoinStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.zbro.main.service.MainService;
 import com.zbro.main.service.UserService;
 import com.zbro.model.ConsumerUser;
+import com.zbro.model.RoomPhoto;
 import com.zbro.model.SellerUser;
 
 import lombok.extern.slf4j.Slf4j;
@@ -117,10 +120,18 @@ public class MainController {
 			//강제 비승인 처리
 			user.setAdmission(false);
 			
-			String profileImageFilename = userService.profileImageSave(profilePhotoFile);
-			user.setProfilePhoto(profileImageFilename);
-			String bizFilename = userService.bizFileSave(bizScanFile);
-			user.setBizFile(bizFilename);
+			user.setProfilePhoto(null);
+			if(profilePhotoFile.isEmpty() == false) {
+				String profileImageFilename = userService.profileImageSave(profilePhotoFile);
+				user.setProfilePhoto(profileImageFilename);
+			}
+			
+			user.setBizFile(null);
+			if(bizScanFile.isEmpty() == false) {
+				String bizFilename = userService.bizFileSave(bizScanFile);
+				user.setBizFile(bizFilename);
+			}
+			
 			
 			userService.sellerUserSave(user);
 		} catch (Exception e) {
@@ -167,6 +178,14 @@ public class MainController {
 		/*Login logic*/
 		
 		return "redirect:/";
+	}
+	
+	@GetMapping("/seller/profile/photo")
+	public ResponseEntity<Resource> getSellerProfilePhoto(SellerUser user) throws FileNotFoundException {
+		SellerUser findedSellerUser = userService.getSellerUser(user.getSellerId());
+		
+		Resource imageResource = userService.getImageResource(findedSellerUser);
+		return ResponseEntity.ok().body(imageResource);
 	}
 	
 	

@@ -114,5 +114,6 @@ public class RoomController {
 		
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageResource);
 	}
+	
 
 }
