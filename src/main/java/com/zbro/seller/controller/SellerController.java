@@ -155,8 +155,9 @@ public class SellerController {
 	@PostMapping("/seller/user/update")
 	public String sellerUserUpdate(@RequestParam("profilePhotoFile") MultipartFile profilePhotoFile, @RequestParam("bizScanFile") MultipartFile bizScanFile, @RequestParam("isBiz") String isBizString, SellerUser sellerUser) throws IllegalStateException, IOException {
 		
-		
 		Long tempUserId = 1L;
+		
+		SellerUser findedSellerUser = sellerUserService.getSellerUser(tempUserId);
 		
 		//isBiz String -> boolean
 		sellerUser.setBiz("true".equalsIgnoreCase(isBizString));
@@ -164,17 +165,17 @@ public class SellerController {
 		log.info("#### sellerUserUpdate : {}", sellerUser);
 		
 		if(profilePhotoFile.isEmpty() == false) {
-			sellerUserService.profileImageDelete(tempUserId);
+			sellerUserService.profileImageDelete(findedSellerUser);
 			String profileImageFilename = sellerUserService.profileImageSave(profilePhotoFile);
 			sellerUser.setProfilePhoto(profileImageFilename);
 		}
 		
 		if(bizScanFile.isEmpty() == false && sellerUser.isBiz()) {
-			sellerUserService.bizFileDelete(tempUserId);
+			sellerUserService.bizFileDelete(findedSellerUser);
 			String bizFilename = sellerUserService.bizFileSave(bizScanFile);
 			sellerUser.setBizFile(bizFilename);
 		} else if(sellerUser.isBiz() == false) {
-			sellerUserService.bizFileDelete(tempUserId);
+			sellerUserService.bizFileDelete(findedSellerUser);
 		}
 		
 		sellerUserService.updateSellerUser(tempUserId, sellerUser);
@@ -187,7 +188,6 @@ public class SellerController {
 	@GetMapping("/download/seller/bizfile")
 	public ResponseEntity<Resource> downloadBizFile(SellerUser user) {
 		SellerUser sellerUser = sellerUserService.getSellerUser(user.getSellerId());
-		
 		
 		try {
 			Resource resource =  resourceLoader.getResource("file:/"+fileBizPath + sellerUser.getBizFile());

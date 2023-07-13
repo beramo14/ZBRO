@@ -149,10 +149,9 @@ public class UserService {
 	/**
 	 * 프로필이미지 파일 삭제
 	 */
-	public void profileImageDelete(Long userId) {
-		SellerUser findedSellerUser = sellerRepository.findById(userId).get();
+	public void profileImageDelete(SellerUser sellerUser) {
 		
-		File profilePhotoFile = new File(fileProfilePhotoPath+findedSellerUser.getProfilePhoto());
+		File profilePhotoFile = new File(fileProfilePhotoPath+sellerUser.getProfilePhoto());
 		
 		if(profilePhotoFile.exists() && profilePhotoFile.isFile()) {
 			boolean isFileDeleted = profilePhotoFile.delete();
@@ -167,13 +166,12 @@ public class UserService {
 	/**
 	 * 사업자 등록증 파일 삭제
 	 */
-	public void bizFileDelete(Long userId) {
-		SellerUser findedSellerUser = sellerRepository.findById(userId).get();
+	public void bizFileDelete(SellerUser sellerUser) {
 		
-		String tempBizFile = findedSellerUser.getBizFile();
+		String tempBizFile = sellerUser.getBizFile();
 		
-		findedSellerUser.setBizFile(null);
-		sellerRepository.save(findedSellerUser);
+		sellerUser.setBizFile(null);
+		sellerRepository.save(sellerUser);
 		
 		File bizFile = new File(fileBizPath+tempBizFile);
 		
