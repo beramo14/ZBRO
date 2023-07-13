@@ -69,6 +69,10 @@ public class UserService {
 		
 		return sellerRepository.findById(userId).get();
 	}
+	public ConsumerUser getConsumerUser(Long userId) {
+		
+		return consumerRepository.findById(userId).get();
+	}
 
 	public void updateSellerUser(Long userId, SellerUser sellerUser) {
 		SellerUser findedSellerUser = sellerRepository.findById(userId).get();
@@ -185,12 +189,18 @@ public class UserService {
 		}
 	}
 
-	public Resource getImageResource(SellerUser findedSellerUser) throws FileNotFoundException {
+	/**
+	 * 각 유저의 proiflePhoto 파일명을 가지고 이미지 Resource를 반환
+	 * @param profilePhotoFilename
+	 * @return Resource
+	 * @throws FileNotFoundException
+	 */
+	public Resource getProfileImageResource(String profilePhotoFilename) throws FileNotFoundException {
 		
-		File file = new File(fileProfilePhotoPath + findedSellerUser.getProfilePhoto());
+		File file = new File(fileProfilePhotoPath + profilePhotoFilename);
 		
 		if(file.exists() == false || file.isFile() == false) {
-			throw new FileNotFoundException("file not found : " +fileProfilePhotoPath + findedSellerUser.getProfilePhoto());
+			throw new FileNotFoundException("file not found : " +fileProfilePhotoPath + profilePhotoFilename);
 		}
 
 		InputStream fis = new FileInputStream(file);

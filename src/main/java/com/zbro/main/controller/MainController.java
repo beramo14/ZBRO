@@ -184,7 +184,15 @@ public class MainController {
 	public ResponseEntity<Resource> getSellerProfilePhoto(SellerUser user) throws FileNotFoundException {
 		SellerUser findedSellerUser = userService.getSellerUser(user.getSellerId());
 		
-		Resource imageResource = userService.getImageResource(findedSellerUser);
+		Resource imageResource = userService.getProfileImageResource(findedSellerUser.getProfilePhoto());
+		return ResponseEntity.ok().body(imageResource);
+	}
+	
+	@GetMapping("/consumer/profile/photo")
+	public ResponseEntity<Resource> getConsumerProfilePhoto(ConsumerUser user) throws FileNotFoundException {
+		ConsumerUser findedConsumerUser = userService.getConsumerUser(user.getConsumerId());
+		
+		Resource imageResource = userService.getProfileImageResource(findedConsumerUser.getProfilePhoto());
 		return ResponseEntity.ok().body(imageResource);
 	}
 	
