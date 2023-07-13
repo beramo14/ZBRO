@@ -14,4 +14,5 @@ public class CommentDto {
     private LocalDateTime createDate;
     private Long commentId;
     private Long parentId;
+    private int commentType;
 }

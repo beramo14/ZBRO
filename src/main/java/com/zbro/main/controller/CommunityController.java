@@ -280,6 +280,7 @@ public class CommunityController {
 	    commentDto.setProfilePhoto(comment.getUser().getProfilePhoto());
 	    commentDto.setCreateDate(comment.getCreateDate());
 	    commentDto.setCommentId(comment.getCommentId());
+	    commentDto.setCommentType(comment.getCommentType());
 	    if (comment.getParent() != null) {
 	        commentDto.setParentId(comment.getParent().getCommentId());
 	    }
@@ -316,9 +317,10 @@ public class CommunityController {
 	
 	@GetMapping("/comment_revise")
 	public ResponseEntity<?> commentRevise(@RequestParam("commentId") Long commentId,
-										   @RequestParam("content") String content) {
+										   @RequestParam("content") String content,
+										   @RequestParam("commentType") int commentType) {
 		
-		commuService.reviseComment(commentId, content);
+		commuService.reviseComment(commentId, content, commentType);
 		return ResponseEntity.ok().build();
 	}
 	

@@ -35,7 +35,7 @@ public class SellerController {
 	@Autowired
 	private SellerRoomService roomService;
 	
-	@Value("${path.upload}")
+	@Value("${file.images.room-photo}")
 	public String uploadFolder;
 	
 	

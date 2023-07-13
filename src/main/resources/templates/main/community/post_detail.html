@@ -8,10 +8,12 @@
 <th:block layout:fragment="customStyle">
 <style th:inline="css" type="text/css">
 
-	#commentsList > div {
+	.thisComment > div {
 		margin-right: 20px
 	}
-	
+	.commentsList {
+		border: 1px solid gray;
+	}
 </style>
 </th:block>
 
@@ -129,9 +131,12 @@
 			
 		 	
 			// 수정 버튼클릭
-		 	var isEditMode = false; // 수정 폼이 열려있는지 여부를 저장하는 변수
+		 	var isEditReplyMode = false;	// 수정 폼이 열려있는지 여부를 저장하는 변수
 			$(document).on("click", ".commentEdit", function() {
-				if(isEditMode) cancelEditMode();
+				if(isEditReplyMode) {
+					cancelReplyMode();
+					cancelEditMode();
+				}
 				
 				var commentContent = $(this).parent().siblings().find("span.commentContent").text();
 				var commentId = $(this).closest('.commentsList').find('.commentId').val();
@@ -143,7 +148,7 @@
                 
 	            $(this).closest('.commentsList').append(editForm);
                 $(this).closest('.thisComment').hide();
-                isEditMode = true;
+                isEditReplyMode = true;
 			})
 			
 			// 수정취소 버튼클릭
@@ -155,13 +160,14 @@
 			$(document).on("click", ".saveEdit", function() {
 	            var content = $(".content").val();
 	            var commentId = $(this).closest('.commentsList').find('.commentId').val();
+	            var commentType = $(this).closest('.commentsList').find('.commentType').val();
 	            
 	            if (content !== "") {
 
 		            $.ajax({
 		                type: "GET",
 		                url: "/comment_revise", // 댓글작성을 처리하는 컨트롤러 경로
-		                data: { content:content, commentId:commentId},
+		                data: { content:content, commentId:commentId, commentType:commentType},
 		                contentType: "application/json",
 		                success: function(result) {
 		                	console.log('댓글수정 성공')
@@ -176,9 +182,12 @@
 	        });
 		 	
 		 	// 답글 버튼클릭
-		 	var isReplyMode = false;
+		 	/* var isEditReplyMode = false; */
 		 	$(document).on("click", ".commentReply", function() {
-		 		if(isReplyMode) cancelReplyMode();
+		 		if(isEditReplyMode) {
+		 			cancelEditMode();
+		 			cancelReplyMode();
+		 		}
 		 		
 		 		var parentId = $(this).closest('.commentsList').find('.commentId').val();
 		 		var editForm =
@@ -188,7 +197,7 @@
 				+'<button class="saveReply">등록</button> </div>'
 				
 				$(this).closest('.commentsList').append(editForm);
-				isReplyMode = true;
+				isEditReplyMode = true;
 		 	});
 		 	
 		 	// 답글취소 버튼클릭
@@ -236,13 +245,13 @@
 		function cancelEditMode() {
 			$(".editForm").remove();
 			$(".thisComment").show();
-			isEditMode = false;
+			isEditReplyMode = false;
 		}
 		
 		// 답글 입력란 remove
 		function cancelReplyMode() {
 			$(".replyForm").remove();
-			isReplyMode = false;
+			isEditReplyMode = false;
 		}
 											  
 		// 댓글목록 가져오기
@@ -273,10 +282,11 @@
 	                    var profilePhoto = comment.profilePhoto;
 	                    var commentId = comment.commentId;
 	                    var parentId = comment.parentId
+	                    var commentType = comment.commentType;
 	                    if(parentId === 0) parentId = '';
 	                    
 	                    // 댓글 HTML 생성 및 목록에 추가
-       					var commentHtml = '<div class="commentsList"> <input type="hidden" class="commentId" value="' + commentId + '" /> <input type="hidden" class="parentId" value="' + parentId + '" /> <div class="thisComment" style="display: flex;"> <div>profilePhoto</div> <div> <div>' + userName + '</div>'
+       					var commentHtml = '<div class="commentsList" style="margin-left: calc(60px * ' + commentType + ')"> <input type="hidden" class="commentId" value="' + commentId + '" /> <input type="hidden" class="parentId" value="' + parentId + '" /> <input type="hidden" class="commentType" value="' + commentType + '" /> <div class="thisComment" style="display: flex;"> <div>profilePhoto</div> <div> <div>' + userName + '</div>'
                         + '<span class="commentContent">' + content + '</span> <div style="display: flex"> <span style="margin-right:10px">' + formattedDate + '</span>'
                         + '<div class="commentReply btn">답글</div> </div> </div> <div> <span class="commentEdit btn">수정</span> <span> ｜ </span> <span class="commentDel btn">삭제</span> </div> </div> </div>';
 

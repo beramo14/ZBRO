@@ -77,6 +77,9 @@ public class CommunityService {
 		ConsumerUser user = new ConsumerUser();
 		user.setConsumerId(userId);
 		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+		String formattedDateTime = LocalDateTime.now().format(formatter);
+		
 		Community community = new Community();
 		community.setType(postType);
 		community.setCategoryType(categoryType);
@@ -85,6 +88,7 @@ public class CommunityService {
 		community.setContent(content);
 		community.setUser(user);
 		community.setViewCount(viewCount);
+		community.setUpdateDate(LocalDateTime.parse(formattedDateTime, formatter));
 		
 		commuRepo.save(community);
 	}
@@ -142,7 +146,7 @@ public class CommunityService {
 	}
 
 
-	public void reviseComment(Long commentId, String content) {
+	public void reviseComment(Long commentId, String content, int commentType) {
 		Optional<Comment> comment = commentRepo.findById(commentId);
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
@@ -156,6 +160,7 @@ public class CommunityService {
 		reviseComment.setPost(comment.get().getPost());
 		reviseComment.setUpdateDate(LocalDateTime.parse(formattedDateTime, formatter));
 		reviseComment.setUser(comment.get().getUser());
+		reviseComment.setCommentType(commentType);
 		
 		commentRepo.save(reviseComment);
 	}
