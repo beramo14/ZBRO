@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
 import com.zbro.type.PostType;
@@ -51,6 +52,7 @@ public class Community {
 	private ConsumerUser user;
 	
 	@Comment("조회수")
+	@ColumnDefault("0")
 	private int viewCount;
 	
 	@Comment("등록일")

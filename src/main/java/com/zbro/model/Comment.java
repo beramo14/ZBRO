@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.ColumnDefault;
 import lombok.Data;
 
 @Data
@@ -40,6 +41,10 @@ public class Comment {
 	@ManyToOne
 	@JoinColumn(name="parent_id")
 	private Comment parent;
+	
+	@org.hibernate.annotations.Comment("댓글_유형")
+	@ColumnDefault("0")
+	private int commentType;
 	
 	@org.hibernate.annotations.Comment("작성일")
 	@Column(updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
