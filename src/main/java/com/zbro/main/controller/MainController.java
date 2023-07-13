@@ -105,7 +105,7 @@ public class MainController {
 	}
 	
 	@PostMapping("/join/seller")
-	public String joinSeller(SellerUser user, @RequestParam("profilePhotoFile") MultipartFile profilePhotoFile, @RequestParam("bizScanFile") MultipartFile bizScanFile, Model model) {
+	public String joinSeller(SellerUser user, @RequestParam("profilePhotoFile") MultipartFile profilePhotoFile, @RequestParam("bizScanFile") MultipartFile bizScanFile, @RequestParam("isBiz") String isBizString, Model model) {
 		
 		log.info("### joinSeller = {}", user);
 		
@@ -119,6 +119,7 @@ public class MainController {
 		try {
 			//강제 비승인 처리
 			user.setAdmission(false);
+			user.setBiz("true".equalsIgnoreCase(isBizString));
 			
 			user.setProfilePhoto(null);
 			if(profilePhotoFile.isEmpty() == false) {
@@ -127,11 +128,10 @@ public class MainController {
 			}
 			
 			user.setBizFile(null);
-			if(bizScanFile.isEmpty() == false) {
+			if(bizScanFile.isEmpty() == false && user.isBiz() == true) {
 				String bizFilename = userService.bizFileSave(bizScanFile);
 				user.setBizFile(bizFilename);
 			}
-			
 			
 			userService.sellerUserSave(user);
 		} catch (Exception e) {
