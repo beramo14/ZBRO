@@ -135,7 +135,7 @@ public class MainController {
 			
 			userService.sellerUserSave(user);
 		} catch (Exception e) {
-			log.error(e.getMessage(), e.getStackTrace());
+			log.error("joinSeller(POST) Error : ", e);
 			
 			model.addAttribute("response", "error");
 			return "redirect:/join/seller";
