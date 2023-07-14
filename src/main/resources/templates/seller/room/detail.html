@@ -91,11 +91,13 @@
 			        </div>
 			        <br />
 			        이미지등록<br />
-			        <div class="file_list">
+			        <div class="file_list" th:each="roomPhoto : ${roomPhotos}">
 			        	<div class="myFile">
-				        	<div class="imagePreview"></div>
+				        	<div class="imagePreview">
+				        		<img th:src="@{'/seller/room/photo?photoId=' + ${roomPhoto.photoId}}" alt="Room Photo" style="max-width:100%"/>
+				        	</div>
 		                    <div class="file_input">
-		                        <input type="text" name="fileName" readonly />
+		                        <input type="text" name="fileName" readonly th:value="${roomPhoto.fileName}"/>
 		                        <label> 첨부파일
 		                            <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
 		                        </label>

@@ -1,11 +1,14 @@
 package com.zbro.seller.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +22,7 @@ import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
 import com.zbro.model.RoomOptionType;
 import com.zbro.model.RoomPhoto;
+import com.zbro.model.SellerUser;
 import com.zbro.seller.service.SellerRoomService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -122,4 +126,15 @@ public class SellerRoomController {
 			 
 			return "seller/room/detail";
 		}
+		
+		
+		@GetMapping("/seller/room/photo")
+		public ResponseEntity<Resource> getSellerRoomPhoto(RoomPhoto roomPhoto) throws FileNotFoundException {
+			RoomPhoto findedRoomPhoto = roomService.getRoomPhoto(roomPhoto.getPhotoId());
+			
+			Resource imageResource = roomService.getImageResource(findedRoomPhoto);
+			return ResponseEntity.ok().body(imageResource);
+		}
+		
+		
 }
