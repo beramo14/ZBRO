@@ -50,8 +50,6 @@ public class SellerRoomController {
 							  @RequestParam(value = "uploadFile", required = false) List<MultipartFile> files,
 							  Room room) throws Exception, IOException {
 			
-			System.out.println(room);
-			
 			// room insert
 			room.setRoomIn(isRoomIn);
 			room.setElevator(isElevator);
@@ -70,16 +68,13 @@ public class SellerRoomController {
 			}
 			
 			// 업로드한 파일 확인
-			for (MultipartFile file : files) {
-			    System.out.println("업로드한 파일 확인 : " + file.getOriginalFilename());
-			}
+//			for (MultipartFile file : files) {
+//			    System.out.println("업로드한 파일 확인 : " + file.getOriginalFilename());
+//			}
 			
-			
-			if(!files.isEmpty()) {	//파일을 업로드했다면
-				int imgCnt = 1;
-				
-				for(MultipartFile file:files) {
-					System.out.println(imgCnt);
+			int imgCnt = 1;
+			for(MultipartFile file : files) {
+				if(!file.getOriginalFilename().isBlank()) {	//파일을 업로드했다면
 					// 지정폴더에 파일을 실제 업로드 // ex)room1_파일명.파일형식
 					String fileName = "room"+room.getRoomId()+"_"+file.getOriginalFilename();
 					file.transferTo(new File(uploadFolder+fileName));
@@ -118,10 +113,12 @@ public class SellerRoomController {
 			Room findRoom = roomService.getRoom(roomId);
 			List<RoomOptionType> roomOptionType = roomService.getRoomOptionType();
 			List<RoomOption> roomOptions = roomService.getRoomOptions(findRoom);
+			List<RoomPhoto> roomPhotos = roomService.getRoomPhotos(findRoom);
 			
 			model.addAttribute("room", findRoom);
 			model.addAttribute("optionTypes", roomOptionType);
 			model.addAttribute("thisRoomOptions", roomOptions);
+			model.addAttribute("roomPhotos", roomPhotos);
 			 
 			return "seller/room/detail";
 		}

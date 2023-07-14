@@ -67,4 +67,8 @@ public class SellerRoomService {
 		return roomOptionRepo.findAllByRoom(findRoom);
 	}
 
+	public List<RoomPhoto> getRoomPhotos(Room findRoom) {
+		return roomPhotoRepo.findAllByRoom(findRoom);
+	}
+
 }
