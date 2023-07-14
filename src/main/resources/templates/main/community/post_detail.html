@@ -4,7 +4,6 @@
 <meta charset="UTF-8" />
 
 
-
 <th:block layout:fragment="customStyle">
 <style th:inline="css" type="text/css">
 
@@ -16,7 +15,6 @@
 	}
 </style>
 </th:block>
-
 
 
 <th:block layout:fragment="content">
@@ -61,7 +59,6 @@
 		<!-- </div> -->
 	</div>
 </th:block>
-
 
 
 <th:block layout:fragment="customScript">
@@ -131,7 +128,7 @@
 			
 		 	
 			// 수정 버튼클릭
-		 	var isEditReplyMode = false;	// 수정 폼이 열려있는지 여부를 저장하는 변수
+		 	var isEditReplyMode = false;	// 수정/답글 폼이 열려있는지 여부를 저장하는 변수
 			$(document).on("click", ".commentEdit", function() {
 				if(isEditReplyMode) {
 					cancelReplyMode();
@@ -182,7 +179,6 @@
 	        });
 		 	
 		 	// 답글 버튼클릭
-		 	/* var isEditReplyMode = false; */
 		 	$(document).on("click", ".commentReply", function() {
 		 		if(isEditReplyMode) {
 		 			cancelEditMode();

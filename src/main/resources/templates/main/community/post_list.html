@@ -8,7 +8,6 @@
 
 
 <th:block layout:fragment="content">
-	<!-- <th:block th:if="${type}=='꿀팁'">Tip</th:block> -->
 	<span th:if="${type}=='꿀팁'" th:text="Tip"></span>
 	<span th:if="${type}=='질문'" th:text="Question"></span>
 	<h1 th:text="${type}"></h1>

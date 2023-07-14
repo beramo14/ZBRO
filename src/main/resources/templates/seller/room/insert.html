@@ -1,108 +1,106 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-	<title>Insert title here</title>
-</head>
-<body>
-	<h1>매물등록</h1>
-	<div id="roomInsert">
-		<form id="saveForm" action="room_add" method="post" enctype="multipart/form-data" autocomplete="off">
-		    <div>
-				<input type="hidden" name="seller" value="1" /> <br />
-		        방 종류 <select name="type">
-		            <option value="원룸" selected>원룸</option>
-		            <option value="오피스텔">오피스텔</option>
-		            <option value="고시원">고시원</option>
-		        </select> <br />
-		        매물 간단소개 <input type="text" name="intro" value="간단소개"/> <br /> 
-		        매물 상세소개 <textarea name="description"></textarea> <br />
-		        건물명 <input type="text" name="buildingName"/> <br />
-		        주소 <input type="text" id="jibunAddress" name="address" placeholder="주소" onclick="execDaumPostcode()" readonly/>
-		        	<input type="button" onclick="execDaumPostcode()" value="주소 찾기"><br>
-		        호수 <input type="text" name="roomNumber"/> <br />
-		        월/전세 &nbsp 월세 <input type="radio" name="costType" value="월세" checked >
-		            &nbsp 전세 <input type="radio" name="costType" value="전세"> <br />
-		        <div id="monthlyCost">
-		            월세 <input type="number" name="monthCost" value="0"/>만 <br />
-		        </div>
-		        보증금 <input type="number" name="deposit" value="0"/>만 <br />
-		        관리비 <input type="number" name="manageCost" value="0"/>만 <br />
-		        면적 <input type="float" name="size" value="0"/>㎡ <br />
-		        방향 <input type="text" name="direction"/> <br />
-		        교통정보 <input type="text" name="transportInfo" /> <br />
-		        건물 층수 <input type="number" name="totalFloor" value="0"/> <br />
-		        매물 층수 <input type="number" name="roomFloor" value="0"/> <br />
-		        즉시입주 &nbsp 가능 <input type="radio" name="isRoomIn" value="true">
-		                     &nbsp 불가능 <input type="radio" name="isRoomIn" value="false" checked> <br />
-		        안전 <input type="text" name="securityInfo"/> <br />
-		        엘리베이터 &nbsp 있음 <input type="radio" name="isElevator" value="true">
-		                   &nbsp 없음 <input type="radio" name="isElevator" value="false" checked> <br />
-		        냉난방 <input type="text" name="heatInfo"/> <br />
-		        주차장 <input type="text" name="parkingInfo"/> <br />
-		        인터넷 <input type="text" name="internetInfo"/> <br />
-		        성별분리 <input type="text" name="genderInfo"/> <br />
-		        <div style="border: 1px solid gray; width:400px">
-		    		<h3>공용 옵션</h3>
-		    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == true}">
-		    			<th:block th:if="${optionType.sortOrder == 6}"><br /></th:block>
-					    <label>
-					        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}" />
-					        <span th:text="${optionType.optionName}"></span>
-					    </label>
-					</th:block>
-		    	</div>
-		    	<div style="border: 1px solid gray; width:400px">
-		    		<h3>방 옵션</h3>
-		    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == false}">
-					    <label>
-					        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}" />
-					        <span th:text="${optionType.optionName}"></span>
-					    </label>
-					</th:block>
-		    	</div>
-		        <div id="offer" style="display: none;">
-		            제공식사 <input type="text" name="foodOffer"/> <br />
-		            제공비품 <input type="text" name="amenityOffer"/> <br />
-		        </div>
-		        <br />
-		        이미지등록<br />
-		        <div class="file_list">
-	                <div>
-	                    <div class="file_input">
-	                        <input type="text" name="fileName" readonly />
-	                        <label> 첨부파일
-	                            <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
-	                        </label>
-	                    </div>
-	                    <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
-	                    <button type="button" onclick="addFile();" class="btns fn_add_btn"><span>파일 추가</span></button>
-	                </div>
-	            </div>
-	            
-	            
-	            
-	            <!-- <input type="text" id="postcode" placeholder="우편번호"> -->
-				<!-- <input type="text" id="roadAddress" placeholder="도로명주소"> -->
-				<!-- <input type="text" id="jibunAddress" placeholder="지번주소"> -->
-				<!-- <span id="guide" style="color:#999;display:none"></span> -->
-				<!-- <input type="text" id="detailAddress" placeholder="상세주소">
-				<input type="text" id="extraAddress" placeholder="참고항목"> -->
-		    	
-		        
-		        
-		    </div>
-		    <button type="submit">등록하기</button>
-		</form>
-	</div>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/seller_layout}">
+<th:block layout:fragment="customHead">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</th:block>
+
 	
-	<script>
+<th:block layout:fragment="customStyle">
+	<style th:inline="css" type="text/css">
+	
+	</style>
+</th:block>
+
+
+<th:block layout:fragment="content">
+	<div class="content">
+		<h1>매물등록</h1>
+		<div id="roomInsert">
+			<form id="saveForm" action="/seller/room/insert" method="post" enctype="multipart/form-data" autocomplete="off">
+			    <div>
+					<input type="hidden" name="seller" value="1" /> <br />
+			        방 종류 <select name="type">
+			            <option value="원룸" selected>원룸</option>
+			            <option value="오피스텔">오피스텔</option>
+			            <option value="고시원">고시원</option>
+			        </select> <br />
+			        매물 간단소개 <input type="text" name="intro" value="간단소개"/> <br /> 
+			        매물 상세소개 <textarea name="description"></textarea> <br />
+			        건물명 <input type="text" name="buildingName"/> <br />
+			        주소 <input type="text" id="jibunAddress" name="address" placeholder="주소" onclick="execDaumPostcode()" readonly/>
+			        	<input type="button" onclick="execDaumPostcode()" value="주소 찾기"/><br/>
+			        호수 <input type="text" name="roomNumber"/> <br />
+			        월/전세 &nbsp 월세 <input type="radio" name="costType" value="월세" checked >
+			            &nbsp 전세 <input type="radio" name="costType" value="전세"> <br />
+			        <div id="monthlyCost">
+			            월세 <input type="number" name="monthCost" value="0"/>만 <br />
+			        </div>
+			        보증금 <input type="number" name="deposit" value="0"/>만 <br />
+			        관리비 <input type="number" name="manageCost" value="0"/>만 <br />
+			        면적 <input type="float" name="size" value="0"/>㎡ <br />
+			        방향 <input type="text" name="direction"/> <br />
+			        교통정보 <input type="text" name="transportInfo" /> <br />
+			        건물 층수 <input type="number" name="totalFloor" value="0"/> <br />
+			        매물 층수 <input type="number" name="roomFloor" value="0"/> <br />
+			        즉시입주 &nbsp 가능 <input type="radio" name="isRoomIn" value="true">
+			                     &nbsp 불가능 <input type="radio" name="isRoomIn" value="false" checked> <br />
+			        안전 <input type="text" name="securityInfo"/> <br />
+			        엘리베이터 &nbsp 있음 <input type="radio" name="isElevator" value="true">
+			                   &nbsp 없음 <input type="radio" name="isElevator" value="false" checked> <br />
+			        냉난방 <input type="text" name="heatInfo"/> <br />
+			        주차장 <input type="text" name="parkingInfo"/> <br />
+			        인터넷 <input type="text" name="internetInfo"/> <br />
+			        성별분리 <input type="text" name="genderInfo"/> <br />
+			        <div style="border: 1px solid gray; width:400px">
+			    		<h3>공용 옵션</h3>
+			    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == true}">
+			    			<th:block th:if="${optionType.sortOrder == 6}"><br /></th:block>
+						    <label>
+						        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}" />
+						        <span th:text="${optionType.optionName}"></span>
+						    </label>
+						</th:block>
+			    	</div>
+			    	<div style="border: 1px solid gray; width:400px">
+			    		<h3>방 옵션</h3>
+			    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == false}">
+						    <label>
+						        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}" />
+						        <span th:text="${optionType.optionName}"></span>
+						    </label>
+						</th:block>
+			    	</div>
+			        <div id="offer" style="display: none;">
+			            제공식사 <input type="text" name="foodOffer"/> <br />
+			            제공비품 <input type="text" name="amenityOffer"/> <br />
+			        </div>
+			        <br />
+			        이미지등록<br />
+			        <div class="file_list">
+		                <div>
+		                    <div class="file_input">
+		                        <input type="text" name="fileName" readonly />
+		                        <label> 첨부파일
+		                            <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
+		                        </label>
+		                    </div>
+		                    <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
+		                    <button type="button" onclick="addFile();" class="btns fn_add_btn"><span>파일 추가</span></button>
+		                </div>
+		            </div>
+			    </div>
+			    <button type="submit">등록하기</button>
+			</form>
+		</div>
+	</div>
+</th:block>
+
+
+<th:block layout:fragment="customScript">
+	<script th:inline="javascript" type="text/javascript">
 		//참고:https://joonopark92.tistory.com/77
 	    //도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합해 올바른 주소를 구성
 	    function execDaumPostcode() {
@@ -138,7 +136,7 @@
 	
 	
 	<!-- 파일 업로드 관련 -->
-	<script>
+	<script th:inline="javascript" type="text/javascript">
 		var totalFileCount = 5;
 		var fileCount = 1;
 		
@@ -209,7 +207,7 @@
 	</script>
 
 	<!-- 월/전세 선택에 따른 월세 입력칸 보이기/숨기기 -->
-	<script>
+	<script th:inline="javascript" type="text/javascript">
 	    /*단일 라디오 버튼 : getElementById 사용	ex) const selectedValue = document.getElementById('costType');
 	      												id속성이 costType인 요소를 선택
 		  여러 동일한 name속성 가진 라디오 버튼 : querySelector 사용
@@ -221,6 +219,7 @@
 	    
 	    const monthlyCostDiv = document.getElementById('monthlyCost');
 	    const radioButtons = document.querySelectorAll('input[name="costType"]');
+	    const monthlyCostInput = monthlyCostDiv.querySelector('input[name="monthCost"]');
 		
 	    // costType 라디오버튼 체크값에 따른 월세input 보이기/숨기기 기능
 	    function toggleMonthlyCost() {
@@ -230,6 +229,7 @@
 	        monthlyCostDiv.style.display = 'block';
 	      } else {
 	        monthlyCostDiv.style.display = 'none';
+	        monthlyCostInput.value = 0;	//숨길 때마다 값 초기화
 	      }
 	    }
 	    
@@ -240,20 +240,24 @@
 	</script>
 		
 	<!-- 방종류 선택에 따른 제공 입력칸 보이기/숨기기 -->
-	<script>
+	<script th:inline="javascript" type="text/javascript">
 	    const typeSelect = document.getElementsByName('type')[0];
 	    const offerDiv = document.getElementById('offer');
+	    const foodOfferInput = offerDiv.querySelector('input[name="foodOffer"]');
+	    const amenityOfferInput = offerDiv.querySelector('input[name="amenityOffer"]');
 	
 	    function toggleOfferDiv() {
 	        if (typeSelect.value === '고시원') {
 	            offerDiv.style.display = 'block';
 	        } else {
 	            offerDiv.style.display = 'none';
+	            foodOfferInput.value = '';
+	            amenityOfferInput.value = '';
 	        }
 	    }
 	
 	    typeSelect.addEventListener('change', toggleOfferDiv);
 	</script>
 
-</body>
+</th:block>
 </html>

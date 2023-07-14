@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/seller_layout}">
+<th:block layout:fragment="customStyle">
+	<style th:inline="css" type="text/css">
+	
+	</style>
+</th:block>
+<th:block layout:fragment="content">
+	<div class="content">
+		<h1>매물 list</h1>
+		
+		<div>
+			<table>
+				<thead>
+					<tr>
+						<th>No.</th>
+						<th>방종류</th>
+						<th>매물(건물명-호수)</th>
+						<th>주소</th>
+						<th>전/월세</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="room : ${roomList}">
+						<td th:text="${room.roomId}"></td>
+						<td th:text="${room.type}"></td>
+						<td><a th:href="@{/seller/room/detail(roomId=${room.roomId})}" th:text="${room.buildingName} + (${room.roomNumber != '' ? ' - ' + room.roomNumber : ''})"></a></td>
+						<td th:text="${room.address}"></td>
+						<td th:text="${room.costType}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		
+		
+		
+	</div>
+</th:block>
+<th:block layout:fragment="customScript">
+	<script th:inline="javascript" type="text/javascript">
+		//커스텀 스크립트
+	</script>
+</th:block>
+
+    
+    

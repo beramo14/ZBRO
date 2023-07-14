@@ -52,13 +52,13 @@ public class CommunityController {
 		List<Community> postList = pageResult.getContent();
 		
 		// 페이징 확인
-		for(Community post:postList) {
-			System.out.println(post.toString());
-		}
+//		for(Community post:postList) {
+//			System.out.println(post.toString());
+//		}
 		
 		// 쿼리실행 후 총 게시물 수
 		int resultTotalCnt = pageResult.getNumberOfElements();
-		System.out.println("쿼리실행 후 총 게시물 수 : " + resultTotalCnt);
+//		System.out.println("쿼리실행 후 총 게시물 수 : " + resultTotalCnt);
 		
 		// 페이징처리
 		PageInfo pageInfo = new PageInfo((int)pageResult.getTotalElements(), page, pageSize, searchType, searchWord, categoryType);
@@ -295,7 +295,7 @@ public class CommunityController {
 		List<Comment> allComments = commuService.getAllComments();
 		
 		delChildComment(thisComment, allComments);
-		System.out.println("삭제된 댓글 : " + thisComment.getCommentId());
+//		System.out.println("삭제된 댓글 : " + thisComment.getCommentId());
 		commuService.delComment(commentId);
 		
 		
@@ -305,9 +305,9 @@ public class CommunityController {
 	private void delChildComment(Comment parentComment, List<Comment> allComments) {
 		for(Comment comment:allComments) {
 			if(comment.getParent() != null && parentComment.getCommentId() == comment.getParent().getCommentId()) {
-				System.out.println(parentComment.getCommentId()+"의 자식답글 : "+comment.getCommentId());
+//				System.out.println(parentComment.getCommentId()+"의 자식답글 : "+comment.getCommentId());
 				delChildComment(comment, allComments);
-				System.out.println("삭제된 댓글 : " + comment.getCommentId());
+//				System.out.println("삭제된 댓글 : " + comment.getCommentId());
 				commuService.delComment(comment.getCommentId());
 			}
 		}
