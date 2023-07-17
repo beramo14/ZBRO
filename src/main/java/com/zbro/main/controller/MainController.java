@@ -3,6 +3,8 @@ package com.zbro.main.controller;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.hibernate.engine.transaction.spi.JoinStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,11 +177,34 @@ public class MainController {
 		return "login/consumer_login";
 	}
 	
+	
+	/**
+	 * 로그인된 회원 유저 정보 가져오는 코드 예시......
+	 * @param principal
+	 * @return
+	 */
 	@GetMapping("/login/test")
 	@ResponseBody
-	public ResponseEntity<?> loginTest(Principal principal){
+	public ResponseEntity<Map<String, Object>> loginTest(Principal principal){
 		
-		return ResponseEntity.ok().body(principal);
+		//# principal.getName() : 현재 로그인된 유저의 이메일
+		log.info("principal.getName() : {}",principal.getName());
+		
+		Map<String, Object> testMap = new HashMap<>();
+
+		ConsumerUser user = new ConsumerUser();
+		
+		//# 로그인 여부를 principal가 null인지 아닌지로 구분(null이면 비로그인상태...)
+		if(principal != null) {
+			//# 현재 로그인된 유저 이메일을 사용하여 유저 Entity를 조회
+			log.info("userService.getConsumerUserByEmail(principal.getName()) : {}", userService.getConsumerUserByEmail(principal.getName()));
+			user = userService.getConsumerUserByEmail(principal.getName());
+		}
+		
+		testMap.put("principal", principal);
+		testMap.put("user", user);
+		
+		return ResponseEntity.ok().body(testMap);
 	}
 	
 	/*

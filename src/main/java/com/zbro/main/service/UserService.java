@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -72,13 +73,18 @@ public class UserService {
 		
 	}
 	
+	public ConsumerUser getConsumerUser(Long userId) {
+		return consumerRepository.findById(userId).get();
+	}
 	public SellerUser getSellerUser(Long userId) {
-		
 		return sellerRepository.findById(userId).get();
 	}
-	public ConsumerUser getConsumerUser(Long userId) {
-		
-		return consumerRepository.findById(userId).get();
+	
+	public ConsumerUser getConsumerUserByEmail(String email) {
+		return consumerRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("Consumer user Not Found"));
+	}
+	public SellerUser getSellerUserByEmail(String email) {
+		return sellerRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("Seller user Not Found"));
 	}
 
 	public void updateSellerUser(Long userId, SellerUser sellerUser) {
