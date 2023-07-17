@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +33,10 @@ public class UserService {
 	@Autowired
 	private SellerUserRepository sellerRepository;
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	
 	@Value("${file.biz}")
 	private String fileBizPath;
 	
@@ -42,7 +47,8 @@ public class UserService {
 	private String defaultProfileFileName;
 	
 
-	public void consumerUserSave(ConsumerUser user) {
+	public void consumerUserInsert(ConsumerUser user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		consumerRepository.save(user);
 	}
 
@@ -60,7 +66,8 @@ public class UserService {
 		return findedUser.isPresent();
 	}
 
-	public void sellerUserSave(SellerUser user) {
+	public void sellerUserInsert(SellerUser user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		sellerRepository.save(user);
 		
 	}

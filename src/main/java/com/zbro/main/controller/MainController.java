@@ -2,17 +2,20 @@ package com.zbro.main.controller;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.Principal;
 
 import org.hibernate.engine.transaction.spi.JoinStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zbro.main.service.MainService;
@@ -32,6 +35,7 @@ public class MainController {
 	
 	@Autowired
 	private UserService userService;
+	
 	
 	@GetMapping("/")
 	public String mainPage() {
@@ -93,9 +97,9 @@ public class MainController {
 		try {
 			String filename = userService.profileImageSave(file);
 			user.setProfilePhoto(filename);
-			userService.consumerUserSave(user);
+			userService.consumerUserInsert(user);
 		} catch (Exception e) {
-			log.error(e.getMessage(), e.getStackTrace());
+			log.error("joinConsumer(POST) Error : ", e);
 			
 			model.addAttribute("response", "error");
 			return "redirect:/join/consumer";
@@ -133,7 +137,7 @@ public class MainController {
 				user.setBizFile(bizFilename);
 			}
 			
-			userService.sellerUserSave(user);
+			userService.sellerUserInsert(user);
 		} catch (Exception e) {
 			log.error("joinSeller(POST) Error : ", e);
 			
@@ -171,14 +175,30 @@ public class MainController {
 		return "login/consumer_login";
 	}
 	
-	@PostMapping("/login/consumer")
-	public String loginConsumer(ConsumerUser user) {
-		log.info("### loginConsumer = {}", user);
+	@GetMapping("/login/test")
+	@ResponseBody
+	public ResponseEntity<?> loginTest(Principal principal){
 		
-		/*Login logic*/
-		
-		return "redirect:/";
+		return ResponseEntity.ok().body(principal);
 	}
+	
+	/*
+	 * {
+	 * 	"authorities":[{"authority":"ROLE_CONSUMER"}],
+	 * 	"details":{"remoteAddress":"0:0:0:0:0:0:0:1","sessionId":null},
+	 * 	"authenticated":true,
+	 * 	"credentials":null,
+	 * 	"name":"aqaq556@naver.com",
+	 * 	"principal":{
+	 * 		"password":null,
+	 * 		"username":"aqaq556@naver.com",
+	 * 		"authorities":[{"authority":"ROLE_CONSUMER"}],
+	 * 		"accountNonExpired":true,
+	 * 		"accountNonLocked":true,
+	 * 		"credentialsNonExpired":true,
+	 * 		"enabled":true}
+	 * }
+	 * */
 	
 	@GetMapping("/seller/profile/photo")
 	public ResponseEntity<Resource> getSellerProfilePhoto(SellerUser user) throws FileNotFoundException {

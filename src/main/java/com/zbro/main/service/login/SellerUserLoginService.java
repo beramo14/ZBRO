@@ -11,22 +11,23 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.zbro.main.repository.ConsumerUserRepository;
 import com.zbro.main.repository.SellerUserRepository;
 import com.zbro.model.SellerUser;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor //생성자 주입(final필드 의존성 주입)
 public class SellerUserLoginService implements UserDetailsService {
 
-	@Autowired
-	private SellerUserRepository sellerRepository;
+	private final SellerUserRepository sellerRepository;
 	
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		
-		SellerUser seller = sellerRepository.findByEmail(email).get();
-        if (seller == null) {
-            throw new UsernameNotFoundException("Seller not found with email: " + email);
-        }
+		SellerUser seller = sellerRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("Seller not found with email: " + email));
+		
         return new org.springframework.security.core.userdetails.User(seller.getEmail(), seller.getPassword(), getAuthorities(seller));
 	}
 	
