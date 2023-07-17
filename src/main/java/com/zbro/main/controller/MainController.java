@@ -180,6 +180,7 @@ public class MainController {
 	
 	/**
 	 * 로그인된 회원 유저 정보 가져오는 코드 예시......
+	 * 로그인 후 /login/test 접속
 	 * @param principal
 	 * @return
 	 */
@@ -187,43 +188,29 @@ public class MainController {
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> loginTest(Principal principal){
 		
-		//# principal.getName() : 현재 로그인된 유저의 이메일
-		log.info("principal.getName() : {}",principal.getName());
+		//## principal.getName() : 현재 로그인된 유저의 이메일
+		log.info("principal.getName() : {}", principal.getName());
 		
 		Map<String, Object> testMap = new HashMap<>();
 
 		ConsumerUser user = new ConsumerUser();
 		
-		//# 로그인 여부를 principal가 null인지 아닌지로 구분(null이면 비로그인상태...)
+		//## 로그인 여부를 principal가 null인지 아닌지로 구분(null이면 비로그인상태...)
+		// ※주의!!! principal null 체크 필수!!!!!(아래 if문 처럼 null처리 후 값을 불러와야함)
+		//	null 체크 안하면 비로그인시 nullPointerException 발생
+		//	별도로 비로그인처리를 해야하는 경우, null 체크 if문에 else 등으로 별도 처리(로그인 페이지로 redirect등...)
 		if(principal != null) {
-			//# 현재 로그인된 유저 이메일을 사용하여 유저 Entity를 조회
+			//## 현재 로그인된 유저 이메일을 사용하여 유저 Entity를 조회
 			log.info("userService.getConsumerUserByEmail(principal.getName()) : {}", userService.getConsumerUserByEmail(principal.getName()));
 			user = userService.getConsumerUserByEmail(principal.getName());
 		}
 		
-		testMap.put("principal", principal);
-		testMap.put("user", user);
+		testMap.put("username", principal.getName());
+		testMap.put("findedUser", user);
 		
 		return ResponseEntity.ok().body(testMap);
 	}
 	
-	/*
-	 * {
-	 * 	"authorities":[{"authority":"ROLE_CONSUMER"}],
-	 * 	"details":{"remoteAddress":"0:0:0:0:0:0:0:1","sessionId":null},
-	 * 	"authenticated":true,
-	 * 	"credentials":null,
-	 * 	"name":"aqaq556@naver.com",
-	 * 	"principal":{
-	 * 		"password":null,
-	 * 		"username":"aqaq556@naver.com",
-	 * 		"authorities":[{"authority":"ROLE_CONSUMER"}],
-	 * 		"accountNonExpired":true,
-	 * 		"accountNonLocked":true,
-	 * 		"credentialsNonExpired":true,
-	 * 		"enabled":true}
-	 * }
-	 * */
 	
 	@GetMapping("/seller/profile/photo")
 	public ResponseEntity<Resource> getSellerProfilePhoto(SellerUser user) throws FileNotFoundException {
