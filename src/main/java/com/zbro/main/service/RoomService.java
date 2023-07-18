@@ -16,12 +16,15 @@ import org.springframework.stereotype.Service;
 
 import com.zbro.dto.RoomSearchDTO;
 import com.zbro.main.repository.FavoritRepository;
+import com.zbro.main.repository.RoomOptionRepository;
 import com.zbro.main.repository.RoomPhotoRepository;
 import com.zbro.main.repository.RoomRepository;
 import com.zbro.model.ConsumerUser;
 import com.zbro.model.Favorite;
 import com.zbro.model.Room;
+import com.zbro.model.RoomOption;
 import com.zbro.model.RoomPhoto;
+import com.zbro.model.SellerUser;
 import com.zbro.type.CostType;
 import com.zbro.type.RoomType;
 
@@ -40,6 +43,9 @@ public class RoomService {
 	
 	@Autowired
 	private FavoritRepository favRepository;
+	
+	@Autowired
+	private RoomOptionRepository roomOptionRepository;
 	
 	
 	public List<RoomSearchDTO> searchRoomAndFavorite(RoomSearchDTO roomDTO, Long userId) {
@@ -73,6 +79,32 @@ public class RoomService {
 		return roomDTOList;
 	}
 	
+	
+	
+	public Room findById(Long roomId) {
+		Optional<Room> roomOptional =  roomRepository.findById(roomId);
+		if (roomOptional.isPresent()) {
+			return roomOptional.get();
+	    }
+		return null;
+	}
+
+
+
+
+	public List<RoomOption> getroomOption(Room room) {
+		List<RoomOption> getRoomOption = roomOptionRepository.findByRoom(room);
+		return getRoomOption;
+	}
+	
+	public List<Room> findBySellerId(SellerUser selleruser) {
+		List<Room> roomsame = roomRepository.findBySeller(selleruser);
+		
+		return roomsame;
+	}
+	
+	
+	
 
 	public RoomPhoto getRoomPhotoOne(Room room) {
 		
@@ -97,3 +129,4 @@ public class RoomService {
 		return imageResource;
 	}
 }
+

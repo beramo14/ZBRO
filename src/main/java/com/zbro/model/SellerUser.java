@@ -69,6 +69,9 @@ public class SellerUser {
 	@Comment("사업자 여부")
 	private boolean isBiz;
 	
+	@Comment("사업자등록증_파일명")
+	private String bizFile;
+	
 	@Comment("상태")
 	@Enumerated(EnumType.STRING)
 	@Column(updatable = false, insertable = false, columnDefinition = "VARCHAR(10) DEFAULT 'ACTIVE'")

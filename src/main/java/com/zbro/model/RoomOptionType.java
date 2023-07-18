@@ -27,3 +27,4 @@ public class RoomOptionType {
 	@Comment("정렬_순서")
 	private int sortOrder;
 }
+

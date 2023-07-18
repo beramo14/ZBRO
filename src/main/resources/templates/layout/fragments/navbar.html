@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <th:block th:fragment="navbar">
 <nav class="navbar navbar-expand-lg navbar-light bg-white navigation">
@@ -10,19 +10,25 @@
 	    <div class="d-flex justify-content-end">
 			<ul class="navbar-nav" style="align-items:center;">
 				<li class="nav-item1 me-3">
-					<a class="nav-link" href="/map">지도</a>
+					<a class="nav-link" th:href="@{/room/search}">지도</a>
 				</li>
-				<li class="nav-item1 dropdown me-4">
+				<li class="nav-item1 dropdown">
 					<a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
 					   꿀팁/질문
 					</a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item text-center" th:href="@{/tips}">꿀팁</a></li>
-						<li><a class="dropdown-item text-center" th:href="@{/questions}">질문</a></li>
+						<li><a class="dropdown-item text-center" th:href="@{/post_list(type='꿀팁')}">꿀팁</a></li>
+						<li><a class="dropdown-item text-center" th:href="@{/post_list(type='질문')}">질문</a></li>
 					</ul>
 				</li>
-				<li class="nav-item">
+				<li class="nav-item1" sec:authorize="isAuthenticated()">
+					<a class="nav-link" th:href="@{/mypage}">마이페이지</a>
+				</li>
+				<li class="nav-item ms-4" sec:authorize="isAnonymous()">
 					<a class="nav-link btn btn-link m-0" th:href="@{/login}">로그인 | 회원가입</a>
+				</li>
+				<li class="nav-item ms-4" sec:authorize="isAuthenticated()">
+					<a class="nav-link btn btn-link m-0" th:href="@{/logout}">로그아웃</a>
 				</li>
 			</ul>
 	    </div>
