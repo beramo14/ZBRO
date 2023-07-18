@@ -26,13 +26,12 @@ public class SellerUserLoginService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		
-		SellerUser seller = sellerRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("Seller not found with email: " + email));
+		SellerUser seller = sellerRepository.findByEmail(email).orElseThrow( () -> new UsernameNotFoundException("Seller not found with email: " + email) );
 		
         return new org.springframework.security.core.userdetails.User(seller.getEmail(), seller.getPassword(), getAuthorities(seller));
 	}
 	
 	private Collection<? extends GrantedAuthority> getAuthorities(SellerUser user) {
-        // 판매자의 권한 정보를 가져와서 Spring Security의 GrantedAuthority 객체로 변환하는 로직을 작성합니다.
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_SELLER"));
     }
 

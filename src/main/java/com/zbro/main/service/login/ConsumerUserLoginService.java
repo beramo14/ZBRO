@@ -32,7 +32,6 @@ public class ConsumerUserLoginService implements UserDetailsService{
 	}
 	
 	private Collection<? extends GrantedAuthority> getAuthorities(ConsumerUser user) {
-        // 구매자의 권한 정보를 가져와서 Spring Security의 GrantedAuthority 객체로 변환하는 로직을 작성합니다.
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_CONSUMER"));
     }
 	
