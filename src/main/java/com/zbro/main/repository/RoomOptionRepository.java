@@ -9,11 +9,7 @@ import com.zbro.model.RoomOption;
 
 public interface RoomOptionRepository extends JpaRepository<RoomOption, Long> {
 	
-    List<RoomOption> findByRoomRoomId(Long roomId);
-
-
-    
-    
+	
 
     
 }

@@ -11,8 +11,10 @@ html, body {
 	margin: 0 auto ;
 	padding-top: 40px;
 	padding-bottom: 172px;
+	
 }
 
 .main-content-wrapper{
 	margin-left: 10px;
+	width: 100%;
 }

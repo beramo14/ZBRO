@@ -22,7 +22,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.zbro.main.repository.RoomOptionRepository;
 import com.zbro.main.repository.RoomOptionTypeRepository;
 import com.zbro.main.service.MypageService;
-import com.zbro.main.service.RoomOptionTypeService;
 import com.zbro.model.Comment;
 import com.zbro.model.Community;
 import com.zbro.model.ConsumerUser;
@@ -30,7 +29,6 @@ import com.zbro.model.Favorite;
 import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
 import com.zbro.model.RoomOptionType;
-import com.zbro.model.RoomPhoto;
 import com.zbro.type.PostType;
 
 @Controller
@@ -39,34 +37,20 @@ public class MypageController {
 	@Autowired
 	private MypageService mypageService;
 	
-	@Autowired
-	private RoomOptionTypeService roomOptionTypeService;
 	
 	
 	@GetMapping("/favoriteCompare")
 	public String favoriteComparePage(Model model) {
 
 	    List<Favorite> favorites = mypageService.getFavoritesByUserConsumerId();
-	    List<List<RoomOption>> roomOptions = new ArrayList<>();
-	    List<List<RoomPhoto>> roomPhotos = new ArrayList<>();
+	    List<RoomOption> roomOptions = mypageService.getAllRoomOptions();
 	    ConsumerUser consumerUser = mypageService.getConsumerUser();
-	    
-        
-        for (Favorite favorite : favorites) {
-            List<RoomOption> options = mypageService.getRoomOptionsByRoomId(favorite.getRoom().getRoomId());
-            roomOptions.add(options);
-            
-            List<RoomPhoto> photos = mypageService.getRoomPhotosByRoomId(favorite.getRoom().getRoomId());
-            roomPhotos.add(photos);
-        }
-        
-        List<RoomOptionType> roomOptionTypes = roomOptionTypeService.getAllRoomOptionTypes();
+        List<RoomOptionType> roomOptionTypes = mypageService.getAllRoomOptionTypes();
         
         
         model.addAttribute("roomOptions", roomOptions);
         model.addAttribute("favorites", favorites);
         model.addAttribute("roomOptionTypes", roomOptionTypes);
-        model.addAttribute("roomPhotos", roomPhotos); 
         model.addAttribute("consumerUser", consumerUser);
         
         return "main/mypage/favoriteCompare";
@@ -102,21 +86,33 @@ public class MypageController {
     }	
     
     @GetMapping("/contentList")
-    public String getAllCommunities(Model model) {
-        List<Community> communities = mypageService.getCommunitiesByUser();
-        ConsumerUser consumerUser = mypageService.getConsumerUser();
+    public String getAllCommunities(Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "꿀팁") String type) {
 
-
-        model.addAttribute("communities", communities);
-        model.addAttribute("consumerUser", consumerUser);
-
-
-        return "main/mypage/contentList";
-    }
+		Page<Community> tipsPage = mypageService.getCommunitiesAllTips(page, size);
+		Page<Community> questionsPage = mypageService.getCommunitiesAllQuestions(page, size);
+		ConsumerUser consumerUser = mypageService.getConsumerUser();
+		
+		List<Community> tips = tipsPage.getContent();
+		List<Community> questions = questionsPage.getContent();
+		
+		model.addAttribute("tips", tips);
+		model.addAttribute("questions", questions);
+		model.addAttribute("consumerUser", consumerUser);
+		model.addAttribute("type", type);
+		model.addAttribute("tipsPage", tipsPage); // 페이징
+		model.addAttribute("questionsPage", questionsPage); // 페이징
+		
+		return "main/mypage/contentList";
+		}
 	
     @GetMapping("/commentList")
-    public String getAllComments(Model model) {
-        List<Comment> comments = mypageService.getCommentsByUser();
+    public String getAllComments(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size,
+                                 Model model) {
+        Page<Comment> comments = mypageService.getCommentsByUser(page, size);
         ConsumerUser consumerUser = mypageService.getConsumerUser();
 
         model.addAttribute("comments", comments);
@@ -124,7 +120,6 @@ public class MypageController {
         
         return "main/mypage/commentList";
     }
-    
     
     
     @GetMapping("/sidebar")
@@ -148,14 +143,19 @@ public class MypageController {
     @PostMapping("/memberInfo")
     public String updateUserInfo(@RequestParam("imageUpload") MultipartFile file, ConsumerUser consumerUser, Model model) {
 
-        if (!file.isEmpty()) {
+
+        
+        ConsumerUser consumerUserUP = mypageService.getConsumerUser();
+        consumerUserUP.setPassword(consumerUser.getPassword());        
+        consumerUserUP.setName(consumerUser.getName ());
+        
+        if (file != null && !file.isEmpty()) {
             String fileName = saveProfileImage(file);
             consumerUser.setProfilePhoto(fileName);
         }
-        
-        ConsumerUser consumerUserUP = mypageService.getConsumerUser();
-        consumerUserUP.setPassword(consumerUser.getPassword());
-        consumerUserUP.setProfilePhoto(consumerUser.getProfilePhoto());
+        if (!file.isEmpty() || consumerUser.getProfilePhoto() != null) {
+            consumerUserUP.setProfilePhoto(consumerUser.getProfilePhoto());
+        }     
         
         mypageService.updateUserInfo(consumerUserUP);
         
@@ -164,10 +164,8 @@ public class MypageController {
     
     
     private String saveProfileImage(MultipartFile file) {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
+        String fileName = file.getOriginalFilename();
         return fileName;
-
     }
     
     @PostMapping("/memberDelete")
@@ -179,21 +177,13 @@ public class MypageController {
   
     @GetMapping("/myMain")
     public String myMainPage(Model model) {
-		List<Favorite> favorites = mypageService.getFavoritesByUserConsumerId();
-		List<List<RoomPhoto>> roomPhotos = new ArrayList<>();
-		List<Community> communities = mypageService.getCommunitiesByUser();
-		List<Comment> comments = mypageService.getCommentsByUser();
-		ConsumerUser consumerUser = mypageService.getConsumerUser();
-		
-        for (Favorite favorite : favorites) {
-         
-            List<RoomPhoto> photos = mypageService.getRoomPhotosByRoomId(favorite.getRoom().getRoomId());
-            roomPhotos.add(photos);
-        }
-                      
+        List<Favorite> favorites = mypageService.getFavoritesByUserConsumerId();
+        List<Community> top10Contents = mypageService.getTop10();
+        List<Comment> comments = mypageService.getComments10ByUser();
+        ConsumerUser consumerUser = mypageService.getConsumerUser();
+
         model.addAttribute("favorites", favorites);
-        model.addAttribute("roomPhotos", roomPhotos); 
-        model.addAttribute("communities", communities);
+        model.addAttribute("top10Contents", top10Contents);
         model.addAttribute("comments", comments);
         model.addAttribute("consumerUser", consumerUser);
 

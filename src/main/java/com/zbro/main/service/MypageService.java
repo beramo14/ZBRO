@@ -16,14 +16,14 @@ import com.zbro.main.repository.CommunityRepository;
 import com.zbro.main.repository.ConsumerUserRepository;
 import com.zbro.main.repository.MypageRepository;
 import com.zbro.main.repository.RoomOptionRepository;
-import com.zbro.main.repository.RoomPhotoRepository;
+import com.zbro.main.repository.RoomOptionTypeRepository;
 import com.zbro.model.Comment;
 import com.zbro.model.Community;
 import com.zbro.model.ConsumerUser;
 import com.zbro.model.Favorite;
 import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
-import com.zbro.model.RoomPhoto;
+import com.zbro.model.RoomOptionType;
 import com.zbro.type.PostType;
 import com.zbro.type.UserStatusType;
 
@@ -37,7 +37,8 @@ public class MypageService {
 	private RoomOptionRepository roomOptionRepository;
 	
 	@Autowired
-	private RoomPhotoRepository roomPhotoRepository;
+	private RoomOptionTypeRepository roomOptionTypeRepository;
+
 	
 	@Autowired
 	private CommunityRepository communityRepository;
@@ -47,46 +48,58 @@ public class MypageService {
 	
 	@Autowired
 	private CommentRepository commentRepository;
+
+	
+    private Long getLoggedInUserId() {
+        return 1L;
+    }	
 	
 	
     public List<Favorite> getFavoritesByUserConsumerId() {
-        Long userId = getLoggedInUserId();
+        Long userId = getLoggedInUserId();  //아이디
         return mypageRepository.findByUserConsumerId(userId);
     }
-    
-    private Long getLoggedInUserId() {
-        return 1L;
+      
+    public List<RoomOptionType> getAllRoomOptionTypes() {
+        return roomOptionTypeRepository.findAll();
     }
     
-    public List<RoomOption> getRoomOptionsByRoomId(Long roomId) {
-        return roomOptionRepository.findByRoomRoomId(roomId);
+    public List<RoomOption> getAllRoomOptions() {
+        return roomOptionRepository.findAll();
     }
     
+   
     public void saveMemo(Long favoriteId, String memo) {
-        Favorite favorite = mypageRepository.findById(favoriteId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid favoriteId"));
-        favorite.setMemo(memo);
-        mypageRepository.save(favorite);
+        Favorite favorite = mypageRepository.findById(favoriteId).orElse(null);
+        if (favorite != null) {
+            favorite.setMemo(memo);
+            mypageRepository.save(favorite);
+        }
     }
     
-    public List<RoomPhoto> getRoomPhotosByRoomId(Long roomId) {
-        return roomPhotoRepository.findByRoomRoomId(roomId);
-    }
+    
     
     public void deleteFavorite(Long favoriteId) {
         mypageRepository.deleteById(favoriteId);
     }
     
     
-	public List<Community> getCommunitiesByUser() {
-		Long userId = getLoggedInUserId();
-		return communityRepository.findByUserConsumerId(userId);
-	}
+    public Page<Community> getCommunitiesAllTips(int page, int size) {
+        Long userId = getLoggedInUserId();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
+        return communityRepository.findByUserConsumerIdAndTypeOrderByCreateDateDesc(userId, PostType.꿀팁, pageable);
+    }
+
+    public Page<Community> getCommunitiesAllQuestions(int page, int size) {
+        Long userId = getLoggedInUserId();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
+        return communityRepository.findByUserConsumerIdAndTypeOrderByCreateDateDesc(userId, PostType.질문, pageable);
+    }
 	
-	
-	public List<Comment> getCommentsByUser() {
-		Long userId = getLoggedInUserId();
-		return commentRepository.findByUserConsumerId(userId);
+	public Page<Comment> getCommentsByUser(int page, int size) {
+	    Long userId = getLoggedInUserId();
+	    Pageable pageable = PageRequest.of(page, size);
+	    return commentRepository.findByUserConsumerId(userId, pageable);
 	}
 	
 	
@@ -106,7 +119,20 @@ public class MypageService {
         consumerUserRepository.save(consumerUser);
     }
     
+    public List<Community> getTop10() {
+        Long userId = getLoggedInUserId();
+        return communityRepository.findTop8ByUserConsumerIdOrderByCreateDateDesc(userId);
+    }
+
+
     
+	public List<Comment> getComments10ByUser() {
+		Long userId = getLoggedInUserId();
+		return commentRepository.findTop8ByUserConsumerIdOrderByCreateDateDesc(userId);
+	}
+
+
+
 
     
 }

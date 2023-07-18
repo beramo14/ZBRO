@@ -10,6 +10,5 @@ import com.zbro.model.RoomPhoto;
 
 public interface RoomPhotoRepository extends JpaRepository<RoomPhoto, String> {
     
-    List<RoomPhoto> findByRoomRoomId(Long roomId);
     Optional<RoomPhoto> findByRoomAndImageSeq(Room room, int seq);
 }

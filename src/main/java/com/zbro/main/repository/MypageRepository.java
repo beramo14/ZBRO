@@ -14,10 +14,9 @@ import com.zbro.model.RoomOption;
 
 
 public interface MypageRepository extends JpaRepository<Favorite, Long> {
+	
     List<Favorite> findByUserConsumerId(Long consumerId);
        
-    @Query("SELECT ro FROM RoomOption ro WHERE ro.room.roomId = :roomId")
-    List<RoomOption> findRoomOptionsByRoomId(@Param("roomId") Long roomId);
 
     
 }

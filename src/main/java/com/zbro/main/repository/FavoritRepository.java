@@ -9,5 +9,6 @@ import com.zbro.model.Favorite;
 import com.zbro.model.Room;
 
 public interface FavoritRepository extends JpaRepository<Favorite, Long>{
+	
 	Optional<Favorite> findByUserAndRoom(ConsumerUser user, Room room);
 }
