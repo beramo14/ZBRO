@@ -64,7 +64,7 @@ public class WebSecurityConfig {
 						.antMatchers("/seller/login").permitAll()
 						.antMatchers("/seller/**").hasAuthority("ROLE_SELLER")
 				)
-	    		.formLogin(login -> login.loginPage("/seller/login").loginProcessingUrl("/seller/login").defaultSuccessUrl("/seller"));
+	    		.formLogin(login -> login.loginPage("/seller/login").loginProcessingUrl("/seller/login").defaultSuccessUrl("/seller/login/success"));
 		}
 
 		@Autowired

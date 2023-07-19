@@ -12,9 +12,11 @@
 				<a href="/" class="go-home">홈페이지 바로가기</a>
 			</div>
 			<div class="profile-wrapper aside-section">
-				<img src="https://picsum.photos/400/300" alt="Seller profile image" class="profile-image"/>
-				<p class="username">홍길동 님</p>
-				<span class="admission-info">승인된 사용자입니다</span>
+				<div class="profile-image-wrapper">
+					<img th:src="@{/seller/profile/photo(sellerId=${sellerId})}" alt="Seller profile image" class="profile-image"/>
+				</div>
+				<p class="username" th:text="${session.sellerName}">홍길동 님</p>
+				<span class="admission-info" th:text="${session.sellerIsAdmission} ? '승인된 사용자입니다' : '승인되지 않은 사용자입니다.'">승인된 사용자입니다</span>
 			</div>
 			<div class="menu-wrapper aside-section">
 				<div class="menu">

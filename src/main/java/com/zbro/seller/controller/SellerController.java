@@ -2,7 +2,10 @@ package com.zbro.seller.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,11 +38,12 @@ public class SellerController {
 	@Autowired
 	private ResourceLoader resourceLoader;
 	
-	// Repository
 	@Autowired
 	private UserService sellerUserService;
+	
 	@Autowired
 	private SellerRoomService roomService;
+	
 	
 	@Value("${file.images.room-photo}")
 	public String uploadFolder;
@@ -48,10 +52,24 @@ public class SellerController {
 	private String fileBizPath;
 	
 	
+	
+	
 	@GetMapping("/seller")
 	public String sellerMainPage() {
 		
 		return "seller/index";
+	}
+	
+	
+	@GetMapping("/seller/login/success")
+	public String sellerLoginSuccess(HttpSession session, Principal principal) {
+		SellerUser seller = sellerUserService.getSellerUserByEmail(principal.getName());
+		
+		session.setAttribute("sellerId", seller.getSellerId());
+		session.setAttribute("sellerName", seller.getName());
+		session.setAttribute("sellerIsAdmission", seller.isAdmission());
+		
+		return "redirect:/seller";
 	}
 	
 	
