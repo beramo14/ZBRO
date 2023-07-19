@@ -207,11 +207,12 @@ public class MainController {
 		// ※주의!!! authentication null 체크 필수!!!!!(아래 if문 처럼 null처리 후 값을 불러와야함)
 		//	null 체크 안하면 비로그인시 nullPointerException 발생
 		//	별도로 비로그인처리를 해야하는 경우, null 체크 if문에 else 등으로 별도 처리(로그인 페이지로 redirect등...)
+		
 		if(authentication != null) {
 			//## authentication.getName() : 현재 로그인된 유저의 이메일
 			log.info("#### authentication.getName() : {}", authentication.getName());
 			//## authentication.getAuthorities() : 현재 로그인된 유저의 권한을 조회(구매자:ROLE_CONSUMER, 판매자:ROLE_SELLER)
-			log.info("#### authentication.getAuthorities() : {}", authentication.getAuthorities().toArray()[0]);
+			log.info("#### authentication.getAuthorities() : {}", authentication.getAuthorities().toArray()[0].toString());
 			String userType =  authentication.getAuthorities().toArray()[0].toString();
 			
 			//## 현재 로그인된 유저 이메일을 사용하여 유저 Entity를 조회
@@ -222,12 +223,11 @@ public class MainController {
 			} else if(userType.equals("ROLE_SELLER") == true) {
 				SellerUser sellerUser = userService.getSellerUserByEmail(authentication.getName());
 				testMap.put("findedUser", sellerUser);
-				
 			}
 			
+			testMap.put("username", authentication.getName());
 		}
 		
-		testMap.put("username", authentication.getName());
 		testMap.put("authentication", authentication);
 		
 		
