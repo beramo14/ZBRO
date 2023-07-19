@@ -41,7 +41,7 @@ public class WebSecurityConfig {
 		}
 
 		@Autowired
-	    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 	        auth.userDetailsService(consumerUserLoginService).passwordEncoder(passwordEncoder);
 	    }
 	}
@@ -68,7 +68,7 @@ public class WebSecurityConfig {
 		}
 
 		@Autowired
-	    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		protected void configure(AuthenticationManagerBuilder auth) throws Exception { 
 	        auth.userDetailsService(sellerUserLoginService).passwordEncoder(passwordEncoder);
 	    }
 	
