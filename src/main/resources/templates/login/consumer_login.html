@@ -131,7 +131,7 @@
 			<div>
 				<form action="#" id="user-find">
 					<div class="modal-form-input-wrapper" style="margin: 0 auto; text-align: center;">
-						<input type="email" name="email" class="form-control form-control-lg" placeholder="이메일을 입력해주세요." style="display: inline-block; width: auto; vertical-align: middle;" required/>
+						<input type="email" name="email" id="findEmail" class="form-control form-control-lg" placeholder="이메일을 입력해주세요." style="display: inline-block; width: auto; vertical-align: middle;" required/>
 						<button type="submit" class="btn btn-lg btn-primary" style="display: inline-block; width: auto; vertical-align: middle;">찾기</button>
 					</div>
 					<div class="modal-message" style="text-align: left;">
@@ -180,10 +180,12 @@
 <th:block layout:fragment="customScript">
 	<script th:inline="javascript" type="text/javascript">
 		
-		$("#user-find-modal-close-button").click( function(){
+		$("#user-find-modal-close-button").click( function() {
+			$('.modal-message').children().hide();
+			$("#findEmail").val(null);
 			$("#user-find-modal").hide();
 		});
-		$("#password-find-modal-close-button").click( function(){
+		$("#password-find-modal-close-button").click( function() {
 			$("#password-find-modal").hide();
 		});
 		
@@ -195,13 +197,47 @@
 			user-not-found : 회원 없음
 		*/
 		function userExistsMessageShowControl(type) {
-			if(type === 'user-found'){
+			if(type === 'user-found') {
 				$("span.message-user-not-found").hide();
 				$("span.message-user-exists").show();
-			} else if( type === 'user-not-found'){
+			} else if( type === 'user-not-found') {
 				$("span.message-user-exists").hide();
 				$("span.message-user-not-found").show();
 			}
 		}
+		
+		$(document).ready(function() {
+			
+			
+			$("#user-find").submit(function(e) {
+				e.preventDefault();
+				
+				if($("#findEmail").val() === "" || $("#findEmail").val() == null) {
+					alert("이메일을 입력해주세요.");
+					$("#findEmail").focus();
+					return;
+				}
+				
+				$.ajax({
+					type: "get",
+					url: '/consumer/login/find/account',
+					data: {"email":$("#findEmail").val()},
+					success: function(res) {
+						console.log(res);
+						if(res === true) {
+							userExistsMessageShowControl('user-found');
+						} else if(res === false) {
+							userExistsMessageShowControl('user-not-found');
+						}
+					},
+					error: function(error) {
+						console.log(error);
+					}
+				});
+			});
+			
+			
+		});
+		
 	</script>
 </th:block>

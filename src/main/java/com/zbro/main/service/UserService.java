@@ -89,6 +89,14 @@ public class UserService {
 	public SellerUser getSellerUserByEmail(String email) {
 		return sellerRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("Seller user Not Found"));
 	}
+	
+	
+	public boolean findConsumerAccountByEmail(String email) {
+		return consumerRepository.findByEmail(email).isPresent();
+	}
+	public boolean findSellerAccountByEmail(String email) {
+		return sellerRepository.findByEmail(email).isPresent();
+	}
 
 	public SellerUser updateSellerUser(Long userId, SellerUser sellerUser) {
 		SellerUser findedSellerUser = sellerRepository.findById(userId).get();
