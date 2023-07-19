@@ -90,7 +90,7 @@ public class UserService {
 		return sellerRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("Seller user Not Found"));
 	}
 
-	public void updateSellerUser(Long userId, SellerUser sellerUser) {
+	public SellerUser updateSellerUser(Long userId, SellerUser sellerUser) {
 		SellerUser findedSellerUser = sellerRepository.findById(userId).get();
 		
 		findedSellerUser.setName(sellerUser.getName());
@@ -113,7 +113,7 @@ public class UserService {
 			}
 		}
 		
-		sellerRepository.save(findedSellerUser);
+		return sellerRepository.save(findedSellerUser);
 		
 	}
 	

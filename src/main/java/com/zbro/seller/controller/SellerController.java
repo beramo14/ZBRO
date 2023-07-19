@@ -60,6 +60,20 @@ public class SellerController {
 		return "seller/index";
 	}
 	
+	/**
+	 * 판매자 로그인 성공했을때 오는 매핑
+	 * 사이드바에 유저 정보를 항시 표출하기 위해 세션에 정보 추가
+	 * */
+	@GetMapping("/seller/login/success")
+	public String sellerLoginSuccess(HttpSession session, Principal principal) {
+		SellerUser seller = sellerUserService.getSellerUserByEmail(principal.getName());
+		
+		session.setAttribute("sellerId", seller.getSellerId());
+		session.setAttribute("sellerName", seller.getName());
+		session.setAttribute("sellerIsAdmission", seller.isAdmission());
+		
+		return "redirect:/seller";
+	}
 	
 	
 	// 매물등록 페이지 들어가기.

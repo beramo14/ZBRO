@@ -1,9 +1,9 @@
 package com.zbro.main.service.login;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.zbro.main.repository.ConsumerUserRepository;
 import com.zbro.main.repository.SellerUserRepository;
 import com.zbro.model.SellerUser;
 
@@ -28,11 +27,17 @@ public class SellerUserLoginService implements UserDetailsService {
 		
 		SellerUser seller = sellerRepository.findByEmail(email).orElseThrow( () -> new UsernameNotFoundException("Seller not found with email: " + email) );
 		
-        return new org.springframework.security.core.userdetails.User(seller.getEmail(), seller.getPassword(), getAuthorities(seller));
+        return new org.springframework.security.core.userdetails.User(seller.getEmail(), seller.getPassword(), getAuthorities(seller.isAdmission()));
 	}
 	
-	private Collection<? extends GrantedAuthority> getAuthorities(SellerUser user) {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_SELLER"));
+	private Collection<? extends GrantedAuthority> getAuthorities(boolean isAdmission) {
+		List<GrantedAuthority> authList = new ArrayList<>();
+		authList.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+		if(isAdmission == true) {
+			authList.add(new SimpleGrantedAuthority("ROLE_SELLER_ADMISSION"));
+		}
+        return authList;
     }
 
 }
+//isAdmission
