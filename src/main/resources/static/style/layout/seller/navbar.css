@@ -8,6 +8,12 @@
 	background-color: white;
 }
 
+.navigation a.nav-title {
+	text-decoration: none;
+	color: black;
+	font-weight: bold;
+}
+
 .navigation .login-wrapper > a{
 	text-decoration: none;
 	color: black;

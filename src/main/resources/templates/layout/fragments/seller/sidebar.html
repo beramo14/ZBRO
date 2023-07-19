@@ -13,14 +13,14 @@
 			</div>
 			<div class="profile-wrapper aside-section">
 				<div class="profile-image-wrapper">
-					<img th:src="@{/seller/profile/photo(sellerId=${sellerId})}" alt="Seller profile image" class="profile-image"/>
+					<img th:src="@{/seller/profile/photo(sellerId=${session.sellerId})}" alt="Seller profile image" class="profile-image"/>
 				</div>
 				<p class="username" th:text="${session.sellerName}">홍길동 님</p>
 				<span class="admission-info" th:text="${session.sellerIsAdmission} ? '승인된 사용자입니다' : '승인되지 않은 사용자입니다.'">승인된 사용자입니다</span>
 			</div>
 			<div class="menu-wrapper aside-section">
 				<div class="menu">
-					<p class="outer-menu"><a href="/seller/user/detail">회원정보</a></p>
+					<p class="outer-menu"><a href="/seller/user">회원정보</a></p>
 				</div>
 				<div class="menu">
 					<p class="outer-menu"><a href="/seller/room/list">매물</a></p>
