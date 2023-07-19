@@ -61,17 +61,6 @@ public class SellerController {
 	}
 	
 	
-	@GetMapping("/seller/login/success")
-	public String sellerLoginSuccess(HttpSession session, Principal principal) {
-		SellerUser seller = sellerUserService.getSellerUserByEmail(principal.getName());
-		
-		session.setAttribute("sellerId", seller.getSellerId());
-		session.setAttribute("sellerName", seller.getName());
-		session.setAttribute("sellerIsAdmission", seller.isAdmission());
-		
-		return "redirect:/seller";
-	}
-	
 	
 	// 매물등록 페이지 들어가기.
 	@GetMapping("/room_add")
@@ -160,22 +149,26 @@ public class SellerController {
 	
 	
 	@GetMapping("/seller/user")
-	public String sellerUserView(Model model){
+	public String sellerUserView(Principal principal, Model model){
 		
-		Long tempUserId = 1L;
 		
-		SellerUser sellerUser = sellerUserService.getSellerUser(tempUserId);
+		SellerUser sellerUser = sellerUserService.getSellerUserByEmail(principal.getName());
 		model.addAttribute("sellerUser", sellerUser);
 		
 		return "seller/user/detail";
 	}
 	
 	@PostMapping("/seller/user/update")
-	public String sellerUserUpdate(@RequestParam("profilePhotoFile") MultipartFile profilePhotoFile, @RequestParam("bizScanFile") MultipartFile bizScanFile, @RequestParam("isBiz") String isBizString, SellerUser sellerUser) throws IllegalStateException, IOException {
+	public String sellerUserUpdate(Principal principal
+									, @RequestParam("profilePhotoFile") MultipartFile profilePhotoFile
+									, @RequestParam("bizScanFile") MultipartFile bizScanFile
+									, @RequestParam("isBiz") String isBizString
+									, SellerUser sellerUser
+									, HttpSession session
+									) throws IllegalStateException, IOException {
 		
-		Long tempUserId = 1L;
 		
-		SellerUser findedSellerUser = sellerUserService.getSellerUser(tempUserId);
+		SellerUser findedSellerUser = sellerUserService.getSellerUserByEmail(principal.getName());
 		
 		//isBiz String -> boolean
 		sellerUser.setBiz("true".equalsIgnoreCase(isBizString));
@@ -196,7 +189,10 @@ public class SellerController {
 			sellerUserService.bizFileDelete(findedSellerUser);
 		}
 		
-		sellerUserService.updateSellerUser(tempUserId, sellerUser);
+		SellerUser savedSeller = sellerUserService.updateSellerUser(findedSellerUser.getSellerId(), sellerUser);
+		
+		//사이드바 업데이트
+		session.setAttribute("sellerName", savedSeller.getName());
 		
 		return "redirect:/seller/user";
 	}
