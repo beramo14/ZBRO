@@ -93,7 +93,7 @@
 			        이미지등록<br />
 			        <div class="file_list" th:each="roomPhoto : ${roomPhotos}">
 			        	<div class="myFile">
-				        	<div class="imagePreview">
+				        	<div class="imagePreview" style="overflow: hidden">
 				        		<img th:src="@{'/seller/room/photo?photoId=' + ${roomPhoto.photoId}}" alt="Room Photo" style="max-width:100%"/>
 				        	</div>
 		                    <div class="file_input">
@@ -103,11 +103,11 @@
 		                        </label>
 		                    </div>
 		                    <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
-		                    <button type="button" onclick="addFile();" class="btns fn_add_btn"><span>파일 추가</span></button>
 			        	</div>
 		            </div>
 			    </div>
 			    <button type="submit">등록하기</button>
+			    <div class="imageContainer" ></div>
 			</form>
 		</div>
 		
@@ -124,32 +124,29 @@
 	</div>
 </th:block>
 <th:block layout:fragment="customScript">
+
 	<script th:inline="javascript">
 		$(document).ready(function() {
-			getImage();
+			
+			/* 파일 추가 버튼 생성 */
+			var fileAddDiv = document.querySelector('.myFile');
+			var fileAddBtn = `
+				<button type="button" onclick="addFile();" class="btns fn_add_btn"><span>파일 추가</span></button>
+			`;
+				
+			/* insertAdjacentHTML
+				첫번째 인자 : 위치 지정
+				두번째 인자 : 추가하려는 HTML문자열
+				
+				bdforebegin : 해당 요소 바로 앞에 추가
+				afterbefing : 해당 요소의 첫번째 자식 요소로 추가
+				beforeend : 해당 요소의 마지막 자식요소로 추가
+				afterend : 해당 요소 바로 뒤에 추가
+			*/
+			fileAddDiv.insertAdjacentHTML('beforeend', fileAddBtn);
 		})
 	</script>
 	
-	<!-- 이미지 불러오기  -->
-	<script th:inline="javascript">
-		function getImage() {
-			var image = new Image();
-			var photoId = 29;
-			
-			$.ajax({
-				type: "GET",
-				url: "/seller/room/photo",
-				data: {photoId: photoId},
-				success: function(result) {
-					console.log('이미지 가져오기 성공')
-				},
-				error: function(error) {
-					console.log('이미지 가져오기 실패')
-					console.log(error);
-				}
-			})
-		}
-	</script>
 
 	<!-- 주소 찾기 -->
 	<script th:inline="javascript" type="text/javascript">
@@ -231,20 +228,25 @@
 				alert('최대 5개까지 등록 가능합니다');
 				return false;
 			}
-			
-	        const fileDiv = document.createElement('div');
-	        fileDiv.classList.add('myFile');
-	        fileDiv.innerHTML =`
-	        	<div class="imagePreview"></div>
-	        	<div class="file_input">
-	                <input type="text" readonly/>
-	                <label> 첨부파일
-	                    <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
-	                </label>
+	        
+	        var lastFileList = $('.file_list').last();
+	        var newFileElement = `
+	        	<div class="file_list">
+	        		<div class="myFile">
+			        	<div class="imagePreview" style="overflow: hidden"></div>
+			        	<div class="file_input">
+			                <input type="text" readonly/>
+			                <label> 첨부파일
+			                    <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
+			                </label>
+			            </div>
+			            <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
+		            </div>
 	            </div>
-	            <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
 	        `;
-	        document.querySelector('.file_list').appendChild(fileDiv);
+	        
+			$('.file_list').last().after(newFileElement);
+	        
 	        
 	     	// 파일개수 제한
 	        fileCount = fileCount+1;
@@ -252,23 +254,23 @@
 		
 	 	// 파일 삭제
 	    function removeFile(element) {
-	        const fileAddBtn = element.nextElementSibling;
-	        if (fileAddBtn) {
-	            const inputs = element.previousElementSibling.querySelectorAll('input');
-	            inputs.forEach(input => input.value = '')
+	       const fileAddBtn = element.nextElementSibling;
+	       if (fileAddBtn) {
+	           const inputs = element.previousElementSibling.querySelectorAll('input');
+	           inputs.forEach(input => input.value = '')
 	            
-	            // 미리보기 이미지 삭제
-		        const previewDiv = document.querySelector('.imagePreview');
-				const imgElement = previewDiv.querySelector('img');
-				if (imgElement) {
-				    imgElement.remove(); // img 태그 삭제
-				}
+	           // 미리보기 이미지 삭제
+		       const previewDiv = document.querySelector('.imagePreview');
+			   const imgElement = previewDiv.querySelector('img');
+			   if (imgElement) {
+				   imgElement.remove(); // img 태그 삭제
+			   }
         
-	            return false;
-	        }
-	        element.parentElement.remove();
+	           return false;
+	       }
+	       element.closest('.file_list').remove();
 	        
-	        fileCount = fileCount-1;
+	       fileCount = fileCount-1;
 	    }
 	</script>
 	
