@@ -3,7 +3,12 @@ package com.zbro.seller.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -134,6 +139,46 @@ public class SellerRoomController {
 			
 			Resource imageResource = roomService.getImageResource(findedRoomPhoto);
 			return ResponseEntity.ok().body(imageResource);
+		}
+		
+		
+		@PostMapping("/seller/room/edit")
+		public String roomEdit(@RequestParam("isRoomIn") boolean isRoomIn, 
+				  @RequestParam("isElevator") boolean isElevator,
+				  @RequestParam(value = "optionType", required = false) List<String> optionTypes,
+				  @RequestParam(value = "uploadFile", required = false) List<MultipartFile> files,
+				  Room room) throws Exception, IOException {
+			
+			// room insert
+			room.setRoomIn(isRoomIn);
+			room.setElevator(isElevator);
+			roomService.insertRoom(room);
+			System.out.println("room : " + room.toString());
+			
+			// 앞단에서 가져온 옵션들
+			Set<String> optionTypesSet = new HashSet<>(optionTypes);
+			
+			// 원래 optionTypes의 optionType만 String으로 불러오기
+			List<RoomOption> beforeRoomOption = roomService.getRoomOptions(room);
+			Set<String> beforeRoomOptionSet = beforeRoomOption.stream()
+											.flatMap(roomOption -> Stream.of(roomOption.getOptionType().getOptionType()))
+											.collect(Collectors.toSet());
+			
+			// 옵션 변경되면 RoomOption delete/insert
+			if(!beforeRoomOptionSet.equals(optionTypesSet)) {
+////				for (String optionType : optionTypes) {
+////					RoomOption roomOption = new RoomOption();
+////					RoomOptionType roomOptionType = new RoomOptionType();
+////					roomOptionType.setOptionType(optionType);
+////					roomOption.setRoom(room);
+////					roomOption.setOptionType(roomOptionType);
+////					roomService.insertRoomOption(roomOption);
+////				}
+			}
+			
+			
+			
+			return "seller/room/editTest";
 		}
 		
 		
