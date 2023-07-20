@@ -16,22 +16,28 @@
 } */
 
 .sidemenu {
+	position: sticky;
 	 border: 1px solid;
 	 border-color:#F3F3F3;
-	 height: 370px;
+	 min-height: 100%;
 	  width:30%; 
 	 
+}
+
+.side-under {
+	position: sticky;
+	top:100px;
 }
 
 
 .main {
 	display: flex;
-	align-items: center;
 	justify-content: space-between;
 }
 
 .roominfo {
 	width: 70%;
+	height:100%;
 }
 
 
@@ -156,3 +162,6 @@
 	background-color:#F3F3F3;
 	
 }
+
+.sidemenu-wrapper {
+	display:flex;

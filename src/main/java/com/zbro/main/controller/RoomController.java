@@ -69,21 +69,26 @@ public class RoomController {
 	    Room room = roomService.findById(roomId);
 	    SellerUser selleruser = new SellerUser();
 	    selleruser.setSellerId(room.getSeller().getSellerId());
-	    
+	    ConsumerUser csuser = new ConsumerUser();
+	    csuser.setConsumerId(1L);
 	    List<Room> roomsame = roomService.findBySellerId(selleruser);
 	    List<RoomOption> roomOption = roomService.getroomOption(room);
 	    List<RoomPhoto> roomPhotoList = roomService.getRoomPhtotList(roomId);
 	    List<RoomReview> roomReviewList = roomService.getRoomReview(ReviewDTO,roomId);
+		Optional<Favorite> roomDetailFavorite = favService.getFavoriteDetail(csuser , room);
 		/*
 		 * List<RoomReviewDTO> roomReviewDTOList =
 		 * RoomReviewDTO.convertToDTOList(roomReviewList);
 		 */
-
 	    model.addAttribute("room", room);
 	    model.addAttribute("roomsame", roomsame);
 	    model.addAttribute("roomOptions", roomOption);
 	    model.addAttribute("roomPhotoList",roomPhotoList);
 	    model.addAttribute("roomReviews",roomReviewList);
+	    model.addAttribute("isFavorite",roomDetailFavorite.isPresent());
+	    if(roomDetailFavorite.isPresent()) {
+	    	model.addAttribute("roomDetailFavorite",roomDetailFavorite.get());
+	    }
 	    return "main/room/detail";
 	}
 	
