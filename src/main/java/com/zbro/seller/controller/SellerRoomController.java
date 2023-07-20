@@ -128,12 +128,23 @@ public class SellerRoomController {
 		}
 		
 		
+//		@GetMapping("/seller/room/photo")
+//		public ResponseEntity<Resource> getSellerRoomPhoto(RoomPhoto roomPhoto) throws FileNotFoundException {
+//			System.out.println("photoId = "+roomPhoto.getPhotoId());
+//			RoomPhoto findedRoomPhoto = roomService.getRoomPhoto(roomPhoto.getPhotoId());
+//			
+//			Resource imageResource = roomService.getImageResource(findedRoomPhoto);
+//			return ResponseEntity.ok().body(imageResource);
+//		}
+		
 		@GetMapping("/seller/room/photo")
 		public ResponseEntity<Resource> getSellerRoomPhoto(RoomPhoto roomPhoto) throws FileNotFoundException {
-			RoomPhoto findedRoomPhoto = roomService.getRoomPhoto(roomPhoto.getPhotoId());
-			
-			Resource imageResource = roomService.getImageResource(findedRoomPhoto);
-			return ResponseEntity.ok().body(imageResource);
+			System.out.println("photoId = "+roomPhoto.getPhotoId());
+//			RoomPhoto findedRoomPhoto = roomService.getRoomPhoto(roomPhoto.getPhotoId());
+//			
+//			Resource imageResource = roomService.getImageResource(findedRoomPhoto);
+//			return ResponseEntity.ok().body(imageResource);
+			return null;
 		}
 		
 		

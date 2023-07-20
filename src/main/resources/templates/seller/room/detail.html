@@ -124,6 +124,33 @@
 	</div>
 </th:block>
 <th:block layout:fragment="customScript">
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			getImage();
+		})
+	</script>
+	
+	<!-- 이미지 불러오기  -->
+	<script th:inline="javascript">
+		function getImage() {
+			var image = new Image();
+			var photoId = 29;
+			
+			$.ajax({
+				type: "GET",
+				url: "/seller/room/photo",
+				data: {photoId: photoId},
+				success: function(result) {
+					console.log('이미지 가져오기 성공')
+				},
+				error: function(error) {
+					console.log('이미지 가져오기 실패')
+					console.log(error);
+				}
+			})
+		}
+	</script>
+
 	<!-- 주소 찾기 -->
 	<script th:inline="javascript" type="text/javascript">
 	    function execDaumPostcode() {
