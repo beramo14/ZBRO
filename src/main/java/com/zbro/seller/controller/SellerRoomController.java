@@ -147,36 +147,100 @@ public class SellerRoomController {
 				  @RequestParam("isElevator") boolean isElevator,
 				  @RequestParam(value = "optionType", required = false) List<String> optionTypes,
 				  @RequestParam(value = "uploadFile", required = false) List<MultipartFile> files,
-				  Room room) throws Exception, IOException {
+				  Room room,
+				  @RequestParam("isPhotoEdit") int isPhotoEdit) throws Exception, IOException {
 			
-			// room insert
+			// room edit
 			room.setRoomIn(isRoomIn);
 			room.setElevator(isElevator);
 			roomService.insertRoom(room);
 			System.out.println("room : " + room.toString());
 			
-			// 앞단에서 가져온 옵션들
-			Set<String> optionTypesSet = new HashSet<>(optionTypes);
+			// roomOption edit
+			if(optionTypes != null) {
+				// 앞단에서 가져온 옵션들
+				Set<String> optionTypesSet = new HashSet<>(optionTypes);
+				
+				// 기존optionTypes의 optionType만 String으로 불러오기
+				List<RoomOption> beforeRoomOption = roomService.getRoomOptions(room);
+				Set<String> beforeRoomOptionSet = beforeRoomOption.stream()
+						.flatMap(roomOption -> Stream.of(roomOption.getOptionType().getOptionType()))
+						.collect(Collectors.toSet());
+				
+				// 옵션 변경되면 RoomOption delete/insert
+				if(!beforeRoomOptionSet.equals(optionTypesSet)) {
+					roomService.delRoomOptions(room);
+					for (String optionType : optionTypes) {
+						RoomOption roomOption = new RoomOption();
+						RoomOptionType roomOptionType = new RoomOptionType();
+						roomOptionType.setOptionType(optionType);
+						roomOption.setRoom(room);
+						roomOption.setOptionType(roomOptionType);
+						roomService.insertRoomOption(roomOption);
+					}
+				}
+			} else	roomService.delRoomOptions(room);
 			
-			// 원래 optionTypes의 optionType만 String으로 불러오기
-			List<RoomOption> beforeRoomOption = roomService.getRoomOptions(room);
-			Set<String> beforeRoomOptionSet = beforeRoomOption.stream()
-											.flatMap(roomOption -> Stream.of(roomOption.getOptionType().getOptionType()))
-											.collect(Collectors.toSet());
-			
-			// 옵션 변경되면 RoomOption delete/insert
-			if(!beforeRoomOptionSet.equals(optionTypesSet)) {
-////				for (String optionType : optionTypes) {
-////					RoomOption roomOption = new RoomOption();
-////					RoomOptionType roomOptionType = new RoomOptionType();
-////					roomOptionType.setOptionType(optionType);
-////					roomOption.setRoom(room);
-////					roomOption.setOptionType(roomOptionType);
-////					roomService.insertRoomOption(roomOption);
-////				}
+
+			// roomPhoto insert
+			if(isPhotoEdit != 0 && roomService.getRoomPhotos(room).isEmpty()) {
+				int imgCnt = 1;
+				for(MultipartFile file : files) {
+					if(!file.getOriginalFilename().isBlank()) {	//파일을 업로드했다면
+						// 지정폴더에 파일을 실제 업로드 // ex)room1_파일명.파일형식
+						String fileName = "room"+room.getRoomId()+"_"+file.getOriginalFilename();
+						file.transferTo(new File(uploadFolder+fileName));
+						
+						// 테이블 데이터 set
+						RoomPhoto roomPhoto = new RoomPhoto();
+						roomPhoto.setFileName(fileName);
+						roomPhoto.setRoom(room);
+						roomPhoto.setImageSeq(imgCnt);
+						
+						// img insert
+						roomService.insertRoomPhoto(roomPhoto);
+						imgCnt++;
+					}
+				}
 			}
-			
-			
+			// roomPhoto edit
+			else if(isPhotoEdit != 0 && !roomService.getRoomPhotos(room).isEmpty()) {
+				List<RoomPhoto> getRoomPhotos = roomService.getRoomPhotos(room);
+//				for(RoomPhoto roomPhoto : getRoomPhotos) {
+//					String fileName = roomPhoto.getFileName();
+//					File getFile = new File(uploadFolder + fileName);
+//					if(getFile.exists()) {
+//						getFile.delete();
+//						roomService.delRoomPhotos(room);
+//					} else System.out.println("파일이 없음");
+//				}
+//				
+//				int imgCnt = 1;
+//				for(MultipartFile file : files) {
+//					if(!file.getOriginalFilename().isBlank()) {	//파일을 업로드했다면
+//						// 지정폴더에 파일을 실제 업로드 // ex)room1_파일명.파일형식
+//						String fileName = "room"+room.getRoomId()+"_"+file.getOriginalFilename();
+//						file.transferTo(new File(uploadFolder+fileName));
+//						
+//						// 테이블 데이터 set
+//						RoomPhoto roomPhoto = new RoomPhoto();
+//						roomPhoto.setFileName(fileName);
+//						roomPhoto.setRoom(room);
+//						roomPhoto.setImageSeq(imgCnt);
+//						
+//						// img insert
+//						roomService.insertRoomPhoto(roomPhoto);
+//						imgCnt++;
+//					}
+//				}
+				System.out.println("-----------------------------");
+				for(MultipartFile file : files) {
+					System.out.println(file.getOriginalFilename());
+					System.out.println(file);
+				}
+				System.out.println("-----------------------------");
+			}
+			else System.out.println("파일수정안함");
 			
 			return "seller/room/editTest";
 		}

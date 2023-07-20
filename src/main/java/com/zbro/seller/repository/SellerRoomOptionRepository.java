@@ -13,4 +13,6 @@ public interface SellerRoomOptionRepository extends JpaRepository<RoomOption, Lo
 
 	List<RoomOption> findAllByRoom(Room findRoom);
 
+	void deleteAllByRoom(Room room);
+
 }

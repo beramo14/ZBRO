@@ -31,6 +31,7 @@
 			    <div id="formElements">
 					<input type="hidden" name="seller" th:value="${room.seller.sellerId}" /> <br />
 					<input type="hidden" name="roomId" th:value="${room.roomId}" /> <br />
+					<input type="hidden" name="isPhotoEdit" id="isPhotoEdit" value="0" /> <br />
 			        방 종류 <select name="type">
 					    <option value="원룸" th:selected="${room.type.toString() == '원룸'}">원룸</option>
 					    <option value="오피스텔" th:selected="${room.type.toString() == '오피스텔'}">오피스텔</option>
@@ -128,9 +129,10 @@
 			
 	<script th:inline="javascript">
 		var isPhoto = ([[${roomPhotos}]].length == 0);
+		/* 이미지 수정여부 확인 */
+		var isPhotoEdit = 0;
 	
 		$(document).ready(function() {
-			console.log([[${room.roomId}]]);
 			/* 불러올 이미지 없으면 기본폼 생성 */
 			if(isPhoto) {
 				var formElements = document.getElementById('formElements');
@@ -206,6 +208,8 @@
 		
 		// 파일 선택
 	    function selectFile(element) {
+	    	isPhotoEdit = isPhotoEdit+1;
+	    	$("#isPhotoEdit").val(isPhotoEdit);
 			
 	        const file = element.files[0];	//선택된 파일정보
 	        const filename = element.closest('.file_input').firstElementChild;
@@ -252,7 +256,6 @@
 		
 		// 파일 추가
 	    function addFile() {
-			
 	    	if(fileCount == totalFileCount) {
 				alert('최대 5개까지 등록 가능합니다');
 				return false;
@@ -283,6 +286,9 @@
 		
 	 	// 파일 삭제
 	    function removeFile(element) {
+	       isPhotoEdit = isPhotoEdit+1;
+	       $("#isPhotoEdit").val(isPhotoEdit);
+	       
 	       const fileAddBtn = element.nextElementSibling;
 	       if (fileAddBtn) {
 	           const inputs = element.previousElementSibling.querySelectorAll('input');

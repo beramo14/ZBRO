@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
@@ -96,6 +97,16 @@ public class SellerRoomService {
 		InputStream fis = new FileInputStream(file);
 		Resource imageResource = new InputStreamResource(fis);
 		return imageResource;
+	}
+
+	@Transactional
+	public void delRoomOptions(Room room) {
+		roomOptionRepo.deleteAllByRoom(room);	
+	}
+	
+	@Transactional
+	public void delRoomPhotos(Room room) {
+		roomPhotoRepo.deleteAllByRoom(room);
 	}
 
 }
