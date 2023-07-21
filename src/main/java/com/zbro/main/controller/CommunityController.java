@@ -81,7 +81,7 @@ public class CommunityController {
 		model.addAttribute("categories", Category.values());
 		
 		
-		return "/main/community/post_list";
+		return "main/community/post_list";
 	}
 
 	
@@ -94,7 +94,7 @@ public class CommunityController {
 		model.addAttribute("type", type);
 		model.addAttribute("ct", categoryType);
 		model.addAttribute("categories", Category.values());
-		return "/main/community/post_add";
+		return "main/community/post_add";
 	}
 	
 	
@@ -128,7 +128,7 @@ public class CommunityController {
 		model.addAttribute("ct", community.getCategoryType());
 		model.addAttribute("categories", Category.values());
 		
-		return "/main/community/post_detail";
+		return "main/community/post_detail";
 	}
 	
 	
@@ -143,7 +143,7 @@ public class CommunityController {
 		model.addAttribute("ct", community.getCategoryType());
 		model.addAttribute("categories", Category.values());
 		
-		return "/main/community/post_revise";
+		return "main/community/post_revise";
 	}
 	
 	

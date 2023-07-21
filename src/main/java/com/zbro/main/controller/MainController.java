@@ -81,7 +81,7 @@ public class MainController {
 		
 		log.info("### join/seller response : {}",response);
 		
-		return "/join/seller_join";
+		return "join/seller_join";
 	}
 	
 	
@@ -90,7 +90,7 @@ public class MainController {
 		
 		log.info("### join/consumer response : {}",response);
 		
-		return "/join/consumer_join";
+		return "join/consumer_join";
 	}
 	
 	

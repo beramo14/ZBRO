@@ -61,7 +61,7 @@ public class RoomController {
 		model.addAttribute("rooms", roomDTOList);
 		model.addAttribute("roomSearchDTO", roomDTO);
 		
-		return "/main/room/search";
+		return "main/room/search";
 	}
 	
 	@RequestMapping("/detail/{roomId}")
