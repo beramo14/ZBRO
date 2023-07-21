@@ -36,7 +36,7 @@
 				<div class="room-item" th:classappend="'room-'+${room.roomId}" th:each="room : ${rooms}">
 					<div class="room-item-wrapper">
 						<input type="hidden" class="address" th:value="${room.address}" th:data="${room.roomId}"/>
-					    <div class="room-photo-wrapper">
+					    <div class="room-photo-wrapper" style="width:138px;">
 				    		<div class="favorite-button" th:classappend="'favorite-room-'+${room.roomId}">
 				    			<button type="button" onclick="doFavorite(this)" th:if="${room.isFavorite == false}" th:data-room="${room.roomId}">
 				    				<i class="bi bi-heart"></i>
@@ -46,7 +46,7 @@
 				    			</button>
 			    			</div>
 					    	<div class="image-wrapper"></div>
-					        <img src="https://picsum.photos/300/200" th:alt="${room.address}" class="room-image" />
+					        <img th:src="@{/room/photo(roomId=${room.roomId})}" th:alt="${room.address}" class="room-image" />
 					    </div>
 					    
 					    <div class="room-info-wrapper" th:onclick="|location.href='@{/room/detail(roomId=${room.roomId})}'|">
