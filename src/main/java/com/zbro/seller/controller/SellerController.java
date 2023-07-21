@@ -2,9 +2,12 @@ package com.zbro.seller.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,11 +45,12 @@ public class SellerController {
 	@Autowired
 	private ResourceLoader resourceLoader;
 	
-	// Repository
 	@Autowired
 	private UserService sellerUserService;
+	
 	@Autowired
 	private SellerRoomService roomService;
+	
 	
 	@Value("${file.images.room-photo}")
 	public String uploadFolder;
@@ -55,10 +59,27 @@ public class SellerController {
 	private String fileBizPath;
 	
 	
+	
+	
 	@GetMapping("/seller")
 	public String sellerMainPage() {
 		
 		return "seller/index";
+	}
+	
+	/**
+	 * 판매자 로그인 성공했을때 오는 매핑
+	 * 사이드바에 유저 정보를 항시 표출하기 위해 세션에 정보 추가
+	 * */
+	@GetMapping("/seller/login/success")
+	public String sellerLoginSuccess(HttpSession session, Principal principal) {
+		SellerUser seller = sellerUserService.getSellerUserByEmail(principal.getName());
+		
+		session.setAttribute("sellerId", seller.getSellerId());
+		session.setAttribute("sellerName", seller.getName());
+		session.setAttribute("sellerIsAdmission", seller.isAdmission());
+		
+		return "redirect:/seller";
 	}
 	
 	
@@ -149,22 +170,26 @@ public class SellerController {
 	
 	
 	@GetMapping("/seller/user")
-	public String sellerUserView(Model model){
+	public String sellerUserView(Principal principal, Model model){
 		
-		Long tempUserId = 1L;
 		
-		SellerUser sellerUser = sellerUserService.getSellerUser(tempUserId);
+		SellerUser sellerUser = sellerUserService.getSellerUserByEmail(principal.getName());
 		model.addAttribute("sellerUser", sellerUser);
 		
 		return "seller/user/detail";
 	}
 	
 	@PostMapping("/seller/user/update")
-	public String sellerUserUpdate(@RequestParam("profilePhotoFile") MultipartFile profilePhotoFile, @RequestParam("bizScanFile") MultipartFile bizScanFile, @RequestParam("isBiz") String isBizString, SellerUser sellerUser) throws IllegalStateException, IOException {
+	public String sellerUserUpdate(Principal principal
+									, @RequestParam("profilePhotoFile") MultipartFile profilePhotoFile
+									, @RequestParam("bizScanFile") MultipartFile bizScanFile
+									, @RequestParam("isBiz") String isBizString
+									, SellerUser sellerUser
+									, HttpSession session
+									) throws IllegalStateException, IOException {
 		
-		Long tempUserId = 1L;
 		
-		SellerUser findedSellerUser = sellerUserService.getSellerUser(tempUserId);
+		SellerUser findedSellerUser = sellerUserService.getSellerUserByEmail(principal.getName());
 		
 		//isBiz String -> boolean
 		sellerUser.setBiz("true".equalsIgnoreCase(isBizString));
@@ -185,7 +210,10 @@ public class SellerController {
 			sellerUserService.bizFileDelete(findedSellerUser);
 		}
 		
-		sellerUserService.updateSellerUser(tempUserId, sellerUser);
+		SellerUser savedSeller = sellerUserService.updateSellerUser(findedSellerUser.getSellerId(), sellerUser);
+		
+		//사이드바 업데이트
+		session.setAttribute("sellerName", savedSeller.getName());
 		
 		return "redirect:/seller/user";
 	}

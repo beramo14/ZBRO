@@ -25,21 +25,27 @@ aside {
 
 
 /*########## 프로필 ##########*/
-.profile-wrapper {
+.aside-inner .profile-wrapper {
 	padding: 30px 0;
 	border-top: 1px solid lightgray;
 	border-bottom: 1px solid lightgray;
 	text-align: center;
 }
 
-.profile-wrapper img.profile-image {
+.aside-inner .profile-wrapper div.profile-image-wrapper {
+	margin: 0 auto;
 	width: 80px;
 	height: 80px;
-	border-radius: 50%;
-	object-fit: cover;
 }
 
-.profile-wrapper p.username {
+.aside-inner .profile-wrapper img.profile-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.aside-inner .profile-wrapper p.username {
 	padding: 0;
 	margin: 0;
 	margin-top: 5px;
@@ -47,7 +53,7 @@ aside {
 	font-weight: bold;
 }
 
-.profile-wrapper span.admission-info {
+.aside-inner .profile-wrapper span.admission-info {
 	color: gray;
 	font-size: 12px;
 	

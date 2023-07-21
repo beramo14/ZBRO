@@ -47,11 +47,19 @@ public class UserService {
 	@Value("${file.images.profile-default-file}")
 	private String defaultProfileFileName;
 	
+	
 
 	public void consumerUserInsert(ConsumerUser user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		consumerRepository.save(user);
 	}
+
+	public void sellerUserInsert(SellerUser user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		sellerRepository.save(user);
+		
+	}
+	
 
 	public boolean consumerUserExistsCheck(String email) {
 		
@@ -67,11 +75,6 @@ public class UserService {
 		return findedUser.isPresent();
 	}
 
-	public void sellerUserInsert(SellerUser user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		sellerRepository.save(user);
-		
-	}
 	
 	public ConsumerUser getConsumerUser(Long userId) {
 		return consumerRepository.findById(userId).get();
@@ -87,7 +90,7 @@ public class UserService {
 		return sellerRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("Seller user Not Found"));
 	}
 
-	public void updateSellerUser(Long userId, SellerUser sellerUser) {
+	public SellerUser updateSellerUser(Long userId, SellerUser sellerUser) {
 		SellerUser findedSellerUser = sellerRepository.findById(userId).get();
 		
 		findedSellerUser.setName(sellerUser.getName());
@@ -110,7 +113,7 @@ public class UserService {
 			}
 		}
 		
-		sellerRepository.save(findedSellerUser);
+		return sellerRepository.save(findedSellerUser);
 		
 	}
 	

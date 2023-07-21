@@ -16,10 +16,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zbro.dto.RoomReviewDTO;
 import com.zbro.dto.RoomSearchDTO;
 import com.zbro.main.service.FavoriteService;
 import com.zbro.main.service.RoomService;
@@ -27,6 +30,7 @@ import com.zbro.model.ConsumerUser;
 import com.zbro.model.Favorite;
 import com.zbro.model.Room;
 import com.zbro.model.RoomPhoto;
+import com.zbro.model.RoomReview;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,16 +65,30 @@ public class RoomController {
 	}
 	
 	@RequestMapping("/detail/{roomId}")
-	public String detailView(@PathVariable("roomId") Long roomId, Model model) {
+	public String detailView(@PathVariable("roomId") Long roomId,RoomReviewDTO ReviewDTO,Model model) {
 	    Room room = roomService.findById(roomId);
 	    SellerUser selleruser = new SellerUser();
 	    selleruser.setSellerId(room.getSeller().getSellerId());
+	    ConsumerUser csuser = new ConsumerUser();
+	    csuser.setConsumerId(1L);
 	    List<Room> roomsame = roomService.findBySellerId(selleruser);
 	    List<RoomOption> roomOption = roomService.getroomOption(room);
-	    
-	        model.addAttribute("room", room);
-	        model.addAttribute("roomsame", roomsame);
-	        model.addAttribute("roomOptions", roomOption);
+	    List<RoomPhoto> roomPhotoList = roomService.getRoomPhtotList(roomId);
+	    List<RoomReview> roomReviewList = roomService.getRoomReview(ReviewDTO,roomId);
+		Optional<Favorite> roomDetailFavorite = favService.getFavoriteDetail(csuser , room);
+		/*
+		 * List<RoomReviewDTO> roomReviewDTOList =
+		 * RoomReviewDTO.convertToDTOList(roomReviewList);
+		 */
+	    model.addAttribute("room", room);
+	    model.addAttribute("roomsame", roomsame);
+	    model.addAttribute("roomOptions", roomOption);
+	    model.addAttribute("roomPhotoList",roomPhotoList);
+	    model.addAttribute("roomReviews",roomReviewList);
+	    model.addAttribute("isFavorite",roomDetailFavorite.isPresent());
+	    if(roomDetailFavorite.isPresent()) {
+	    	model.addAttribute("roomDetailFavorite",roomDetailFavorite.get());
+	    }
 	    return "main/room/detail";
 	}
 	
@@ -116,4 +134,30 @@ public class RoomController {
 	}
 	
 
+//	// 상세페이지 사진 업로드 구현
+	@GetMapping("/photodetail")
+	public ResponseEntity<Resource> getDetailRoomPhotoImg(RoomPhoto roomphoto) throws FileNotFoundException {
+		
+		RoomPhoto findedRoomPhoto = roomService.getRoomPhoto(roomphoto);
+		
+		Resource imageResource = roomService.getImageResource(findedRoomPhoto);
+		
+		return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageResource);
+	}
+	
+	@PostMapping("/review")
+	public String postRoomReview(@RequestParam("roomId") Long roomId,RoomReview roomReview) {
+		
+		Room room = new Room();
+		room.setRoomId(roomId);
+		roomReview.setRoom(room);
+		roomService.saveRoomReview(roomReview); 
+		
+	
+		return "redirect:/room/detail/"+roomId;
+	
+		
+	}	
+	
+	
 }

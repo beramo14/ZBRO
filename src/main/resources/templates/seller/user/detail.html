@@ -113,7 +113,7 @@
 					
 					<div style="text-align: center; margin-bottom: 40px;">
 						<div class="profile-image-wrapper">
-							<img src="/seller/profile/photo?sellerId=1" alt="프로필사진_수정" id="profile-image" class="profile-image"/>
+							<img th:src="@{/seller/profile/photo(sellerId=${sellerUser.sellerId})}" alt="프로필사진_수정" id="profile-image" class="profile-image"/>
 						</div>
 						
 						<label for="profilePhotoFile" class="form-label btn btn-outline-secondary info-input">이미지 변경</label>
@@ -128,7 +128,7 @@
 					
 					
 					<div class="row mb-3">
-						<label for="name" class="col-form-label col-sm-3">이름</label>
+						<label for="name" class="col-sm-3">이름</label>
 						<div class="col-sm-9">
 							<p class="info-text" th:text="${sellerUser.name}"></p>
 							<input type="text" name="name" class="form-control info-input" placeholder="*이름" th:value="${sellerUser.name}" required/>
@@ -176,7 +176,7 @@
 					</div>
 					<span th:if="${sellerUser.admission == true}"></span>
 					
-					<div style="text-align: center;">
+					<div class="mt-4" style="text-align: center;">
 						<button type="button" id="modify-button" class="btn btn-primary me-3">수정</button>
 						<button type="submit" id="save-button" class="btn btn-success d-none me-3">저장</button>
 						<a id="cancle-button" class="btn btn-secondary d-none" href="javascript:window.location.reload(true)">취소</a>
