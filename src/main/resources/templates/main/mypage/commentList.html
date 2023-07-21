@@ -105,15 +105,15 @@
 <div class="pagination">
     <ul>
         <li>
-            <a th:href="@{/commentList(page=${comments.number - 1})}" th:class="${comments.number > 0 ? '' : 'disabled'}">&lt;</a>
+            <a th:href="@{/mypage/comment/list(page=${comments.number - 1})}" th:class="${comments.number > 0 ? '' : 'disabled'}">&lt;</a>
         </li>
         <li th:each="pageNumber : ${#numbers.sequence(0, comments.totalPages - 1)}">
-            <a th:href="@{/commentList(page=${pageNumber})}"
+            <a th:href="@{/mypage/comment/list(page=${pageNumber})}"
                th:text="${pageNumber + 1}"
                th:class="${pageNumber == comments.number ? 'active' : ''}"></a>
         </li>
         <li>
-            <a th:href="@{/commentList(page=${comments.number + 1})}" th:class="${comments.number < comments.totalPages - 1 ? '' : 'disabled'}">&gt;</a>
+            <a th:href="@{/mypage/comment/list(page=${comments.number + 1})}" th:class="${comments.number < comments.totalPages - 1 ? '' : 'disabled'}">&gt;</a>
         </li>
     </ul>
 </div>

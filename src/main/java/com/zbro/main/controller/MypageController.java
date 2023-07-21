@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.zbro.main.repository.RoomOptionRepository;
 import com.zbro.main.repository.RoomOptionTypeRepository;
 import com.zbro.main.service.MypageService;
+import com.zbro.main.service.UserService;
 import com.zbro.model.Comment;
 import com.zbro.model.Community;
 import com.zbro.model.ConsumerUser;
@@ -31,15 +32,22 @@ import com.zbro.model.RoomOption;
 import com.zbro.model.RoomOptionType;
 import com.zbro.type.PostType;
 
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
 @Controller
 public class MypageController {
 	
 	@Autowired
 	private MypageService mypageService;
 	
+	@Autowired
+	private UserService userService;
 	
 	
-	@GetMapping("/favoriteCompare")
+	
+	@GetMapping("/mypage/favorite/compare")
 	public String favoriteComparePage(Model model) {
 
 	    List<Favorite> favorites = mypageService.getFavoritesByUserConsumerId();
@@ -65,7 +73,7 @@ public class MypageController {
 	}
 	
 
-	@GetMapping("/favoriteList")
+	@GetMapping("/mypage/favorite/list")
 	public String favoriteListPage(Model model) {
 		List<Favorite> favorites = mypageService.getFavoritesByUserConsumerId();
 		ConsumerUser consumerUser = mypageService.getConsumerUser();
@@ -85,7 +93,7 @@ public class MypageController {
         return ResponseEntity.ok("Favorite deleted");
     }	
     
-    @GetMapping("/contentList")
+    @GetMapping("/mypage/content/list")
     public String getAllCommunities(Model model,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -108,7 +116,7 @@ public class MypageController {
 		return "main/mypage/contentList";
 		}
 	
-    @GetMapping("/commentList")
+    @GetMapping("/mypage/comment/list")
     public String getAllComments(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int size,
                                  Model model) {
@@ -131,7 +139,7 @@ public class MypageController {
         return "main/mypage/sidebar";
     }
 	
-    @GetMapping("/memberInfo")
+    @GetMapping("/mypage/member/info")
     public String getMenberInfo(Model model) {
         ConsumerUser consumerUser = mypageService.getConsumerUser();
 
@@ -142,40 +150,35 @@ public class MypageController {
 	
     @PostMapping("/memberInfo")
     public String updateUserInfo(@RequestParam("imageUpload") MultipartFile file, ConsumerUser consumerUser, Model model) {
-
-
-        
         ConsumerUser consumerUserUP = mypageService.getConsumerUser();
-        consumerUserUP.setPassword(consumerUser.getPassword());        
-        consumerUserUP.setName(consumerUser.getName ());
-        
+        consumerUserUP.setPassword(consumerUser.getPassword());
+        consumerUserUP.setName(consumerUser.getName());
+
         if (file != null && !file.isEmpty()) {
-            String fileName = saveProfileImage(file);
-            consumerUser.setProfilePhoto(fileName);
+            try {
+                String fileName = userService.profileImageSave(file);
+                consumerUserUP.setProfilePhoto(fileName);
+            } catch (Exception e) {
+                log.error("Error saving profile image: ", e);
+                model.addAttribute("response", "error");
+                return "redirect:/memberInfo";
+            }
         }
-        if (!file.isEmpty() || consumerUser.getProfilePhoto() != null) {
-            consumerUserUP.setProfilePhoto(consumerUser.getProfilePhoto());
-        }     
-        
+
         mypageService.updateUserInfo(consumerUserUP);
-        
-        return "redirect:/memberInfo";
+
+        return "redirect:/mypage/member/info";
     }
-    
-    
-    private String saveProfileImage(MultipartFile file) {
-        String fileName = file.getOriginalFilename();
-        return fileName;
-    }
+
     
     @PostMapping("/memberDelete")
     public String memberDelete() {
       mypageService.memberDelete();
-      return "redirect:/"; 
+      return "redirect:/logout"; 
     }
     
   
-    @GetMapping("/myMain")
+    @GetMapping("/mypage")
     public String myMainPage(Model model) {
         List<Favorite> favorites = mypageService.getFavoritesByUserConsumerId();
         List<Community> top10Contents = mypageService.getTop10();

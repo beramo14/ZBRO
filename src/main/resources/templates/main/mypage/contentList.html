@@ -165,16 +165,16 @@
 		<div class="pagination" th:if="${type == '질문'} and ${questionsPage.totalElements > 0}" >
 		    <ul>
 		        <li>
-		            <a th:href="@{${'/contentList'} + '?type=' + ${type} + '&amp;page=' + ${questionsPage.number - 1}}"
+		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${questionsPage.number - 1}}"
 		               th:class="${questionsPage.first ? 'disabled' : ''}">&lt;</a>
 		        </li>
 		        <li th:each="pageNumber : ${#numbers.sequence(0, questionsPage.totalPages - 1)}">
-		            <a th:href="@{${'/contentList'} + '?type=' + ${type} + '&amp;page=' + ${pageNumber}}"
+		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${pageNumber}}"
 		               th:text="${pageNumber + 1}"
 		               th:class="${pageNumber == questionsPage.number ? 'active' : ''}"></a>
 		        </li>
 		        <li>
-		            <a th:href="@{${'/contentList'} + '?type=' + ${type} + '&amp;page=' + ${questionsPage.number + 1}}"
+		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${questionsPage.number + 1}}"
 		               th:class="${questionsPage.last ? 'disabled' : ''}">&gt;</a>
 		        </li>
 		    </ul>

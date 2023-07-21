@@ -101,7 +101,7 @@
 	    <form id="userInfoForm" action="/memberInfo" method="post" enctype="multipart/form-data">
 	      <div class= profileWrap>
 			<div class="profile-image">
-			    <img id="profileImage" th:src="@{'/images/' + ${consumerUser.profilePhoto}}" alt="프로필">
+			    <img id="profileImage" th:src="@{'/consumer/profile/photo?consumerId=' + ${consumerUser.consumerId}}" alt="프로필">
 			</div>
 	        <input type="file" id="imageUpload" name="imageUpload" style="display: none;" accept="image/*">
 	        <button type="button" onclick="document.getElementById('imageUpload').click();" id="imageButton" style="display: none;">이미지 변경</button>

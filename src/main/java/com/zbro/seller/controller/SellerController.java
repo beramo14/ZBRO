@@ -4,17 +4,24 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -204,5 +211,49 @@ public class SellerController {
 		}
 		
 	}
+
+
+		
+	
+	
+	
+
+	@GetMapping("/seller/room/list")
+	public String roomList(Model model,
+	                       @RequestParam(value = "searchType", required = false) String searchType,
+	                       @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+	                       @RequestParam(value = "type", required = false) List<String> types,
+	                       @RequestParam(defaultValue = "0") int page,
+	                       @RequestParam(defaultValue = "10") int size) {
+
+	    Long sellerId = 1L;
+	    Pageable pageable = PageRequest.of(page, size);
+
+	    Page<Room> rooms;
+	    if ((searchType != null && searchKeyword != null) || (types != null && !types.isEmpty())) {
+	        rooms = roomService.searchRoomsByTypeOrBuildingNameOrAddress(sellerId, types, searchType, searchKeyword, pageable);
+	    } else {
+	        rooms = roomService.getAllRoomsOrderedByRoomId(sellerId, pageable);
+	    }
+
+	    model.addAttribute("rooms", rooms);
+	    model.addAttribute("searchKeyword", searchKeyword);
+	    model.addAttribute("searchType", searchType);
+	    model.addAttribute("types", types);
+
+	    return "seller/roomList";
+	}
+	
+	
+	@PostMapping("/seller/room/delete")
+	public ResponseEntity<Void> deleteRooms(@RequestBody List<Long> roomIds) {
+	    System.out.println(" roomIds: " + roomIds);
+
+	    roomService.deleteRooms(roomIds);
+
+	    return ResponseEntity.ok().build();
+	}
+	
+	
 	
 }
