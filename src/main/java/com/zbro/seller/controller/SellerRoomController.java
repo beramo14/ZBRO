@@ -5,15 +5,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -91,13 +94,14 @@ public class SellerRoomController {
 			int imgCnt = 1;
 			for(MultipartFile file : files) {
 				if(!file.getOriginalFilename().isBlank()) {	//파일을 업로드했다면
-					// 지정폴더에 파일을 실제 업로드 // ex)room1_파일명.파일형식
-					String fileName = "room"+room.getRoomId()+"_"+file.getOriginalFilename();
-					file.transferTo(new File(uploadFolder+fileName));
+					// 지정폴더에 파일을 실제 업로드 // ex)room1_랜덤문자.파일형식
+					String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+			        String randomFileName = "room" + room.getRoomId() + "_" + UUID.randomUUID().toString() + "." + fileExtension;
+					file.transferTo(new File(uploadFolder + randomFileName));
 					
 					// 테이블 데이터 set
 					RoomPhoto roomPhoto = new RoomPhoto();
-					roomPhoto.setFileName(fileName);
+					roomPhoto.setFileName(randomFileName);
 					roomPhoto.setRoom(room);
 					roomPhoto.setImageSeq(imgCnt);
 					
@@ -197,12 +201,13 @@ public class SellerRoomController {
 				for(MultipartFile file : files) {
 					if(!file.getOriginalFilename().isBlank()) {	//파일을 업로드했다면
 						// 지정폴더에 파일을 실제 업로드 // ex)room1_파일명.파일형식
-						String fileName = "room"+room.getRoomId()+"_"+file.getOriginalFilename();
-						file.transferTo(new File(uploadFolder+fileName));
+						String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+				        String randomFileName = "room" + room.getRoomId() + "_" + UUID.randomUUID().toString() + "." + fileExtension;
+						file.transferTo(new File(uploadFolder + randomFileName));
 						
 						// 테이블 데이터 set
 						RoomPhoto roomPhoto = new RoomPhoto();
-						roomPhoto.setFileName(fileName);
+						roomPhoto.setFileName(randomFileName);
 						roomPhoto.setRoom(room);
 						roomPhoto.setImageSeq(imgCnt);
 						
@@ -214,7 +219,7 @@ public class SellerRoomController {
 			}
 			// roomPhoto edit : 이미지가 있었고, 수정했을때
 			else if(isPhotoEdit != 0 && !roomService.getRoomPhotos(room).isEmpty()) {
-				List<RoomPhoto> getRoomPhotos = roomService.getRoomPhotos(room);
+//				List<RoomPhoto> getRoomPhotos = roomService.getRoomPhotos(room);
 //				for(RoomPhoto roomPhoto : getRoomPhotos) {
 //					String fileName = roomPhoto.getFileName();
 //					File getFile = new File(uploadFolder + fileName);
@@ -243,31 +248,47 @@ public class SellerRoomController {
 //					}
 //				}
 				
-				String filePath = uploadFolder+"room33_antoine-j-FLmujG5l7uE-unsplash.jpg";
-				
-				File imageFile = new File(filePath);
-				try {
-		            // 이미지 파일을 읽어와서 BufferedImage 객체로 변환
-		            BufferedImage image = ImageIO.read(imageFile);
-
-		            if (image != null) {
-		                System.out.println("이미지 파일이 제대로 있습니다.");
-		            } else {
-		                System.out.println("이미지 파일이 올바르지 않거나 없습니다.");
-		            }
-		        } catch (IOException e) {
-		            System.out.println("이미지 파일 읽기 오류: " + e.getMessage());
-		        }
 				
 				
-				System.out.println("-----------------------------");
-				for(MultipartFile file : files) {
-					System.out.println(file.getOriginalFilename());
-					System.out.println(file);
-					System.out.println(file.toString());
-					System.out.println(file.isEmpty());
-				}
-				System.out.println("-----------------------------");
+//				String filePath = uploadFolder+"room33_antoine-j-FLmujG5l7uE-unsplash.jpg";
+//				File imageFile = new File(filePath);
+//				try {
+//		            // 이미지 파일을 읽어와서 BufferedImage 객체로 변환
+//		            BufferedImage image = ImageIO.read(imageFile);
+//
+//		            if (image != null) {
+//		                System.out.println("이미지 파일이 제대로 있습니다.");
+//		            } else {
+//		                System.out.println("이미지 파일이 올바르지 않거나 없습니다.");
+//		            }
+//		        } catch (IOException e) {
+//		            System.out.println("이미지 파일 읽기 오류: " + e.getMessage());
+//		        }
+				
+				
+//				List<File> imageFiles = new ArrayList<>();
+//				List<BufferedImage> registedPhoto = new ArrayList<>();
+//				List<RoomPhoto> getRoomPhotos = roomService.getRoomPhotos(room);
+//				for(RoomPhoto roomPhoto : getRoomPhotos) {
+//					String filePath = uploadFolder + roomPhoto.getFileName();
+//					imageFiles.add(new File(filePath));
+//					System.out.println(filePath);
+//				}
+//				for (File imageFile : imageFiles) {
+//				    try {
+//				        BufferedImage image = ImageIO.read(imageFile);
+//				        if (image != null) {
+//				            registedPhoto.add(image);
+//				            System.out.println("image : " + image);
+//				        } else {
+//				            System.out.println("이미지 파일이 올바르지 않거나 없습니다.");
+//				        }
+//				    } catch (IOException e) {
+//				        System.out.println("이미지 파일 읽기 오류: " + e.getMessage());
+//				    }
+//				}
+				
+				
 			}
 			else System.out.println("파일수정안함");
 			
