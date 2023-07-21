@@ -178,7 +178,24 @@
 		})
 	</script>
 	
-
+	<!-- 파일 삭제 처리용 익명 함수 -->
+	<script th:inline="javascript" type="text/javascript">
+		const removeFileId = (function() {
+			const ids = [];
+			return {
+				add(id) {
+					if(ids.includes(id)) {
+						return false;
+					}
+					ids.push(id);
+				},
+				getAll() {
+					return ids;
+				}
+			}
+		})
+	</script>
+	
 	<!-- 주소 찾기 -->
 	<script th:inline="javascript" type="text/javascript">
 	    function execDaumPostcode() {
