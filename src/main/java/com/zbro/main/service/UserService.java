@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -17,25 +19,35 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.zbro.dto.EmailDTO;
+import com.zbro.dto.PasswordEmailDTO;
+import com.zbro.mail.MailSendService;
+import com.zbro.main.repository.ConsumerPasswordTokenRepository;
 import com.zbro.main.repository.ConsumerUserRepository;
+import com.zbro.main.repository.SellerPasswordTokenRepository;
 import com.zbro.main.repository.SellerUserRepository;
+import com.zbro.model.ConsumerPasswordToken;
 import com.zbro.model.ConsumerUser;
+import com.zbro.model.SellerPasswordToken;
 import com.zbro.model.SellerUser;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
 	
-	@Autowired
-	private ConsumerUserRepository consumerRepository;
+	private final ConsumerUserRepository consumerRepository;
+	private final SellerUserRepository sellerRepository;
 	
-	@Autowired
-	private SellerUserRepository sellerRepository;
+	private final ConsumerPasswordTokenRepository consumerPasswordTokenRepository;
+	private final SellerPasswordTokenRepository sellerPasswordTokenRepository;
 	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private final MailSendService mailSendService;
+	
+	private final PasswordEncoder passwordEncoder;
 	
 	
 	@Value("${file.biz}")
@@ -90,12 +102,11 @@ public class UserService {
 		return sellerRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("Seller user Not Found"));
 	}
 	
-	
-	public boolean findConsumerAccountByEmail(String email) {
-		return consumerRepository.findByEmail(email).isPresent();
+	public Optional<ConsumerUser> findConsumerAccountByEmail(String email) {
+		return consumerRepository.findByEmail(email);
 	}
-	public boolean findSellerAccountByEmail(String email) {
-		return sellerRepository.findByEmail(email).isPresent();
+	public Optional<SellerUser> findSellerAccountByEmail(String email) {
+		return sellerRepository.findByEmail(email);
 	}
 
 	public SellerUser updateSellerUser(Long userId, SellerUser sellerUser) {
@@ -231,6 +242,25 @@ public class UserService {
 		Resource imageResource = new InputStreamResource(fis);
 		return imageResource;
 		
+	}
+
+	public void consumerPasswordChangeMail(ConsumerUser consumerUser) throws MessagingException {
+		String token = UUID.randomUUID().toString();
+		ConsumerPasswordToken passwordToken = ConsumerPasswordToken.builder().user(consumerUser).token(token).build();
+		
+		consumerPasswordTokenRepository.save(passwordToken);
+		ConsumerPasswordToken findedPasswordToken = consumerPasswordTokenRepository.findById(passwordToken.getUserId()).get();
+		log.info("####### findedPasswordToken : {}", findedPasswordToken);
+		mailSendService.sendPasswordChangeMail(new PasswordEmailDTO(findedPasswordToken));
+	}
+	
+	public void sellerPasswordChangeMail(SellerUser sellerUser) throws MessagingException {
+		String token = UUID.randomUUID().toString();
+		SellerPasswordToken passwordToken = SellerPasswordToken.builder().user(sellerUser).token(token).build();
+		
+		sellerPasswordTokenRepository.save(passwordToken);
+		SellerPasswordToken findedPasswordToken = sellerPasswordTokenRepository.findById(passwordToken.getUserId()).get();
+		mailSendService.sendPasswordChangeMail(new PasswordEmailDTO(findedPasswordToken));
 	}
 
 

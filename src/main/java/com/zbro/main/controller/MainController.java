@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
 import javax.security.auth.Subject;
 
 import org.hibernate.engine.transaction.spi.JoinStatus;
@@ -200,7 +203,7 @@ public class MainController {
 	 */
 	@GetMapping("/login/test")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> loginTest(Authentication authentication ){
+	public ResponseEntity<Map<String, Object>> loginTest(Authentication authentication ) {
 		
 		log.info("#### authentication : {}", authentication);
 		
@@ -240,13 +243,42 @@ public class MainController {
 	@GetMapping("/consumer/login/find/account")
 	@ResponseBody
 	public ResponseEntity<?> findCounsumerAccount(@RequestParam("email") String email) {
-		return ResponseEntity.ok().body(userService.findConsumerAccountByEmail(email));
+		return ResponseEntity.ok().body(userService.findConsumerAccountByEmail(email).isPresent());
 	}
 	
 	@GetMapping("/seller/login/find/account")
 	@ResponseBody
 	public ResponseEntity<?> findSellerAccount(@RequestParam("email") String email) {
-		return ResponseEntity.ok().body(userService.findSellerAccountByEmail(email));
+		return ResponseEntity.ok().body(userService.findSellerAccountByEmail(email).isPresent());
+	}
+	
+	
+	@GetMapping("/consumer/login/find/password")
+	@ResponseBody
+	public ResponseEntity<?> findConsumerPassword(@RequestParam("email") String email) throws MessagingException {
+		
+		Optional<ConsumerUser> findedUser = userService.findConsumerAccountByEmail(email);
+		
+		if(findedUser.isEmpty() == true) {
+			return ResponseEntity.ok().body("email-not-found");
+		}
+		
+		userService.consumerPasswordChangeMail(findedUser.get());
+		return ResponseEntity.ok().body(null);
+	}
+	
+	@GetMapping("/seller/login/find/password")
+	@ResponseBody
+	public ResponseEntity<?> findSellerPassword(@RequestParam("email") String email) throws MessagingException {
+		
+		Optional<SellerUser> findedUser = userService.findSellerAccountByEmail(email);
+		
+		if(findedUser.isEmpty() == true) {
+			return ResponseEntity.ok().body("email-not-found");
+		}
+		
+		userService.sellerPasswordChangeMail(findedUser.get());
+		return ResponseEntity.ok().body("email-sended");
 	}
 	
 	
