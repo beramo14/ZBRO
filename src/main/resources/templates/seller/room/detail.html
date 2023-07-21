@@ -112,19 +112,15 @@
 			    <div class="imageContainer" ></div>
 			</form>
 		</div>
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	</div>
 </th:block>
+
+
+
+
+
+
+
 <th:block layout:fragment="customScript">
 			
 	<script th:inline="javascript">
@@ -175,24 +171,6 @@
 			
 			/* 불러온 이미지 개수 */
 			fileCount = $('.myFile').length;
-		})
-	</script>
-	
-	<!-- 파일 삭제 처리용 익명 함수 -->
-	<script th:inline="javascript" type="text/javascript">
-		const removeFileId = (function() {
-			const ids = [];
-			return {
-				add(id) {
-					if(ids.includes(id)) {
-						return false;
-					}
-					ids.push(id);
-				},
-				getAll() {
-					return ids;
-				}
-			}
 		})
 	</script>
 	

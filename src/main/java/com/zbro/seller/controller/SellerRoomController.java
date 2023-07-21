@@ -1,6 +1,8 @@
 package com.zbro.seller.controller;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
@@ -10,9 +12,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.imageio.ImageIO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.zbro.model.Room;
@@ -148,7 +155,9 @@ public class SellerRoomController {
 				  @RequestParam(value = "optionType", required = false) List<String> optionTypes,
 				  @RequestParam(value = "uploadFile", required = false) List<MultipartFile> files,
 				  Room room,
-				  @RequestParam("isPhotoEdit") int isPhotoEdit) throws Exception, IOException {
+				  @RequestParam("isPhotoEdit") int isPhotoEdit,
+				  @RequestParam(value = "fileName", required = false) List<String> registRoomPhoto
+				  ) throws Exception, IOException {
 			
 			// room edit
 			room.setRoomIn(isRoomIn);
@@ -182,7 +191,7 @@ public class SellerRoomController {
 			} else	roomService.delRoomOptions(room);
 			
 
-			// roomPhoto insert
+			// roomPhoto insert : 이미지가 없었고, 새로 등록했을때
 			if(isPhotoEdit != 0 && roomService.getRoomPhotos(room).isEmpty()) {
 				int imgCnt = 1;
 				for(MultipartFile file : files) {
@@ -203,7 +212,7 @@ public class SellerRoomController {
 					}
 				}
 			}
-			// roomPhoto edit
+			// roomPhoto edit : 이미지가 있었고, 수정했을때
 			else if(isPhotoEdit != 0 && !roomService.getRoomPhotos(room).isEmpty()) {
 				List<RoomPhoto> getRoomPhotos = roomService.getRoomPhotos(room);
 //				for(RoomPhoto roomPhoto : getRoomPhotos) {
@@ -233,10 +242,30 @@ public class SellerRoomController {
 //						imgCnt++;
 //					}
 //				}
+				
+				String filePath = uploadFolder+"room33_antoine-j-FLmujG5l7uE-unsplash.jpg";
+				
+				File imageFile = new File(filePath);
+				try {
+		            // 이미지 파일을 읽어와서 BufferedImage 객체로 변환
+		            BufferedImage image = ImageIO.read(imageFile);
+
+		            if (image != null) {
+		                System.out.println("이미지 파일이 제대로 있습니다.");
+		            } else {
+		                System.out.println("이미지 파일이 올바르지 않거나 없습니다.");
+		            }
+		        } catch (IOException e) {
+		            System.out.println("이미지 파일 읽기 오류: " + e.getMessage());
+		        }
+				
+				
 				System.out.println("-----------------------------");
 				for(MultipartFile file : files) {
 					System.out.println(file.getOriginalFilename());
 					System.out.println(file);
+					System.out.println(file.toString());
+					System.out.println(file.isEmpty());
 				}
 				System.out.println("-----------------------------");
 			}
@@ -247,3 +276,4 @@ public class SellerRoomController {
 		
 		
 }
+
