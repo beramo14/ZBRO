@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -81,6 +82,14 @@ public class SellerRoomService {
 	public List<RoomPhoto> getRoomPhotos(Room findRoom) {
 		return roomPhotoRepo.findAllByRoom(findRoom);
 	}
+	
+	public List<String> getRoomPhotosName(Room room) {
+		List<String> roomPhotoNames = new ArrayList<>();
+		for(RoomPhoto roomPhoto : roomPhotoRepo.findAllByRoom(room)) {
+			roomPhotoNames.add(roomPhoto.getFileName());
+		}
+		return roomPhotoNames;
+	}
 
 	public RoomPhoto getRoomPhoto(Long photoId) {
 		return roomPhotoRepo.findById(photoId).get();
@@ -103,10 +112,10 @@ public class SellerRoomService {
 	public void delRoomOptions(Room room) {
 		roomOptionRepo.deleteAllByRoom(room);	
 	}
-	
+
 	@Transactional
-	public void delRoomPhotos(Room room) {
-		roomPhotoRepo.deleteAllByRoom(room);
+	public void delRoomPhoto(String roomPhotoName) {
+		roomPhotoRepo.deleteByFileName(roomPhotoName);
 	}
 
 }

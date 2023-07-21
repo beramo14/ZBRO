@@ -13,4 +13,6 @@ public interface SellerRoomPhotoRepository extends JpaRepository<RoomPhoto, Long
 
 	void deleteAllByRoom(Room room);
 
+	void deleteByFileName(String roomPhotoName);
+
 }
