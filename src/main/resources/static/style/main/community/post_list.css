@@ -1,26 +1,52 @@
 .main-wrapper {
 	padding-top: 80px;
-	background: blue;
+	/* background: blue; */
 	text-align: center; /* 전체글자 중앙정렬 */
 	display: flex;
 	flex-direction: column;
 }
 
+#category {
+	padding: 0;
+	margin: 0 0 10px;
+	width: 180px;
+	display: flex;
+	justify-content: space-between;
+}
+
+#category > li {
+	list-style: none;
+	/* background: green;
+	border: 1px solid black; */
+}
+
+#category > li > a {
+	text-decoration: none;
+	color: #B9B9B9;
+}
+
+#category > li > a.black-underline {
+	color: black;
+	text-decoration: underline;
+	text-decoration-thickness : 2px;
+	text-underline-offset: 9px;
+}
+
 .postListBlock {
 	background: red;
-	margin: 0 auto 40px;
+	margin: 0 auto 30px;
 }
 
 #typeTitle > span{
 	font-family: 'La Belle Aurore', cursive;
 	font-size: 2em;
-	color: gray;
+	color: #D0D0D0;
 	position: relative;
-	top: 20px
 }
 
 #typeTitle > h1 {
 	letter-spacing :-0.05em;
 	font-weight: 500;
 	position: relative;
+	bottom: 20px;
 }

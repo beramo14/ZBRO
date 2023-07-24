@@ -15,12 +15,10 @@
 		<h1 th:text="${type}"></h1>
 	</div>
 	
-	<br />
-	
 	<div class="postListBlock">
 		<ul id="category">
-		    <li th:each="category : ${categories}" th:style="(${category.name()} == ${ct}) ? 'color: black' : 'color: gray'" >
-		        <a th:href="@{/post_list(categoryType=${category}, type=${type})}" th:text="${category}" ></a>
+		    <li th:each="category : ${categories}" >
+		        <a th:href="@{/post_list(categoryType=${category}, type=${type})}" th:text="${category}"  th:class="${category.name()} == ${ct} ? 'black-underline' : ''" ></a>
 		    </li>
 		</ul>
 	</div>
