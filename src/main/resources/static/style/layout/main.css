@@ -5,8 +5,7 @@ html, body {
 .main-wrapper {
 	width: 1350px;
 	height: auto;
-	min-height: calc(100% - 106px); /* 우측 값 : nav 높이*/
+	min-height: calc(100% - 227px);  /* 우측 값 : nav+footer 높이 */
 	margin: 0 auto ;
 	padding-top: 40px;
-	padding-bottom: 172px;
 }

@@ -25,9 +25,10 @@
 	
 	<br />
 	
-	<div class="postListBlock">
-		<div>
+	<div class="postListBlock" id="postMiddle">
+		<div id="postListSearch">
 			<h4><span th:text="${type}"/>게시판 - <span th:text="${ct}"/></h4>
+			<label th:text="|${pageable.getPageNumber()*pageable.getPageSize()+1} of ${pageResult.getTotalElements()}|"></label>
 			<div>
 				<form action="/post_list" method="post" id="postForm">
 					<input type="hidden" id="type" name="type"  th:value="${type}">
@@ -43,7 +44,6 @@
 					<button type="submit">검색</button>
 				</form>
 			</div>
-			<label th:text="|${pageable.getPageNumber()*pageable.getPageSize()+1} of ${pageResult.getTotalElements()}|"></label>
 		</div>
 		
 		<hr />
