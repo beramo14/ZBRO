@@ -160,14 +160,15 @@ public class SellerRoomController {
 				  @RequestParam(value = "uploadFile", required = false) List<MultipartFile> files,
 				  Room room,
 				  @RequestParam("isPhotoEdit") int isPhotoEdit,
-				  @RequestParam(value = "fileName", required = false) List<String> registRoomPhoto
+				  @RequestParam(value = "fileName", required = false) List<String> registRoomPhoto,
+				  Model model
 				  ) throws Exception, IOException {
 			
 			// room edit
 			room.setRoomIn(isRoomIn);
 			room.setElevator(isElevator);
 			roomService.insertRoom(room);
-			System.out.println("room : " + room.toString());
+//			System.out.println("room : " + room.toString());
 			
 			// roomOption edit
 			if(optionTypes != null) {
@@ -201,7 +202,7 @@ public class SellerRoomController {
 				
 				for(String RoomPhotoName : RoomPhotoNames) {
 					if(!registRoomPhoto.contains(RoomPhotoName)) {
-						System.out.println(RoomPhotoName+"얘는 지워야함");
+//						System.out.println(RoomPhotoName+"얘는 지워야함");
 						File getFile = new File(uploadFolder + RoomPhotoName);
 						getFile.delete();
 						roomService.delRoomPhoto(RoomPhotoName);
@@ -210,12 +211,12 @@ public class SellerRoomController {
 				
 				for(String photo : registRoomPhoto) { //input에 있는 파일명들 순차검사
 					if(!RoomPhotoNames.contains(photo) && !photo.isBlank()) {	//input o, DB x
-						System.out.println(photo+"파일이 없넹");
+//						System.out.println(photo+"파일이 없넹");
 						newPhotos.add(photo);
 					}
-					else if(RoomPhotoNames.contains(photo) && !photo.isBlank()) {//input o, DB o
-						System.out.println(photo+"파일이 원래 있음");
-					}
+//					else if(RoomPhotoNames.contains(photo) && !photo.isBlank()) {//input o, DB o
+//						System.out.println(photo+"파일이 원래 있음");
+//					}
 				}
 				
 				if(!newPhotos.isEmpty()) {
@@ -245,9 +246,30 @@ public class SellerRoomController {
 				}
 				
 			}
-			else System.out.println("파일수정안함");
+//			else System.out.println("파일수정안함");
 			
-			return "seller/room/editTest";
+			return "redirect:/seller/room/detail?roomId="+room.getRoomId();
+		}
+		
+		
+		
+		@GetMapping("/seller/room/delete")
+		public String roomDelete(@RequestParam("roomId") Room room) {
+			if(!roomService.getRoomOptions(room).isEmpty()) {
+				roomService.delRoomOptions(room);
+			}
+			
+			if(!roomService.getRoomPhotos(room).isEmpty()) {
+				List<String> RoomPhotoNames = roomService.getRoomPhotosName(room);
+				for(String RoomPhotoName : RoomPhotoNames) {
+					File getFile = new File(uploadFolder + RoomPhotoName);
+					getFile.delete();
+					roomService.delRoomPhoto(RoomPhotoName);
+				}
+			}
+			
+			roomService.delRoom(room.getRoomId());
+			return "redirect:/seller/room/list";
 		}
 		
 		

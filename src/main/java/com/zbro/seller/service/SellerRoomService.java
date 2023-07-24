@@ -118,4 +118,8 @@ public class SellerRoomService {
 		roomPhotoRepo.deleteByFileName(roomPhotoName);
 	}
 
+	public void delRoom(Long roomId) {
+		roomRepo.deleteById(roomId);
+	}
+
 }

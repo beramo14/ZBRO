@@ -1,0 +1,26 @@
+.main-wrapper {
+	padding-top: 80px;
+	background: blue;
+	text-align: center; /* 전체글자 중앙정렬 */
+	display: flex;
+	flex-direction: column;
+}
+
+.postListBlock {
+	background: red;
+	margin: 0 auto 40px;
+}
+
+#typeTitle > span{
+	font-family: 'La Belle Aurore', cursive;
+	font-size: 2em;
+	color: gray;
+	position: relative;
+	top: 20px
+}
+
+#typeTitle > h1 {
+	letter-spacing :-0.05em;
+	font-weight: 500;
+	position: relative;
+}

@@ -1,3 +1,7 @@
+body {
+	min-width: 900px
+}
+
 .nav-link.btn.btn-link {
     border: 1px solid ;
     border-radius: 12px;
@@ -18,12 +22,12 @@
 	font-weight: bolder;
 	font-size: 20px;
 	color: #acda93;
-	margin: 15px
+	margin: 15px 10px 15px 10px;
 }
 
 .navigation {
-  padding-top: 15px;
-  padding-bottom: 15px;
+  /* padding-top: 15px;
+  padding-bottom: 15px; */
   position: relative;
 }
 
@@ -44,4 +48,13 @@
 
 .navbar-brand img {
 	height:100%;
+	width: 80%;
+}
+
+#navButtons {
+	min-width: 400px;
+}
+
+.navbar-nav {
+	flex-direction: row;
 }

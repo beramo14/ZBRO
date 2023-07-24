@@ -108,8 +108,9 @@
 			        	</div>
 		            </div>
 			    </div>
-			    <button type="submit">등록하기</button>
-			    <div class="imageContainer" ></div>
+			    <button type="submit">수정하기</button>
+			    <a th:href="@{/seller/room/delete(roomId=${room.roomId})}" class="btn">삭제</a>
+			    <a th:href="@{/seller/room/list}" class="btn">목록</a>
 			</form>
 		</div>
 	</div>
