@@ -1,0 +1,87 @@
+body {
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+}
+.main-wrapper {
+	padding-top: 50px;
+	padding-bottom: 50px;
+	background: blue;
+	text-align: center; /* 전체글자 중앙정렬 */
+	display: flex;
+	flex-direction: column;
+	width:90%;
+	min-width: 900px;
+}
+
+
+/* ------------- 크게 나눈 블럭 ------------- */
+.postBlock {
+	background: red;
+	margin: 0 auto 10px;
+}
+
+
+/* ------------- 상단 타입 ------------- */
+#typeTitle {
+	margin: 0;
+	padding: 0;
+}
+#typeTitle > span{
+	font-family: 'La Belle Aurore', cursive;
+	font-size: 4em;
+	color: #D0D0D0;
+	position: relative;
+	top: 30px;
+}
+#typeTitle > h1 {
+	letter-spacing :-0.05em;
+	font-weight: 500;
+	position: relative;
+	bottom: 30px;
+}
+
+
+/* ------------- 상단 카테고리 ------------- */
+#category {
+	padding: 0;
+	margin: 0 0 30px;
+	width: 180px;
+	display: flex;
+	justify-content: space-between;
+}
+#category > li {
+	list-style: none;
+}
+#category > li > a {
+	text-decoration: none;
+	color: #B9B9B9;
+}
+#category > li > a.black-underline {
+	font-weight: 600;
+	color: #7c8475;
+	text-decoration: underline;
+	text-decoration-thickness : 2px;
+	text-underline-offset: 9px;
+}
+
+
+/* ------------- 중앙 메인내용 ------------- */
+.post-main {
+	width: 90%;
+	max-width: 1200px;
+}
+
+
+
+
+
+
+
+.thisComment > div {
+	margin-right: 20px
+}
+.commentsList {
+	border: 1px solid gray;
+}
