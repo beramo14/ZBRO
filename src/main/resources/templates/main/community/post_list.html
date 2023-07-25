@@ -10,9 +10,9 @@
 
 <th:block layout:fragment="content">
 	<div class="postListBlock" id="typeTitle">
-		<span th:if="${type}=='꿀팁'" th:text="Tip"></span>
-		<span th:if="${type}=='질문'" th:text="Question"></span>
-		<h1 th:text="${type}"></h1>
+		<span th:if="${type}=='꿀팁'" th:text="Tip" style="color: #ebeeea;"></span>
+		<span th:if="${type}=='질문'" th:text="Question" style="color: #ebeeea;"></span>
+		<h1 th:text="${type}" style="color: #47a385;"></h1>
 	</div>
 	
 	<div class="postListBlock">
@@ -38,9 +38,9 @@
 					<div class="selectbox">
 						<label for="select">제목</label>
 						<select name="searchType" id="select">
-				            <option value=title selected>제목</option>
-				            <option value="content">내용</option>
-				            <option value="user">작성자</option>
+				            <option class="optionItem" value=title selected>제목</option>
+				            <option class="optionItem" value="content">내용</option>
+				            <option class="optionItem" value="user">작성자</option>
 				        </select>
 					</div>
 					<div>
