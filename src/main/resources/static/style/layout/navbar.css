@@ -8,7 +8,8 @@ body {
    	border-color:#acda93;
    	padding: 13px;
    	font-weight: bolder;
-   	font-size: 20px;
+   	/* font-size: 20px; */
+   	font-size: 17px;
     color : #acda93;
 }
 
@@ -20,7 +21,8 @@ body {
   
 .nav-item1 .nav-link {
 	font-weight: bolder;
-	font-size: 20px;
+	/* font-size: 20px; */
+   	font-size: 17px;
 	color: #acda93;
 	margin: 15px 10px 15px 10px;
 }
