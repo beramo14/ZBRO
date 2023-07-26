@@ -199,5 +199,23 @@ public class UserService {
 		
 	}
 
+	public ConsumerUser getConsumerUser(Long userId) {
+		return consumerRepository.findById(userId).get();
+	}
+
+	public Resource getProfileImageResource(String profilePhotoFilename) throws FileNotFoundException {
+		
+		File file = new File(fileProfilePhotoPath + profilePhotoFilename);
+		
+		if(file.exists() == false || file.isFile() == false) {
+			throw new FileNotFoundException("file not found : " +fileProfilePhotoPath + profilePhotoFilename);
+		}
+
+		InputStream fis = new FileInputStream(file);
+		Resource imageResource = new InputStreamResource(fis);
+		return imageResource;
+		
+	}
+
 
 }
