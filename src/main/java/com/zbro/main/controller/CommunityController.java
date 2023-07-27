@@ -162,10 +162,8 @@ public class CommunityController {
 		
 		commuService.postRevise(postType, categoryType, postId, title, content, user, viewCount);
 		
-		redirectAttributes.addAttribute("type", type);
-		redirectAttributes.addAttribute("categoryType", categoryType);
-		
-		return "redirect:post_list";
+		redirectAttributes.addAttribute("postId", postId);
+		return "redirect:post_detail";
 	}
 	
 	
@@ -196,53 +194,6 @@ public class CommunityController {
 	
 	
 	
-//	@GetMapping("/get_comments")
-//	public ResponseEntity<?> getComments(@RequestParam("postId") Long postId) {
-//		List<Comment> comments = commuService.getComment(postId);	//postId의 댓글목록 가져오기
-//		
-//		List<CommentDto> commentDtos = new ArrayList<>();
-//		
-//		for (Comment comment : comments) {
-//		    if (comment.getParent() == null) {
-//		        // 부모 댓글인 경우
-//		        CommentDto commentDto = new CommentDto();
-//		        commentDto.setContent(comment.getContent());
-//		        commentDto.setPostId(postId);
-//		        commentDto.setUserId(comment.getUser().getConsumerId());
-//		        commentDto.setUserName(comment.getUser().getName());
-//		        commentDto.setProfilePhoto(comment.getUser().getProfilePhoto());
-//		        commentDto.setCreateDate(comment.getCreateDate());
-//		        commentDto.setCommentId(comment.getCommentId());
-//		        if (comment.getParent() != null) {
-//	                commentDto.setParentId(comment.getParent().getCommentId());
-//	            }
-//		        commentDtos.add(commentDto);
-//		        sortChildComments(comment, comments, commentDtos, postId);
-//		    }
-//		}
-//		
-//	    return ResponseEntity.ok(commentDtos);
-//	}
-//	
-//	private void sortChildComments(Comment parentComment, List<Comment> comments, List<CommentDto> commentDtos, Long postId) {
-//	    for (Comment comment : comments) {
-//	        if (comment.getParent() == parentComment) {
-//	            CommentDto commentDto = new CommentDto();
-//	            commentDto.setContent(comment.getContent());
-//	            commentDto.setPostId(postId);
-//	            commentDto.setUserId(comment.getUser().getConsumerId());
-//	            commentDto.setUserName(comment.getUser().getName());
-//	            commentDto.setProfilePhoto(comment.getUser().getProfilePhoto());
-//	            commentDto.setCreateDate(comment.getCreateDate());
-//	            commentDto.setCommentId(comment.getCommentId());
-//	            if (comment.getParent() != null) {
-//	                commentDto.setParentId(comment.getParent().getCommentId());
-//	            }
-//	            commentDtos.add(commentDto);
-//	            sortChildComments(comment, comments, commentDtos, postId);
-//	        }
-//	    }
-//	}
 	@GetMapping("/get_comments")
 	public ResponseEntity<?> getComments(@RequestParam("postId") Long postId) {
 	    List<Comment> comments = commuService.getComment(postId); // postId의 댓글목록 가져오기

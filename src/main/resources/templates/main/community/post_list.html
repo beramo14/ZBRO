@@ -10,8 +10,10 @@
 
 <th:block layout:fragment="content">
 	<div class="postListBlock" id="typeTitle">
-		<span th:if="${type}=='꿀팁'" th:text="Tip" style="color: #ebeeea;"></span>
-		<span th:if="${type}=='질문'" th:text="Question" style="color: #ebeeea;"></span>
+		<!-- <span th:if="${type}=='꿀팁'" th:text="Tip" style="color: #ebeeea;"></span>
+		<span th:if="${type}=='질문'" th:text="Question" style="color: #ebeeea;"></span> -->
+		<span th:if="${type}=='꿀팁'" th:text="Tip" style="color: white;"></span>
+		<span th:if="${type}=='질문'" th:text="Question" style="color: white;"></span>
 		<h1 th:text="${type}" style="color: #47a385;"></h1>
 	</div>
 	
@@ -107,7 +109,7 @@
 					</th:block>
 				</ul>
 			</div>
-			<a th:href="@{/post_add(type=${type}, categoryType=${ct})}" class="btn btn-dark post-write">글쓰기</a>
+			<a th:href="@{/post_add(type=${type}, categoryType=${ct})}" class="post-write btn">글쓰기</a>
 		</div>
 	</div>
 </th:block>

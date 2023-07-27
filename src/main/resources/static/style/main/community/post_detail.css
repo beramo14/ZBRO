@@ -1,13 +1,19 @@
 body {
-  -webkit-user-select:none;
-  -moz-user-select:none;
-  -ms-user-select:none;
-  user-select:none;
+	-webkit-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+}
+.draggable {
+  -webkit-user-select:text;
+  -moz-user-select:text;
+  -ms-user-select:text;
+  user-select:text
 }
 .main-wrapper {
 	padding-top: 50px;
 	padding-bottom: 50px;
-	background: blue;
+	/* background: blue; */
 	text-align: center; /* 전체글자 중앙정렬 */
 	display: flex;
 	flex-direction: column;
@@ -31,7 +37,6 @@ body {
 #typeTitle > span{
 	font-family: 'La Belle Aurore', cursive;
 	font-size: 4em;
-	color: #D0D0D0;
 	position: relative;
 	top: 30px;
 }
@@ -58,9 +63,12 @@ body {
 	text-decoration: none;
 	color: #B9B9B9;
 }
+#category > li > a:hover {
+	color: #86C69F;
+}
 #category > li > a.black-underline {
 	font-weight: 600;
-	color: #7c8475;
+	color: #7e8279;
 	text-decoration: underline;
 	text-decoration-thickness : 2px;
 	text-underline-offset: 9px;
@@ -71,20 +79,21 @@ body {
 .post-main {
 	width: 90%;
 	max-width: 1200px;
-	border: 1px solid yellow;
+	/* border: 1px solid yellow; */
 	text-align: left;
+	margin-top: 20px;
 }
 
 
 /* ------------- 내용/댓글 전체 ------------- */
 .content-box {
 	background: pink;
-	margin-bottom: 120px;
+	margin-bottom: 150px;
 }
 .comment-box {
 	background: pink;
-	margin-top: 20px;
-	padding: 0 20px;
+	margin-top: 25px;
+	padding: 0 30px;
 }
 
 
@@ -102,27 +111,30 @@ body {
 	background: purple;
 	position: absolute;
 	margin-left: 5px;
+	color: #b3b3b3;
+	font-size: 0.95em;
 }
 .content-user {
-	left: 10%;
+	left: 100px;
 }
 .content-view {
 	right: 3%;
 }
 .title-line {
 	width: 100%;
-	border-top: 2px solid #a6aba1;
+	border-top: 2px solid #7e8279;
 }
 
 
 /* ------------- content 내용 ------------- */
 .content-text {
 	background: green;
-	padding: 25px 3%;
+	padding: 42px 3%;
+	min-height: 300px;
 }
 .text-line {
 	width: 100%;
-	border-top: 1px solid #a6aba1;
+	border-top: 1px solid #a6aba12e;
 }
 
 
@@ -137,13 +149,17 @@ body {
 	border-radius: 17px;
 	position: absolute;
 	border: none;
-	background: #ACDA93;
+	background: #ebeeea;
+	color: black;
+	font-weight: 600;
 }
 .content-btn:hover {
 	background: #86C69F;
+	color: white;
 }
-.content-btn:active {
-	background: #5ab17d;
+.btn.content-btn:active {
+	background: #448860;
+	color: white;
 }
 .content-btn.b1 {
 	left: 15px;
@@ -164,21 +180,27 @@ body {
 }
 .commentcount-line {
 	width: 100%;
-	border-top: 1px solid #a6aba1;
-	margin-top: 15px;
+	border-top: 2px solid #a6aba1;
+	margin-top: 8px;
 }
 
 
-/* ------------- 댓글 ------------- */
+/* ------------- 댓글view ------------- */
+#commentList {
+	background: orange;
+	margin-bottom: 30px;
+}
 .commentsList {
 	border: 1px solid gray;
+	position: relative;
 }
 .thisComment {
 	display: flex;
 }
 .imagePreview {
-	width: 2em;
-	height: 2em;
+	flex-shrink: 0;
+	width: 32px;
+	height: 32px;
 	overflow: hidden;
 	border-radius: 100%;
 }
@@ -191,9 +213,89 @@ body {
 	background: purple;
 	border: 1px solid yellow;
 }
+.comment-btn {
+	flex-shrink: 0;
+	width: 100px;
+	text-align: right;
+	display: flex;
+	justify-content: flex-end;
+	padding: 0 5px 0 0;
+}
 .comment-middle {
+	padding: 3px 10px 0;
 	flex-grow: 1;
 }
-.comment-btn {
-	width: 60px;
+.comment-btn > * {
+	background: yellow;
+	/* border: 1px solid black; */
+	font-size: 0.9em;
+	height: 20px;
+	color: #aeaeae;
+}
+.comment-middle > * {
+	background: green;
+}
+.comment-name {
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+.comment-bottom {
+	margin-top: 10px;
+	color: #aeaeae;
+	font-size: 0.8em;
+	margin-right: 
+}
+.commentReply {
+	margin-left: 5px;
+}
+.isChildComment {
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	/* background: #5bf7f2; */
+	top: 5px;
+	border-left: 1px solid #c8c8c8;
+	border-bottom: 1px solid #c8c8c8;
+}
+#commentList hr {
+	border:0;
+	height:1px;
+	background: #bbb;
+}
+
+
+/* ------------- 댓글 작성/수정 ------------- */
+textarea {
+	resize: none;
+	/* height: 100px; */
+	padding: 10px;
+	margin: 0 19px 0 15px;
+	flex-grow: 1;
+	border: 2px solid #ebeeea;
+}
+textarea:focus {
+	border: 2px solid #cacec8;
+	outline: none;
+}
+.commentAdd {
+	background: #ebeeea;
+	color: black;
+	border-radius: 20px;
+	border: none;
+	font-weight: 600;
+	padding: 7px 12px;
+	margin-right: 25px;
+}
+.commentAdd:hover {
+	background: #86C69F;
+	color: white;
+}
+.btn.commentAdd:active {
+	background: #448860;
+	color: white;
+}
+.commetnAdd-box {
+	background: red;
+	display: flex;
+	align-items: center;
 }
