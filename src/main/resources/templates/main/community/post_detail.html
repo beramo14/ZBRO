@@ -52,7 +52,7 @@
 			<div id="commentList"></div>
 			
 			<!-- 댓글 작성 -->
-			<div class="commetnAdd-box" style="white-space:pre;"><!-- <div th:if="${뫄뫄 != null}"> -->
+			<div class="commetnAdd-box"><!-- <div th:if="${뫄뫄 != null}"> -->
 				<div class="imagePreview">
 					<img src="/consumer/profile/photo2?userId=2" alt="user Photo" class="profileImg"/>
 				</div>
@@ -153,11 +153,14 @@
 				var commentContent = $(this).closest('.commentsList').find("span.commentContent").html();
 				commentContent = commentContent.replace(/<br>/g, "\n");
 				var commentId = $(this).closest('.commentsList').find('.commentId').val();
-				var editForm = '<div class="editForm">'
+				var commentType = parseInt($(this).closest('.commentsList').find('.commentType').val());
+				console.log(commentType);
+				var editForm = '<div class="editForm"> <div class="thisEdit" style="display: flex; margin-left: calc(50px * ' + commentType + ')">'
+					 + '<div class="imagePreview"> <img src="/consumer/profile/photo2?userId=2" alt="user Photo" class="profileImg"/> </div>'
 	                 + '<textarea id="target-textarea" class="content" name="content" rows="3" placeholder="댓글을 작성하세요" required>' + commentContent + '</textarea>'
-	                 + '<button class="cancelEdit">취소</button>'
-	                 + '<button class="saveEdit">등록</button>'
-	                 + '</div>'; 
+	                 + '<button class="saveEdit btn">수정</button>'
+	                 + '<button class="cancelEdit btn">취소</button>'
+	                 + '</div> </div>'; 
                 
 	            $(this).closest('.commentsList').append(editForm);
                 $(this).closest('.thisComment').hide();
@@ -203,11 +206,14 @@
 		 		}
 		 		
 		 		var parentId = $(this).closest('.commentsList').find('.commentId').val();
+		 		var commentType = parseInt($(this).closest('.commentsList').find('.commentType').val())+1;
 		 		var editForm =
-		 		'<div class="replyForm">'
+		 		'<div class="replyForm"> <hr> <div class="thisReply" style="display: flex; margin-left: calc(50px * ' + commentType + ')">'
+		 		+'<div class="imagePreview"> <img src="/consumer/profile/photo2?userId=2" alt="user Photo" class="profileImg"/>	</div>'
 				+'<textarea id="target-textarea" name="" class="content" rows="3" placeholder="답글을 작성하세요" required></textarea>'
-				+'<button class="cancelReply">취소</button>'
-				+'<button class="saveReply">등록</button> </div>'
+				+'<button class="saveReply btn">등록</button>'
+				+'<button class="cancelReply btn">취소</button> </div>'
+				+'<div class="isReply" style="margin-left: calc(50px * ' + commentType + ' - 20px)"></div> </div>';
 				
 				$(this).closest('.commentsList').append(editForm);
 				isEditReplyMode = true;
