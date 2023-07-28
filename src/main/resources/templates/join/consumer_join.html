@@ -43,7 +43,7 @@
 			<h1 class="title">구매자 회원가입</h1>
 			
 			<div class="join-form-wrapper">
-				<form action="/join/consumer" method="post" id="join-form" enctype="multipart/form-data">
+				<form th:action="@{/join/consumer}" method="post" id="join-form" enctype="multipart/form-data">
 					<div class="email-input-wrapper mb-1">
 						<div class="d-flex" style="gap: 10px; flex-direction: row; flex-wrap: nowrap;">
 							<input type="hidden" id="email-check" value="false"/>

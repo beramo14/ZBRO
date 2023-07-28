@@ -5,10 +5,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
 import javax.mail.MessagingException;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -243,25 +245,73 @@ public class UserService {
 		return imageResource;
 		
 	}
+	
+	public Optional<ConsumerPasswordToken> getConsumerPasswordTokenByToken(String token) {
+		return consumerPasswordTokenRepository.findByToken(token);
+	}
+	public Optional<SellerPasswordToken> getSellerPasswordTokenByToken(String token) {
+		return sellerPasswordTokenRepository.findByToken(token);
+	}
 
+	@Transactional
 	public void consumerPasswordChangeMail(ConsumerUser consumerUser) throws MessagingException {
 		String token = UUID.randomUUID().toString();
-		ConsumerPasswordToken passwordToken = ConsumerPasswordToken.builder().user(consumerUser).token(token).build();
+		ConsumerPasswordToken passwordToken = null;
 		
-		consumerPasswordTokenRepository.save(passwordToken);
+		Optional<ConsumerPasswordToken> findedToken = consumerPasswordTokenRepository.findByUser(consumerUser);
+		if(findedToken.isPresent() == true) {
+			passwordToken = findedToken.get();
+			passwordToken.setToken(token);
+			passwordToken.setCreateDate(LocalDateTime.now());
+			passwordToken.setExpiredDate(LocalDateTime.now().plusMinutes(10));
+			consumerPasswordTokenRepository.save(passwordToken);
+		} else if(findedToken.isEmpty() == true) {
+			passwordToken = ConsumerPasswordToken.builder().user(consumerUser).token(token).build();
+			consumerPasswordTokenRepository.save(passwordToken);
+		}
+		
 		ConsumerPasswordToken findedPasswordToken = consumerPasswordTokenRepository.findById(passwordToken.getUserId()).get();
-		log.info("####### findedPasswordToken : {}", findedPasswordToken);
 		mailSendService.sendPasswordChangeMail(new PasswordEmailDTO(findedPasswordToken));
 	}
 	
+	@Transactional
 	public void sellerPasswordChangeMail(SellerUser sellerUser) throws MessagingException {
 		String token = UUID.randomUUID().toString();
-		SellerPasswordToken passwordToken = SellerPasswordToken.builder().user(sellerUser).token(token).build();
+		SellerPasswordToken passwordToken = null;
 		
-		sellerPasswordTokenRepository.save(passwordToken);
+		Optional<SellerPasswordToken> findedToken = sellerPasswordTokenRepository.findByUser(sellerUser);
+		if(findedToken.isPresent() == true) {
+			passwordToken = findedToken.get();
+			passwordToken.setToken(token);
+			sellerPasswordTokenRepository.save(passwordToken);
+		} else if(findedToken.isEmpty() == true) {
+			passwordToken = SellerPasswordToken.builder().user(sellerUser).token(token).build();
+			sellerPasswordTokenRepository.save(passwordToken);
+		}
+		
 		SellerPasswordToken findedPasswordToken = sellerPasswordTokenRepository.findById(passwordToken.getUserId()).get();
 		mailSendService.sendPasswordChangeMail(new PasswordEmailDTO(findedPasswordToken));
 	}
+
+	
+	public void updateConsumerPassword(ConsumerUser consumerUser, String password) {
+		consumerUser.setPassword(passwordEncoder.encode(password));
+		consumerRepository.save(consumerUser);
+	}
+	public void updateSellerPassword(SellerUser sellerUser, String password) {
+		sellerUser.setPassword(passwordEncoder.encode(password));
+		sellerRepository.save(sellerUser);
+	}
+
+	public void deleteSellerPasswordToken(SellerPasswordToken consumerPasswordToken) {
+		sellerPasswordTokenRepository.deleteById(consumerPasswordToken.getUserId());
+	}
+	public void deleteConsumerPasswordToken(ConsumerPasswordToken consumerPasswordToken) {
+		consumerPasswordTokenRepository.deleteById(consumerPasswordToken.getUserId());
+		
+	}
+
+	
 
 
 }

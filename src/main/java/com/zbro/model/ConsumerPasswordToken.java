@@ -37,10 +37,10 @@ public class ConsumerPasswordToken{
 	private String token;
 	
 	@Comment("만료일")
-	@Column(insertable = false, columnDefinition = "TIMESTAMP DEFAULT date_add(current_timestamp(), interval 10 minute)")
+	@Column(columnDefinition = "TIMESTAMP DEFAULT date_add(current_timestamp(), interval 10 minute)")
 	private LocalDateTime expiredDate;
 	
 	@Comment("생성일")
-	@Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime createDate;
 }
