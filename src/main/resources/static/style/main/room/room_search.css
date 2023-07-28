@@ -18,6 +18,10 @@ button.submit-btn {
 	border: 1px solid #47a385;
     color: #47a385;
 }
+button.submit-btn:hover {
+    background-color: #86c69f;
+    color: white;
+}
 button.search-word-reset-button {
 	border: 0;
 	padding: 0;
