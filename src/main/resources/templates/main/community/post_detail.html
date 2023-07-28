@@ -89,6 +89,15 @@
 	*/
 		$(document).ready(function() {
 			
+			// 게시글 html로 변환
+			var contentTextHtml = $('.content-text').html();
+			var contentText = $('.content-text').text();
+			$(".content-text").empty();
+			/* contentText = contentText.replace(/<br>/g, "\n"); */
+			console.log(contentTextHtml);
+			console.log(contentText);
+			$('.content-text').append(contentText);
+			
 			// 댓글작성 버튼클릭
 		 	$(".commentAdd").click(function() {
 	            var content = $(".content").val(); // 작성한 댓글
@@ -154,7 +163,6 @@
 				commentContent = commentContent.replace(/<br>/g, "\n");
 				var commentId = $(this).closest('.commentsList').find('.commentId').val();
 				var commentType = parseInt($(this).closest('.commentsList').find('.commentType').val());
-				console.log(commentType);
 				var editForm = '<div class="editForm"> <div class="thisEdit" style="display: flex; margin-left: calc(50px * ' + commentType + ')">'
 					 + '<div class="imagePreview"> <img src="/consumer/profile/photo2?userId=2" alt="user Photo" class="profileImg"/> </div>'
 	                 + '<textarea id="target-textarea" class="content" name="content" rows="3" placeholder="댓글을 작성하세요" required>' + commentContent + '</textarea>'

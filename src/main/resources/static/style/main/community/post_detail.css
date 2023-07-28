@@ -131,10 +131,15 @@ body {
 	/* background: green; */
 	padding: 42px 3%;
 	min-height: 300px;
+	overflow-wrap: break-word;
 }
 .text-line {
 	width: 100%;
 	border-top: 1px solid #a6aba12e;
+}
+.content-text img {
+  max-width: 100%;
+  height: auto;
 }
 
 
