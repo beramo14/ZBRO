@@ -1,5 +1,6 @@
 package com.zbro.main.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +20,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.zbro.mail.MailSendService;
+import com.zbro.main.repository.ConsumerPasswordTokenRepository;
+import com.zbro.main.repository.ConsumerUserRepository;
 import com.zbro.main.repository.RoomOptionRepository;
 import com.zbro.main.repository.RoomOptionTypeRepository;
+import com.zbro.main.repository.SellerPasswordTokenRepository;
+import com.zbro.main.repository.SellerUserRepository;
 import com.zbro.main.service.MypageService;
 import com.zbro.main.service.UserService;
 import com.zbro.model.Comment;
@@ -30,13 +36,17 @@ import com.zbro.model.Favorite;
 import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
 import com.zbro.model.RoomOptionType;
+import com.zbro.model.RoomReview;
 import com.zbro.type.PostType;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class MypageController {
 	
 	@Autowired
@@ -45,11 +55,22 @@ public class MypageController {
 	@Autowired
 	private UserService userService;
 	
+	private final PasswordEncoder passwordEncoder;
 	
+	// 로그인하지 않은 경우 체크
+    public String checkLogin(Principal principal) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+        return null;
+    }		
 	
 	@GetMapping("/mypage/favorite/compare")
-	public String favoriteComparePage(Model model) {
-
+    public String favoriteComparePage(Model model, Principal principal) {
+		
+        String redirectToLogin = checkLogin(principal);
+        if (redirectToLogin != null) return redirectToLogin;
+        
 	    List<Favorite> favorites = mypageService.getFavoritesByUserConsumerId();
 	    List<RoomOption> roomOptions = mypageService.getAllRoomOptions();
 	    ConsumerUser consumerUser = mypageService.getConsumerUser();
@@ -74,7 +95,10 @@ public class MypageController {
 	
 
 	@GetMapping("/mypage/favorite/list")
-	public String favoriteListPage(Model model) {
+    public String favoriteListPage(Model model, Principal principal) {
+        String redirectToLogin = checkLogin(principal);
+        if (redirectToLogin != null) return redirectToLogin;
+
 		List<Favorite> favorites = mypageService.getFavoritesByUserConsumerId();
 		ConsumerUser consumerUser = mypageService.getConsumerUser();
 		
@@ -97,7 +121,11 @@ public class MypageController {
     public String getAllCommunities(Model model,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "꿀팁") String type) {
+            @RequestParam(defaultValue = "꿀팁") String type,
+            Principal principal) {
+
+        String redirectToLogin = checkLogin(principal);
+        if (redirectToLogin != null) return redirectToLogin;
 
 		Page<Community> tipsPage = mypageService.getCommunitiesAllTips(page, size);
 		Page<Community> questionsPage = mypageService.getCommunitiesAllQuestions(page, size);
@@ -118,9 +146,12 @@ public class MypageController {
 	
     @GetMapping("/mypage/comment/list")
     public String getAllComments(@RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "10") int size,
-                                 Model model) {
-        Page<Comment> comments = mypageService.getCommentsByUser(page, size);
+            @RequestParam(defaultValue = "10") int size,
+            Model model, Principal principal) {
+		String redirectToLogin = checkLogin(principal);
+		if (redirectToLogin != null) return redirectToLogin;
+		
+    	Page<Comment> comments = mypageService.getCommentsByUser(page, size);
         ConsumerUser consumerUser = mypageService.getConsumerUser();
 
         model.addAttribute("comments", comments);
@@ -140,7 +171,10 @@ public class MypageController {
     }
 	
     @GetMapping("/mypage/member/info")
-    public String getMenberInfo(Model model) {
+    public String getMenberInfo(Model model, Principal principal) {
+        String redirectToLogin = checkLogin(principal);
+        if (redirectToLogin != null) return redirectToLogin;
+
         ConsumerUser consumerUser = mypageService.getConsumerUser();
 
         model.addAttribute("consumerUser", consumerUser);
@@ -149,10 +183,26 @@ public class MypageController {
     }
 	
     @PostMapping("/memberInfo")
-    public String updateUserInfo(@RequestParam("imageUpload") MultipartFile file, ConsumerUser consumerUser, Model model) {
+    public String updateUserInfo(@RequestParam("imageUpload") MultipartFile file, ConsumerUser consumerUser, Model model , 
+    							 @RequestParam("passwordCurrent") String passwordCurrent,
+                                 @RequestParam("passwordNew") String passwordNew) {
         ConsumerUser consumerUserUP = mypageService.getConsumerUser();
-        consumerUserUP.setPassword(consumerUser.getPassword());
+
+
+        if (passwordCurrent != null && !passwordCurrent.isEmpty() && passwordNew != null && !passwordNew.isEmpty()) {
+            if (passwordEncoder.matches(passwordCurrent, consumerUserUP.getPassword())) {
+            	
+                // 비밀번호가 올바르면 새 비밀번호를 설정하고 암호화
+                String encodedPassword = passwordEncoder.encode(passwordNew);
+                consumerUserUP.setPassword(encodedPassword);
+            } else {
+                return "main/mypage/memberInfo";
+            }
+        }
+
+
         consumerUserUP.setName(consumerUser.getName());
+
 
         if (file != null && !file.isEmpty()) {
             try {
@@ -165,11 +215,21 @@ public class MypageController {
             }
         }
 
+
         mypageService.updateUserInfo(consumerUserUP);
+
 
         return "redirect:/mypage/member/info";
     }
 
+    @PostMapping("/checkPassword")
+    @ResponseBody
+    public boolean checkPassword(@RequestParam("password") String password, Principal principal) {
+        ConsumerUser currentUser = userService.getConsumerUserByEmail(principal.getName());
+        return passwordEncoder.matches(password, currentUser.getPassword());
+    }    
+    
+    
     
     @PostMapping("/memberDelete")
     public String memberDelete() {
@@ -179,7 +239,10 @@ public class MypageController {
     
   
     @GetMapping("/mypage")
-    public String myMainPage(Model model) {
+    public String myMainPage(Model model, Principal principal) {
+        String redirectToLogin = checkLogin(principal);
+        if (redirectToLogin != null) return redirectToLogin;
+        
         List<Favorite> favorites = mypageService.getFavoritesByUserConsumerId();
         List<Community> top10Contents = mypageService.getTop10();
         List<Comment> comments = mypageService.getComments10ByUser();
@@ -191,6 +254,19 @@ public class MypageController {
         model.addAttribute("consumerUser", consumerUser);
 
         return "main/mypage/myMain";
+    }
+   
+    @GetMapping("/mypage/review/list")
+    public String getReviewsByUser(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, Principal principal) {
+        String redirectToLogin = checkLogin(principal);
+        if (redirectToLogin != null) return redirectToLogin;
+        
+        Page<RoomReview> reviews = mypageService.getReviewsByLoggedInUser(page, size);
+        ConsumerUser consumerUser = mypageService.getConsumerUser();
+        
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("consumerUser", consumerUser);
+        return "main/mypage/reviewList"; 
     }
     
 

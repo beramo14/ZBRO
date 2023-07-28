@@ -247,14 +247,15 @@ public class SellerController {
 	
 
 	@GetMapping("/seller/room/list")
-	public String roomList(Model model,
+	public String roomList(Model model,Principal principal,
 	                       @RequestParam(value = "searchType", required = false) String searchType,
 	                       @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
 	                       @RequestParam(value = "type", required = false) List<String> types,
 	                       @RequestParam(defaultValue = "0") int page,
 	                       @RequestParam(defaultValue = "10") int size) {
 
-	    Long sellerId = 1L;
+
+		SellerUser sellerId = sellerUserService.getSellerUserByEmail(principal.getName());
 	    Pageable pageable = PageRequest.of(page, size);
 
 	    Page<Room> rooms;
