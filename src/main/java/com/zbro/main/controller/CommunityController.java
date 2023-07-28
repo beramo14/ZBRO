@@ -36,7 +36,7 @@ public class CommunityController {
 	@Autowired
 	private CommunityService commuService;
 	
-	@RequestMapping("/post_list")
+	@RequestMapping("/community/list")
 	public String postList(Model model,
 							@RequestParam(defaultValue = "0") int page,
 							@RequestParam(defaultValue = "10") int pageSize,
@@ -52,13 +52,13 @@ public class CommunityController {
 		List<Community> postList = pageResult.getContent();
 		
 		// 페이징 확인
-		for(Community post:postList) {
-			System.out.println(post.toString());
-		}
+//		for(Community post:postList) {
+//			System.out.println(post.toString());
+//		}
 		
 		// 쿼리실행 후 총 게시물 수
 		int resultTotalCnt = pageResult.getNumberOfElements();
-		System.out.println("쿼리실행 후 총 게시물 수 : " + resultTotalCnt);
+//		System.out.println("쿼리실행 후 총 게시물 수 : " + resultTotalCnt);
 		
 		// 페이징처리
 		PageInfo pageInfo = new PageInfo((int)pageResult.getTotalElements(), page, pageSize, searchType, searchWord, categoryType);
@@ -80,13 +80,13 @@ public class CommunityController {
 		model.addAttribute("type", type);
 		model.addAttribute("categories", Category.values());
 		
-		
-		return "main/community/post_list";
+
+		return "main/community/list";
 	}
 
 	
 	
-	@GetMapping("/post_add")
+	@GetMapping("/community/add")
 	public String postAddView(Model model,
 							@RequestParam String type,
 							@RequestParam String categoryType) {
@@ -94,12 +94,12 @@ public class CommunityController {
 		model.addAttribute("type", type);
 		model.addAttribute("ct", categoryType);
 		model.addAttribute("categories", Category.values());
-		return "main/community/post_add";
+		return "main/community/add";
 	}
 	
 	
 	
-	@PostMapping("/post_add")
+	@PostMapping("/community/add")
 	public String postAdd(@RequestParam String type,
 						  @RequestParam String categoryType,
 						  @RequestParam String title,
@@ -112,12 +112,12 @@ public class CommunityController {
 		
 		redirectAttributes.addAttribute("type", type);
 		redirectAttributes.addAttribute("categoryType", categoryType);
-		return "redirect:post_list";
+		return "redirect:/community/list";
 	}
 	
 	
 	
-	@GetMapping("/post_detail")
+	@GetMapping("/community/detail")
 	public String postDetail(Model model,
 							 @RequestParam Long postId) {
 		
@@ -127,13 +127,13 @@ public class CommunityController {
 		model.addAttribute("type", community.getType());
 		model.addAttribute("ct", community.getCategoryType());
 		model.addAttribute("categories", Category.values());
-		
-		return "main/community/post_detail";
+
+		return "main/community/detail";
 	}
 	
 	
 	
-	@GetMapping("/post_revise")
+	@GetMapping("/community/edit")
 	public String postReviseView(Model model,
 								 @RequestParam Long postId) {
 		
@@ -142,13 +142,13 @@ public class CommunityController {
 		model.addAttribute("type", community.getType());
 		model.addAttribute("ct", community.getCategoryType());
 		model.addAttribute("categories", Category.values());
-		
-		return "main/community/post_revise";
+
+		return "main/community/edit";
 	}
 	
 	
 	
-	@PostMapping("/post_revise")
+	@PostMapping("/community/edit")
 	public String postRevise(@RequestParam String type,
 						  	 @RequestParam String categoryType,
 						  	 @RequestParam Long postId,
@@ -162,10 +162,8 @@ public class CommunityController {
 		
 		commuService.postRevise(postType, categoryType, postId, title, content, user, viewCount);
 		
-		redirectAttributes.addAttribute("type", type);
-		redirectAttributes.addAttribute("categoryType", categoryType);
-		
-		return "redirect:post_list";
+		redirectAttributes.addAttribute("postId", postId);
+		return "redirect:/community/detail";
 	}
 	
 	
@@ -181,7 +179,7 @@ public class CommunityController {
 		redirectAttributes.addAttribute("type", type);
 		redirectAttributes.addAttribute("categoryType", categoryType);
 		
-		return "redirect:post_list";
+		return "redirect:community/list";
 	}
 	
 	
@@ -196,53 +194,6 @@ public class CommunityController {
 	
 	
 	
-//	@GetMapping("/get_comments")
-//	public ResponseEntity<?> getComments(@RequestParam("postId") Long postId) {
-//		List<Comment> comments = commuService.getComment(postId);	//postId의 댓글목록 가져오기
-//		
-//		List<CommentDto> commentDtos = new ArrayList<>();
-//		
-//		for (Comment comment : comments) {
-//		    if (comment.getParent() == null) {
-//		        // 부모 댓글인 경우
-//		        CommentDto commentDto = new CommentDto();
-//		        commentDto.setContent(comment.getContent());
-//		        commentDto.setPostId(postId);
-//		        commentDto.setUserId(comment.getUser().getConsumerId());
-//		        commentDto.setUserName(comment.getUser().getName());
-//		        commentDto.setProfilePhoto(comment.getUser().getProfilePhoto());
-//		        commentDto.setCreateDate(comment.getCreateDate());
-//		        commentDto.setCommentId(comment.getCommentId());
-//		        if (comment.getParent() != null) {
-//	                commentDto.setParentId(comment.getParent().getCommentId());
-//	            }
-//		        commentDtos.add(commentDto);
-//		        sortChildComments(comment, comments, commentDtos, postId);
-//		    }
-//		}
-//		
-//	    return ResponseEntity.ok(commentDtos);
-//	}
-//	
-//	private void sortChildComments(Comment parentComment, List<Comment> comments, List<CommentDto> commentDtos, Long postId) {
-//	    for (Comment comment : comments) {
-//	        if (comment.getParent() == parentComment) {
-//	            CommentDto commentDto = new CommentDto();
-//	            commentDto.setContent(comment.getContent());
-//	            commentDto.setPostId(postId);
-//	            commentDto.setUserId(comment.getUser().getConsumerId());
-//	            commentDto.setUserName(comment.getUser().getName());
-//	            commentDto.setProfilePhoto(comment.getUser().getProfilePhoto());
-//	            commentDto.setCreateDate(comment.getCreateDate());
-//	            commentDto.setCommentId(comment.getCommentId());
-//	            if (comment.getParent() != null) {
-//	                commentDto.setParentId(comment.getParent().getCommentId());
-//	            }
-//	            commentDtos.add(commentDto);
-//	            sortChildComments(comment, comments, commentDtos, postId);
-//	        }
-//	    }
-//	}
 	@GetMapping("/get_comments")
 	public ResponseEntity<?> getComments(@RequestParam("postId") Long postId) {
 	    List<Comment> comments = commuService.getComment(postId); // postId의 댓글목록 가져오기
@@ -295,7 +246,7 @@ public class CommunityController {
 		List<Comment> allComments = commuService.getAllComments();
 		
 		delChildComment(thisComment, allComments);
-		System.out.println("삭제된 댓글 : " + thisComment.getCommentId());
+//		System.out.println("삭제된 댓글 : " + thisComment.getCommentId());
 		commuService.delComment(commentId);
 		
 		
@@ -305,9 +256,9 @@ public class CommunityController {
 	private void delChildComment(Comment parentComment, List<Comment> allComments) {
 		for(Comment comment:allComments) {
 			if(comment.getParent() != null && parentComment.getCommentId() == comment.getParent().getCommentId()) {
-				System.out.println(parentComment.getCommentId()+"의 자식답글 : "+comment.getCommentId());
+//				System.out.println(parentComment.getCommentId()+"의 자식답글 : "+comment.getCommentId());
 				delChildComment(comment, allComments);
-				System.out.println("삭제된 댓글 : " + comment.getCommentId());
+//				System.out.println("삭제된 댓글 : " + comment.getCommentId());
 				commuService.delComment(comment.getCommentId());
 			}
 		}

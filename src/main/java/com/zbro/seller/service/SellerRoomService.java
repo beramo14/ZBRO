@@ -1,5 +1,9 @@
 package com.zbro.seller.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +25,12 @@ import com.zbro.model.RoomOption;
 import com.zbro.model.RoomOptionType;
 import com.zbro.model.RoomPhoto;
 import com.zbro.seller.repository.SellerRoomFavoriteRepository;
+import com.zbro.model.SellerUser;
 import com.zbro.seller.repository.SellerRoomOptionRepository;
 import com.zbro.seller.repository.SellerRoomOptionTypeRepository;
 import com.zbro.seller.repository.SellerRoomPhotoRepository;
 import com.zbro.seller.repository.SellerRoomRepository;
+import com.zbro.seller.repository.SellerRoomUserRepository;
 
 @Service
 public class SellerRoomService {
@@ -36,6 +45,11 @@ public class SellerRoomService {
 	private SellerRoomPhotoRepository roomPhotoRepo;
 	@Autowired
 	private SellerRoomFavoriteRepository roomFavoriteRepo;
+	@Autowired
+	private SellerRoomUserRepository sellerUserRepo;
+	
+	@Value("${file.images.room-photo}")
+	private String fileRoomPhotoPath;
 
 	public void insertRoom(Room room) {
 		roomRepo.save(room);
@@ -57,11 +71,6 @@ public class SellerRoomService {
 		roomPhotoRepo.save(roomPhoto);
 	}
 
-	
-	
-	
-	
-	
 	
     public Page<Room> getAllRoomsOrderedByRoomId(Long sellerId, Pageable pageable) {
         return roomRepo.findAllBySeller_SellerIdOrderByRoomId(sellerId, pageable);
@@ -114,5 +123,61 @@ public class SellerRoomService {
     }
     
 
+	public List<Room> getRooms(Long sellerId) {
+		Optional<SellerUser> sellerUser = sellerUserRepo.findById(sellerId);
+		
+		return roomRepo.findAllBySeller(sellerUser.get());
+	}
+
+	public Room getRoom(Long roomId) {
+		return roomRepo.findById(roomId).get();
+	}
+
+	public List<RoomOption> getRoomOptions(Room findRoom) {
+		return roomOptionRepo.findAllByRoom(findRoom);
+	}
+
+	public List<RoomPhoto> getRoomPhotos(Room findRoom) {
+		return roomPhotoRepo.findAllByRoom(findRoom);
+	}
+	
+	public List<String> getRoomPhotosName(Room room) {
+		List<String> roomPhotoNames = new ArrayList<>();
+		for(RoomPhoto roomPhoto : roomPhotoRepo.findAllByRoom(room)) {
+			roomPhotoNames.add(roomPhoto.getFileName());
+		}
+		return roomPhotoNames;
+	}
+
+	public RoomPhoto getRoomPhoto(Long photoId) {
+		return roomPhotoRepo.findById(photoId).get();
+	}
+
+	public Resource getImageResource(RoomPhoto roomPhoto) throws FileNotFoundException {
+		
+		File file = new File(fileRoomPhotoPath+roomPhoto.getFileName());
+		
+		if(file.exists() == false || file.isFile() == false) {
+			throw new FileNotFoundException("file not found : " +fileRoomPhotoPath + roomPhoto.getUploadFile());
+		}
+		
+		InputStream fis = new FileInputStream(file);
+		Resource imageResource = new InputStreamResource(fis);
+		return imageResource;
+	}
+
+	@Transactional
+	public void delRoomOptions(Room room) {
+		roomOptionRepo.deleteAllByRoom(room);	
+	}
+
+	@Transactional
+	public void delRoomPhoto(String roomPhotoName) {
+		roomPhotoRepo.deleteByFileName(roomPhotoName);
+	}
+
+	public void delRoom(Long roomId) {
+		roomRepo.deleteById(roomId);
+	}
 
 }

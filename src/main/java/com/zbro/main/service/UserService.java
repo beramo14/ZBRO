@@ -261,6 +261,7 @@ public class UserService {
 		sellerPasswordTokenRepository.save(passwordToken);
 		SellerPasswordToken findedPasswordToken = sellerPasswordTokenRepository.findById(passwordToken.getUserId()).get();
 		mailSendService.sendPasswordChangeMail(new PasswordEmailDTO(findedPasswordToken));
+
 	}
 
 

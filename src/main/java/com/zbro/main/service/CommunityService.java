@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zbro.dto.CommentDto;
 import com.zbro.main.repository.CommentRepository;
@@ -93,8 +94,10 @@ public class CommunityService {
 		commuRepo.save(community);
 	}
 
-
+	@Transactional
 	public void postDelete(Long postId) {
+		Community thisPost = commuRepo.findById(postId).get();
+		commentRepo.deleteAllByPost(thisPost);
 		commuRepo.deleteById(postId);
 	}
 
@@ -163,6 +166,12 @@ public class CommunityService {
 		reviseComment.setCommentType(commentType);
 		
 		commentRepo.save(reviseComment);
+	}
+
+
+	public Community getThisPost(Long postId) {
+		// TODO Auto-generated method stub
+		return commuRepo.findById(postId).get();
 	}
 
 }

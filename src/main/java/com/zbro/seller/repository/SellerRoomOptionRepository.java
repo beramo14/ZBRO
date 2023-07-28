@@ -9,5 +9,8 @@ import com.zbro.model.RoomOption;
 
 public interface SellerRoomOptionRepository extends JpaRepository<RoomOption, Long>{
 
-	 void deleteByRoom(Room room);
+	void deleteByRoom(Room room);
+	List<RoomOption> findAllByRoom(Room findRoom);
+
+	void deleteAllByRoom(Room room);
 }

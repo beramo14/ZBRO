@@ -1,70 +1,81 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 라이브러리를 사용하기 위해 추가 -->
-<meta charset="UTF-8" />
-
-
-
+<th:block layout:fragment="customHead"></th:block>
 <th:block layout:fragment="customStyle">
-<style th:inline="css" type="text/css">
-
-	.thisComment > div {
-		margin-right: 20px
-	}
-	.commentsList {
-		border: 1px solid gray;
-	}
-</style>
+	<link href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Noto+Sans+KR&display=swap" rel="stylesheet">
+	<link href="/style/main/community/post_detail.css" rel="stylesheet" type="text/css" />
+	<style th:inline="css" type="text/css"></style>
 </th:block>
 
-
-
 <th:block layout:fragment="content">
-	<span th:if="${type}=='꿀팁'" th:text="Tip"></span>
-	<span th:if="${type}=='질문'" th:text="Question"></span>
-	<h1 th:text="${type}"></h1>
+	<div class="postBlock" id="typeTitle">
+		<span th:if="${type.toString()}=='꿀팁'" th:text="Tip" style="color: white;"></span>
+		<span th:if="${type.toString()}=='질문'" th:text="Question" style="color: white;"></span>
+		<h1 th:text="${type}" style="color: #47a385;"></h1>
+	</div>
+	
+	<div class="postBlock">
+		<ul id="category">
+		    <li th:each="category : ${categories}" >
+		        <a th:href="@{/community/list(categoryType=${category}, type=${type})}" th:text="${category}"  th:class="${category.name()} == ${ct} ? 'black-underline' : ''" ></a>
+		    </li>
+		</ul>
+	</div>
+	
 	<br />
-	<ul id="category">
-	    <li th:each="category : ${categories}" th:style="(${category.name()} == ${ct}) ? 'color: black' : 'color: gray'" >
-	        <a th:href="@{/post_list(categoryType=${category}, type=${type})}" th:text="${category}" ></a>
-	    </li>
-	</ul>
-	<br />
 	
-	<h2 th:text="${post.Title}"/>
-	<span th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd')}"/>
-	<span th:text="${post.user.name}"/>
-	<span th:text="'조회수 ' + ${post.viewCount}"/>
-	
-	<hr />
-	<span th:text="${post.content}"/>
-	<hr />
-	
-	<a th:href="@{/post_list(type=${type}, categoryType=${ct})}" class="btn">목록</a>
-	<!-- 작성한 유저, 관리자만 볼 수 있는 버튼 -->
-	<a th:href="@{/post_revise(postId=${post.postId})}" class="btn">수정</a>
-	<a th:href="@{/post_delete(postId=${post.postId}, type=${type}, categoryType=${ct})}" class="btn">삭제</a>
-	<!--  -->
-	
-	<br /><br />
-	<h4 th:text="'댓글 '"/>
-	
-	<!-- 댓글 목록 출력 -->
-	<div id="commentList"></div>
-	
-	<!-- 댓글 작성 -->
-	<hr />
-	<div>
-		<!-- <div th:if="${뫄뫄 != null}"> -->
-			<textarea name="" class="content" cols="80" rows="5" placeholder="댓글을 작성하세요" required></textarea>
-			<button class="commentAdd">등록</button>
-		<!-- </div> -->
+	<div class="postBlock post-main">
+		<div class="content-box">
+			<div class="content-title">
+				<h2 th:text="${post.Title}" class="draggable"/>
+				<div>
+					<span class="content-info content-date" th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd')}"/>
+					<span class="content-info content-user" th:text="${post.user.name}"/>
+					<span class="content-info content-view" th:text="'조회수 ' + ${post.viewCount}"/>
+				</div>
+			</div>
+			<div class="title-line"></div>
+			<div class="content-text draggable" th:text="${post.content}"/>
+			<div class="text-line"></div>
+			<div class="content-btns">
+				<a th:href="@{/community/list(type=${type}, categoryType=${ct})}" class="btn content-btn b1">목록</a>
+				<a th:href="@{/community/edit(postId=${post.postId})}" class="btn content-btn b2">수정</a>
+				<a th:href="@{/post_delete(postId=${post.postId}, type=${type}, categoryType=${ct})}" class="btn content-btn b3">삭제</a>
+			</div>
+		</div>
+		
+		<span id="commentCount">댓글 </span>
+		<div class="commentcount-line"></div>
+		
+		<div class="comment-box">
+			<!-- 댓글 목록 출력 -->
+			<div id="commentList"></div>
+			
+			<!-- 댓글 작성 -->
+			<div class="commetnAdd-box"><!-- <div th:if="${뫄뫄 != null}"> -->
+				<div class="imagePreview">
+					<img src="/consumer/profile/photo2?userId=2" alt="user Photo" class="profileImg"/>
+				</div>
+				<textarea id="target-textarea" name="" class="content" rows="3" placeholder="댓글을 작성하세요" required></textarea>
+				<button class="commentAdd btn">등록</button>
+			</div>
+		</div>
 	</div>
 </th:block>
 
 
-
 <th:block layout:fragment="customScript">
+	<!-- textarea 자동길이조절 -->
+	<script th:inline="javascript">
+		function resize() {
+	        let textarea = document.getElementById("target-textarea");
+	        textarea.style.height = "auto"; // 자동으로 높이를 조정하도록 설정
+	        textarea.style.height = textarea.scrollHeight + 10 + "px"; // 스크롤이 생긴 후의 높이로 설정
+	    }
+	
+	    document.addEventListener("input", resize);
+	    window.addEventListener("load", resize);
+	</script>
 	<script th:inline="javascript">
 	/*
 		[ data 보내는 방식 ]
@@ -78,9 +89,19 @@
 	*/
 		$(document).ready(function() {
 			
+			// 게시글 html로 변환
+			var contentTextHtml = $('.content-text').html();
+			var contentText = $('.content-text').text();
+			$(".content-text").empty();
+			/* contentText = contentText.replace(/<br>/g, "\n"); */
+			console.log(contentTextHtml);
+			console.log(contentText);
+			$('.content-text').append(contentText);
+			
 			// 댓글작성 버튼클릭
 		 	$(".commentAdd").click(function() {
 	            var content = $(".content").val(); // 작성한 댓글
+	            content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
 	            var postId = [[${post.postId}]]; // 게시글 ID
 	            var userId = '2'
 	            
@@ -131,20 +152,23 @@
 			
 		 	
 			// 수정 버튼클릭
-		 	var isEditReplyMode = false;	// 수정 폼이 열려있는지 여부를 저장하는 변수
+		 	var isEditReplyMode = false;	// 수정/답글 폼이 열려있는지 여부를 저장하는 변수
 			$(document).on("click", ".commentEdit", function() {
 				if(isEditReplyMode) {
 					cancelReplyMode();
 					cancelEditMode();
 				}
 				
-				var commentContent = $(this).parent().siblings().find("span.commentContent").text();
+				var commentContent = $(this).closest('.commentsList').find("span.commentContent").html();
+				commentContent = commentContent.replace(/<br>/g, "\n");
 				var commentId = $(this).closest('.commentsList').find('.commentId').val();
-				var editForm = '<div class="editForm">'
-	                 + '<textarea class="content" name="content" cols="80" rows="5" required>' + commentContent + '</textarea>'
-	                 + '<button class="cancelEdit">취소</button>'
-	                 + '<button class="saveEdit">등록</button>'
-	                 + '</div>'; 
+				var commentType = parseInt($(this).closest('.commentsList').find('.commentType').val());
+				var editForm = '<div class="editForm"> <div class="thisEdit" style="display: flex; margin-left: calc(50px * ' + commentType + ')">'
+					 + '<div class="imagePreview"> <img src="/consumer/profile/photo2?userId=2" alt="user Photo" class="profileImg"/> </div>'
+	                 + '<textarea id="target-textarea" class="content" name="content" rows="3" placeholder="댓글을 작성하세요" required>' + commentContent + '</textarea>'
+	                 + '<button class="saveEdit btn">수정</button>'
+	                 + '<button class="cancelEdit btn">취소</button>'
+	                 + '</div> </div>'; 
                 
 	            $(this).closest('.commentsList').append(editForm);
                 $(this).closest('.thisComment').hide();
@@ -159,6 +183,7 @@
 		 	// 수정등록 버튼클릭
 			$(document).on("click", ".saveEdit", function() {
 	            var content = $(".content").val();
+	            content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
 	            var commentId = $(this).closest('.commentsList').find('.commentId').val();
 	            var commentType = $(this).closest('.commentsList').find('.commentType').val();
 	            
@@ -182,7 +207,6 @@
 	        });
 		 	
 		 	// 답글 버튼클릭
-		 	/* var isEditReplyMode = false; */
 		 	$(document).on("click", ".commentReply", function() {
 		 		if(isEditReplyMode) {
 		 			cancelEditMode();
@@ -190,11 +214,14 @@
 		 		}
 		 		
 		 		var parentId = $(this).closest('.commentsList').find('.commentId').val();
+		 		var commentType = parseInt($(this).closest('.commentsList').find('.commentType').val())+1;
 		 		var editForm =
-		 		'<div class="replyForm">'
-				+'<textarea name="" class="content" cols="80" rows="5" placeholder="답글을 작성하세요" required></textarea>'
-				+'<button class="cancelReply">취소</button>'
-				+'<button class="saveReply">등록</button> </div>'
+		 		'<div class="replyForm"> <hr> <div class="thisReply" style="display: flex; margin-left: calc(50px * ' + commentType + ')">'
+		 		+'<div class="imagePreview"> <img src="/consumer/profile/photo2?userId=2" alt="user Photo" class="profileImg"/>	</div>'
+				+'<textarea id="target-textarea" name="" class="content" rows="3" placeholder="답글을 작성하세요" required></textarea>'
+				+'<button class="saveReply btn">등록</button>'
+				+'<button class="cancelReply btn">취소</button> </div>'
+				+'<div class="isReply" style="margin-left: calc(50px * ' + commentType + ' - 20px)"></div> </div>';
 				
 				$(this).closest('.commentsList').append(editForm);
 				isEditReplyMode = true;
@@ -208,6 +235,7 @@
 		 	// 답글등록 버튼클릭
 		 	$(document).on("click", ".saveReply", function() {
 		 		var content = $(".content").val(); // 작성한 댓글
+	            content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
 	            var postId = [[${post.postId}]]; // 게시글 ID
 	            var userId = '2'
 	            var parentId = $(this).closest('.commentsList').find('.commentId').val();
@@ -271,7 +299,13 @@
 	                function padZero(num) {
 	                    return num < 10 ? '0' + num : num;
 	                }
-	
+					
+	                /* 총 댓글개수 */
+	                var allComments = result.length;
+	                var commentCount = $("#commentCount");
+	                commentCount.empty();
+	                commentCount.append('댓글 '+allComments);
+	                
 	                for (var i = 0; i < result.length; i++) {
 	                    var comment = result[i];
 	                    var content = comment.content;
@@ -281,16 +315,24 @@
 	                    var formattedDate = createDate.getFullYear() + '-' + padZero(createDate.getMonth() + 1) + '-' + padZero(createDate.getDate());
 	                    var profilePhoto = comment.profilePhoto;
 	                    var commentId = comment.commentId;
-	                    var parentId = comment.parentId
+	                    var parentId = comment.parentId;
 	                    var commentType = comment.commentType;
 	                    if(parentId === 0) parentId = '';
 	                    
 	                    // 댓글 HTML 생성 및 목록에 추가
-       					var commentHtml = '<div class="commentsList" style="margin-left: calc(60px * ' + commentType + ')"> <input type="hidden" class="commentId" value="' + commentId + '" /> <input type="hidden" class="parentId" value="' + parentId + '" /> <input type="hidden" class="commentType" value="' + commentType + '" /> <div class="thisComment" style="display: flex;"> <div>profilePhoto</div> <div> <div>' + userName + '</div>'
-                        + '<span class="commentContent">' + content + '</span> <div style="display: flex"> <span style="margin-right:10px">' + formattedDate + '</span>'
-                        + '<div class="commentReply btn">답글</div> </div> </div> <div> <span class="commentEdit btn">수정</span> <span> ｜ </span> <span class="commentDel btn">삭제</span> </div> </div> </div>';
+	                    if(0 < i) commentList.append('<hr/>');
+       					var commentHtml = '<div class="commentsList"> <input type="hidden" class="commentId" value="' + commentId + '" />'
+       					+ '<input type="hidden" class="parentId" value="' + parentId + '" /> <input type="hidden" class="commentType" value="' + commentType + '" /> <div class="thisComment" style="display: flex; margin-left: calc(50px * ' + commentType + ')">'
+       					+ '<div class="imagePreview"> <img src="/consumer/profile/photo2?userId=' + userId + '" alt="user Photo" class="profileImg"/> </div>'
+       					+ '<div class="comment-middle"> <div class="comment-name">' + userName + '</div>'
+                        + '<span class="commentContent draggable">' + content + '</span> <div style="display: flex" class="comment-bottom"> <span style="margin-right:10px">' + formattedDate + '</span>'
+                        + '<div class="commentReply" style="cursor: pointer;">답글</div> </div> </div> <div class="comment-btn"> <span class="commentEdit" style="cursor: pointer;">수정</span> <span>｜</span> <span class="commentDel" style="cursor: pointer;">삭제</span> </div> </div> </div>';
 
 	                    commentList.append(commentHtml);
+	                    if(parentId !== null) {
+	                    	var addChildComment = $(".commentsList").last();
+	                    	addChildComment.append('<div class="isChildComment" style="margin-left: calc(50px * ' + commentType + ' - 20px)"></div>')
+	                    }
 	                }
 	            },
 	            error: function(error) {

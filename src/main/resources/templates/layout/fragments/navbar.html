@@ -7,7 +7,7 @@
     	<a class="navbar-brand" href="/">
     		<img src="/images/navi_logo.png" alt="로고">
     	</a>
-	    <div class="d-flex justify-content-end">
+	    <div class="d-flex justify-content-end" id="navButtons">
 			<ul class="navbar-nav" style="align-items:center;">
 				<li class="nav-item1 me-3">
 					<a class="nav-link" th:href="@{/room/search}">지도</a>
@@ -17,8 +17,8 @@
 					   꿀팁/질문
 					</a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item text-center" th:href="@{/post_list(type='꿀팁')}">꿀팁</a></li>
-						<li><a class="dropdown-item text-center" th:href="@{/post_list(type='질문')}">질문</a></li>
+						<li><a class="dropdown-item text-center" th:href="@{/community/list(type='꿀팁')}">꿀팁</a></li>
+						<li><a class="dropdown-item text-center" th:href="@{/community/list(type='질문')}">질문</a></li>
 					</ul>
 				</li>
 				<li class="nav-item1" sec:authorize="isAuthenticated()">
