@@ -248,14 +248,21 @@
 			font-size: 5px;
 			color: #979797;
 		}   
-		
-	
+			 
 
 		.custom-hr {        
 		     border: 3px solid #ccc;
 		     margin: 20px 0;
-		  }		           
-                          
+		  }		         
+		    
+        .camparisonWrap {
+        	display: flex;
+		    flex-wrap: nowrap;
+		    flex-direction: row;
+		    justify-content: center;
+		    gap: 10px;
+		  }    
+		                 
          .comparison-item {
              border: 1px solid #E8E8E8;
              display: inline-block;                
@@ -266,10 +273,13 @@
              margin-bottom: 150px;
 
          }
+ 
          
           .hidden-div {
-             display: none;             
-         }  
+             display: none;   
+             
+                       
+         } 
 
 		
 		.delete-button {
@@ -376,6 +386,7 @@
 <body>	
     <th:block layout:fragment="content">
 
+
     <div class="hamburger-menu" onclick="toggleSideMenu()">
         <span></span>
         <span></span>
@@ -409,6 +420,9 @@
                     <li><a href="/mypage/favorite/compare">매물 비교</a></li>
                 </ul>
             </div>
+			<div class="menu">
+				<p class="outer-menu"><a href="/mypage/review/list">리뷰관리</a></p>
+			</div>	            
         </div>
     </div>
 
@@ -453,102 +467,116 @@
             </div>
 
         </div>
-				
-		<div id="comparisonContainer" class="hidden-div">
-		    <div th:each="favorite, status : ${favorites}" class="comparison-item">
-		    	<div class="favorite-building">
-				    <span th:text="${favorite.room.buildingName}"></span>
-				<button class="delete-button">X</button>
-				</div>
-		    	<br />
-				<img th:src="@{/room/photo(roomId=${favorite.room.roomId})}" class="room-image" />
-	    		<div class="favorite-address" th:text="${favorite.room.address}"></div>
-		        <div class="favorite-id" data-favorite-id="${favorite.favoriteId}" th:text="${favorite.favoriteId}"></div>		        
-		        <div class="favorite-type" th:text="${favorite.room.type}"></div>
-		        <div class="favorite-cost" >
-					<span th:text="${#strings.equals(favorite.room.costType, '월세') ? (favorite.room.deposit != 0 ?
-													(favorite.room.costType + ' ' + favorite.room.deposit + '/' + favorite.room.monthCost) 
-													: (favorite.room.costType + ' '  + favorite.room.monthCost)) 
-													: (favorite.room.costType + ' ' + favorite.room.deposit)}">
-			    	</span>		      
-			    </div>  
-				<div class="favorite-manageC" th:text="'관리비 매월 ' + ${favorite.room.manageCost} + '만원'"></div>
-		        <div class="favorite-floor" th:text="${favorite.room.roomFloor} + '층 / ' + ${favorite.room.totalFloor} + '층'"></div>
-		        <div class="favorite-size" th:text="${favorite.room.size} + ' ㎡'"></div>
-		        <div class="favorite-isroomIn" th:text="${favorite.room.isRoomIn ? '즉시 입주 가능' : '즉시 입주 불가'}"></div>
-		        <hr class = "custom-hr"/>	
-		        
-		        <div class="favorite-direction" th:text="${favorite.room.direction} + '향'"></div>
-		        <div class="favorite-parkingInfo" th:text="'주차장 ' + ${favorite.room.parkingInfo}"></div>
-		        <div class="favorite-isElevator" th:text="${favorite.room.isElevator ? '엘리베이터 있음' : '엘리베이터 없음'}"></div>
-		        <div class="favorite-heatInfo" th:text="${favorite.room.heatInfo}"></div>
-		        <div class="favorite-internetInfo" th:text="${favorite.room.internetInfo}"></div>
-		        <hr class = "custom-hr"/>
-		        
-		        <div class="favorite-genderInfo" th:text="${favorite.room.genderInfo}"></div>
-		        <div class="favorite-security" th:text="${favorite.room.securityInfo}"></div>
-		        <hr class = "custom-hr"/>
-
-
-				
-				<h3 class="favoriteOptionTitle">공용옵션</h3>				
-				<div class="favoriteOptionTrue">
-				    <div th:each="roomOption : ${roomOptions}" th:if="${roomOption.room.roomId == favorite.room.roomId}">
-				        <div th:each="optionType : ${roomOptionTypes}" th:if="${optionType.optionType == roomOption.optionType.optionType && optionType.isShare == true}" th:text="${roomOption.optionType.optionName}">
-				        	<span th:text = "${roomOption.optionType.optionName}"></span>												
-				        </div>
-				    </div>    
-				</div>
-				
-				
-				<h3 class="favoriteOptionTitle">방옵션</h3>				
-				<div class="favoriteOptionFalse">
-				    <div th:each="roomOption : ${roomOptions}" th:if="${roomOption.room.roomId == favorite.room.roomId}">
-				        <span th:each="optionType : ${roomOptionTypes}" th:if="${optionType.optionType == roomOption.optionType.optionType && optionType.isShare == false}" th:text="${roomOption.optionType.optionName}"></span>
-				    </div>
-				</div>
-
-				<hr class = "custom-hr"/>		                		        
-
-		        
-		        <h3 class="favoriteOfferTitle">제공식사</h3>
-		        <div class="favoriteFoodOffer"> 
-					<div class="favorite-food" th:if="${not #strings.isEmpty(favorite.room.foodOffer)}">
-						<span th:text="${favorite.room.foodOffer}"></span>
+		<div class="camparisonWrap">
+			<div id="comparisonContainer" class="hidden-div">
+			    <div th:each="favorite, status : ${favorites}" class="comparison-item">
+			    	<div class="favorite-building">
+					    <span th:text="${favorite.room.buildingName}"></span>
+					<button class="delete-button">X</button>
 					</div>
-					<div class="favorite-food" th:if="${#strings.isEmpty(favorite.room.foodOffer)}">
-						<span>-</span>
+			    	<br />
+					<img th:src="@{/room/photo(roomId=${favorite.room.roomId})}" class="room-image" />
+		    		<div class="favorite-address" th:text="${favorite.room.address}"></div>
+			        <div class="favorite-id" data-favorite-id="${favorite.favoriteId}" th:text="${favorite.favoriteId}"></div>		        
+			        <div class="favorite-type" th:text="${favorite.room.type}"></div>
+			        <div class="favorite-cost" >
+						<span th:text="${#strings.equals(favorite.room.costType, '월세') ? (favorite.room.deposit != 0 ?
+														(favorite.room.costType + ' ' + favorite.room.deposit + '/' + favorite.room.monthCost) 
+														: (favorite.room.costType + ' '  + favorite.room.monthCost)) 
+														: (favorite.room.costType + ' ' + favorite.room.deposit)}">
+				    	</span>		      
+				    </div>  
+					<div class="favorite-manageC" th:text="'관리비 매월 ' + ${favorite.room.manageCost} + '만원'"></div>
+			        <div class="favorite-floor" th:text="${favorite.room.roomFloor} + '층 / ' + ${favorite.room.totalFloor} + '층'"></div>
+			        <div class="favorite-size" th:text="${favorite.room.size} + ' ㎡'"></div>
+			        <div class="favorite-isroomIn" th:text="${favorite.room.isRoomIn ? '즉시 입주 가능' : '즉시 입주 불가'}"></div>
+			        <hr class = "custom-hr"/>	
+			        
+			        <div class="favorite-direction" th:if="${not #strings.isEmpty(favorite.room.direction)}" th:text="${favorite.room.direction}"></div>
+			        <div class="favorite-direction" th:if="${#strings.isEmpty(favorite.room.direction)}">-</div>
+	
+			        <div class="favorite-parkingInfo" th:if="${not #strings.isEmpty(favorite.room.parkingInfo)}" th:text="'주차장 ' + ${favorite.room.parkingInfo}"></div>
+			        <div class="favorite-parkingInfo" th:if="${#strings.isEmpty(favorite.room.parkingInfo)}">-</div>
+			        
+			        <div class="favorite-isElevator" th:text="${favorite.room.isElevator ? '엘리베이터 있음' : '엘리베이터 없음'}"></div>
+	
+			        <div class="favorite-heatInfo" th:if="${not #strings.isEmpty(favorite.room.heatInfo)}" th:text="${favorite.room.heatInfo}"></div>
+			        <div class="favorite-heatInfo" th:if="${#strings.isEmpty(favorite.room.heatInfo)}">-</div>
+	
+			        <div class="favorite-internetInfo" th:if="${not #strings.isEmpty(favorite.room.internetInfo)}" th:text="${favorite.room.internetInfo}"></div>
+			        <div class="favorite-internetInfo" th:if="${#strings.isEmpty(favorite.room.internetInfo)}">-</div>
+			        
+			        <hr class = "custom-hr"/>
+	
+			        <div class="favorite-genderInfo" th:if="${not #strings.isEmpty(favorite.room.genderInfo)}" th:text="${favorite.room.genderInfo}"></div>
+			        <div class="favorite-genderInfo" th:if="${#strings.isEmpty(favorite.room.genderInfo)}">-</div>	
+	
+			        <div class="favorite-security" th:if="${not #strings.isEmpty(favorite.room.securityInfo)}" th:text="${favorite.room.securityInfo}"></div>
+			        <div class="favorite-security" th:if="${#strings.isEmpty(favorite.room.securityInfo)}">-</div>	
+			        		        	        
+			        <hr class = "custom-hr"/>
+	
+	
+					
+					<h3 class="favoriteOptionTitle">공용옵션</h3>				
+					<div class="favoriteOptionTrue">
+					    <div th:each="roomOption : ${roomOptions}" th:if="${roomOption.room.roomId == favorite.room.roomId}">
+					        <div th:each="optionType : ${roomOptionTypes}" th:if="${optionType.optionType == roomOption.optionType.optionType && optionType.isShare == true}" th:text="${roomOption.optionType.optionName}">
+					        	<span th:text = "${roomOption.optionType.optionName}"></span>												
+					        </div>
+					    </div>    
 					</div>
-				</div>
-				
-				
-		        <h3 class="favoriteOfferTitle">제공비품</h3>
-		        <div class="favoriteAmenityOffer"> 
-					<div class="favorite-amenity" th:if="${not #strings.isEmpty(favorite.room.amenityOffer)}">
-					    <span th:text="${favorite.room.amenityOffer}"></span>
+					
+					
+					<h3 class="favoriteOptionTitle">방옵션</h3>				
+					<div class="favoriteOptionFalse">
+					    <div th:each="roomOption : ${roomOptions}" th:if="${roomOption.room.roomId == favorite.room.roomId}">
+					        <span th:each="optionType : ${roomOptionTypes}" th:if="${optionType.optionType == roomOption.optionType.optionType && optionType.isShare == false}" th:text="${roomOption.optionType.optionName}"></span>
+					    </div>
 					</div>
-					<div class="favorite-amenity" th:if="${#strings.isEmpty(favorite.room.amenityOffer)}">
-					    <span>-</span>
+	
+					<hr class = "custom-hr"/>		                		        
+	
+			        
+			        <h3 class="favoriteOfferTitle">제공식사</h3>
+			        <div class="favoriteFoodOffer"> 
+						<div class="favorite-food" th:if="${not #strings.isEmpty(favorite.room.foodOffer)}">
+							<span th:text="${favorite.room.foodOffer}"></span>
+						</div>
+						<div class="favorite-food" th:if="${#strings.isEmpty(favorite.room.foodOffer)}">
+							<span>-</span>
+						</div>
 					</div>
-				</div>
-				
-				
-				<hr class = "custom-hr"/>
-				
-				
-				<h3 class="memoTitle">메모</h3>		            
-	            <div class="favorite-memo">
-	                <form class="memo-form">
-	                    <input type="hidden" name="favoriteId" th:value="${favorite.favoriteId}" />
-						<textarea class="memo" name="memo" placeholder="메모할 사항" th:text="${favorite.memo}"></textarea>	<br />					
-						<button class="memo-button" type="button" onclick="saveMemo(this)">저장</button>
-	                </form>
-	            </div>
-		        
-		    </div>
+					
+					
+			        <h3 class="favoriteOfferTitle">제공비품</h3>
+			        <div class="favoriteAmenityOffer"> 
+						<div class="favorite-amenity" th:if="${not #strings.isEmpty(favorite.room.amenityOffer)}">
+						    <span th:text="${favorite.room.amenityOffer}"></span>
+						</div>
+						<div class="favorite-amenity" th:if="${#strings.isEmpty(favorite.room.amenityOffer)}">
+						    <span>-</span>
+						</div>
+					</div>
+					
+					
+					<hr class = "custom-hr"/>
+					
+					
+					<h3 class="memoTitle">메모</h3>		            
+		            <div class="favorite-memo">
+		                <form class="memo-form">
+		                    <input type="hidden" name="favoriteId" th:value="${favorite.favoriteId}" />
+							<textarea class="memo" name="memo" placeholder="메모할 사항" th:text="${favorite.memo}"></textarea>	<br />					
+							<button class="memo-button" type="button" onclick="saveMemo(this)">저장</button>
+		                </form>
+		            </div>
+			        
+			    </div>
+			</div>
+			
 		</div>
-		
-	</div>	
+	</div>
     </th:block>
 	
 	
@@ -680,44 +708,42 @@
             }
             
  
-			document.addEventListener('DOMContentLoaded', function() {
-			  let deleteButtons = document.querySelectorAll('.delete-button');
-			
-			  deleteButtons.forEach(function(deleteButton) {
-			    deleteButton.addEventListener('click', function() {
-			      let comparisonItem = deleteButton.closest('.comparison-item');
-			      let favoriteIdElement = comparisonItem.getElementsByClassName('favorite-id')[0];  
-			      let favoriteId = favoriteIdElement.textContent;
-			      let checkbox = document.querySelector('input[type="checkbox"][name="favoriteIds"][value="' + favoriteId + '"]');
-			      
-			      if (checkbox) {
-			        checkbox.checked = false;
-			        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-			      }
-			
-			      if (comparisonItem) {
-			        comparisonItem.classList.add('hidden-div');
-			      }
-			    });
-			  });
+            document.addEventListener('DOMContentLoaded', function() {
+                let deleteButtons = document.querySelectorAll('.delete-button');
 
-			  
-			  let checkboxes = document.getElementsByName('favoriteIds');
-			
-			  checkboxes.forEach(function(checkbox) {
-			    checkbox.addEventListener('change', function() {
-			      let favoriteId = checkbox.value;
-			      let favoriteIdElement = document.querySelector('.comparison-item .favorite-id[data-favorite-id="' + favoriteId + '"]');
-			      if (favoriteIdElement) {
-			          let comparisonItem = favoriteIdElement.closest('.comparison-item');
-			      }
-			      
-			      if (checkbox.checked && comparisonItem) {
-			        comparisonItem.classList.remove('hidden-div');
-			      }
-			    });
-			  });
-			});
+                deleteButtons.forEach(function(deleteButton) {
+                    deleteButton.addEventListener('click', function() {
+                        let comparisonItem = deleteButton.closest('.comparison-item');
+                        if (comparisonItem) {
+                            let favoriteIdElement = comparisonItem.querySelector('.favorite-id');
+                            let favoriteId = favoriteIdElement.textContent;
+                            let checkbox = document.querySelector('input[type="checkbox"][name="favoriteIds"][value="' + favoriteId + '"]');
+
+                            if (checkbox) {
+                                checkbox.checked = false;
+                                checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+
+                            comparisonItem.classList.add('hidden-div');
+                        }
+                    });
+                });
+
+                let checkboxes = document.getElementsByName('favoriteIds');
+
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('change', function() {
+                        let favoriteId = checkbox.value;
+                        let favoriteIdElement = document.querySelector('.comparison-item .favorite-id[data-favorite-id="' + favoriteId + '"]');
+                        if (favoriteIdElement) {
+                            let comparisonItem = favoriteIdElement.closest('.comparison-item');
+                            if (checkbox.checked && comparisonItem) {
+                                comparisonItem.classList.remove('hidden-div');
+                            }
+                        }
+                    });
+                });
+            });
 			         
 			function toggleSideMenu() {
 			    let sideMenu = document.getElementById("sideMenu");

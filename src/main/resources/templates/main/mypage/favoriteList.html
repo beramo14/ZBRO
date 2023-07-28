@@ -6,12 +6,12 @@
         text-align: center;
         font-size: 30px;
         font-weight: 550;
-        margin: 70px 0 50px 0;	
+        margin: 70px 0 35px 0;	
 	}
 	
 	.compareButton {
 	    text-align: right;
-	    margin-right : 100px;
+	    margin-right : 150px;
 	    margin-bottom: 20px;
 	} 
 	
@@ -26,7 +26,7 @@
         display: flex;
 	    flex-wrap: wrap;
 	    justify-content: flex-start;
-	    padding: 0 150px;
+	    padding: 0 250px;
 	    margin-left : 30px;	
 	    margin-bottom: 100px;	
 	    text-align: center;
@@ -34,14 +34,14 @@
 	}
 
 	.image-container > .comparison-item {
-	    flex: 0 0 calc(33.33% - 20px);
+	    flex: 0 0 calc(33.33%);
 	    padding: 0 10px; 
 	}	
 
 
      .image-container img {
-         width: 230px;
-         height: 180px;
+         width: 255px;
+         height: 205px;
          cursor: pointer;
          margin-top: 30px;
      }
@@ -49,13 +49,14 @@
 	.image-wrapper {
 	    position: relative;
 	    display: inline-block;
+	    margin-top: 15px;
 	}
 	
 	.image-wrapper i.bi-heart-fill {
 	    position: absolute;
-	    bottom: 0;
+	    top: 35px;
 	    right: 10px;
-	    font-size: 28px;
+	    font-size: 32px;
 	    color: #dc3545;
 	    cursor: pointer;
 	}  
@@ -69,11 +70,11 @@
 	    display: flex;
 	    justify-content: space-between;
 	    align-items: center;
+
 	}
 	
 	.favoriteTypeContainer {
 	    margin-left: auto;
-	    margin-right: 10px;
 	    margin-top :5px;
 	    font-size: 16px;
 	}
@@ -81,10 +82,10 @@
 	.favoriteAddressContainer{
 		display: flex;
 		justify-content: flex-end;
+	
 	}
 	
 	.favoriteAddress{
-		margin-right: 10px;
 		font-size: 5px;
 		color: #979797;
 	}
@@ -118,6 +119,7 @@
 				<div class="favoriteAddressContainer">
 				    <span class="favoriteAddress" th:text="${#strings.substringAfter(favorite.room.address, '시 ')}"></span>
 				</div>
+				
 		    </div>
 		</div>
 	</div>

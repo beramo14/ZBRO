@@ -24,6 +24,7 @@ import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
 import com.zbro.model.RoomOptionType;
 import com.zbro.model.RoomPhoto;
+import com.zbro.model.SellerUser;
 import com.zbro.seller.repository.SellerRoomFavoriteRepository;
 import com.zbro.model.SellerUser;
 import com.zbro.seller.repository.SellerRoomOptionRepository;
@@ -31,6 +32,7 @@ import com.zbro.seller.repository.SellerRoomOptionTypeRepository;
 import com.zbro.seller.repository.SellerRoomPhotoRepository;
 import com.zbro.seller.repository.SellerRoomRepository;
 import com.zbro.seller.repository.SellerRoomUserRepository;
+import com.zbro.seller.repository.SellerRoomReviewRepository;
 
 @Service
 public class SellerRoomService {
@@ -50,6 +52,10 @@ public class SellerRoomService {
 	
 	@Value("${file.images.room-photo}")
 	private String fileRoomPhotoPath;
+	
+	@Autowired
+	private SellerRoomReviewRepository roomReviewRepo;
+
 
 	public void insertRoom(Room room) {
 		roomRepo.save(room);
@@ -72,25 +78,30 @@ public class SellerRoomService {
 	}
 
 	
-    public Page<Room> getAllRoomsOrderedByRoomId(Long sellerId, Pageable pageable) {
-        return roomRepo.findAllBySeller_SellerIdOrderByRoomId(sellerId, pageable);
-    }
 
-    public Page<Room> searchRoomsByTypeOrBuildingNameOrAddress(Long sellerId, List<String> types, String searchType, String searchKeyword, Pageable pageable) {
-        List<Room> filteredRooms = new ArrayList<>();
-        Page<Room> rooms = getAllRoomsOrderedByRoomId(sellerId, Pageable.unpaged());
+	
+	
+	
+	public Page<Room> getAllRoomsOrderedByRoomId(SellerUser seller, Pageable pageable) {
+	    return roomRepo.findAllBySeller_SellerIdOrderByRoomId(seller.getSellerId(), pageable);
+	}
 
-        for (Room room : rooms.getContent()) {
-            if (isMatched(room, types, searchType, searchKeyword)) {
-                filteredRooms.add(room);
-            }
-        }
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), filteredRooms.size());
-        return new PageImpl<>(filteredRooms.subList(start, end), pageable, filteredRooms.size());
-    }
+	public Page<Room> searchRoomsByTypeOrBuildingNameOrAddress(SellerUser seller, List<String> types, String searchType, String searchKeyword, Pageable pageable) {
+	    List<Room> filteredRooms = new ArrayList<>();
+	    Page<Room> rooms = getAllRoomsOrderedByRoomId(seller, Pageable.unpaged());
 
+	    for (Room room : rooms.getContent()) {
+	        if (isMatched(room, types, searchType, searchKeyword)) {
+	            filteredRooms.add(room);
+	        }
+	    }
+
+	    int start = (int) pageable.getOffset();
+	    int end = Math.min((start + pageable.getPageSize()), filteredRooms.size());
+	    return new PageImpl<>(filteredRooms.subList(start, end), pageable, filteredRooms.size());
+	}
+	
     private boolean isMatched(Room room, List<String> types, String searchType, String searchKeyword) {
         if (types != null && !types.isEmpty() && !types.contains(room.getType().toString())) {
             return false;
@@ -114,6 +125,8 @@ public class SellerRoomService {
         for (Long roomId : roomIds) {
             Room room = roomRepo.findById(roomId).orElse(null);
             if (room != null) {
+            	
+            	roomReviewRepo.deleteByRoom(room); 
                 roomPhotoRepo.deleteByRoom(room); 
                 roomOptionRepo.deleteByRoom(room); 
                 roomFavoriteRepo.deleteByRoom(room); 

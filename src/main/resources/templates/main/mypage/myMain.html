@@ -2,22 +2,26 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/mypage_layout}">
 <th:block layout:fragment="customStyle">
 <style th:inline="css" type="text/css">
+
+
 			.favorite-list{
-				margin-top:70px;
-				margin-bottom:100px;
-				justify-content: center;
+				margin: 100px auto 100px auto;
+				width: 80%;
+
 			}
 
 			.list-button{
-				margin-left: 630px;
-				padding-top: 20px
-				
+				align-self: flex-end;
+				margin-right: 50px;
 			}
 
 			.favoriteBigTitle{
 				display: flex;
-				justify-content: center;
-				margin-bottom: 10px;
+				justify-content: space-between;
+				margin-bottom: 30px;
+				padding: 0 90px;
+
+
 			}
 			
 			.favoriteBigTitle a{
@@ -37,7 +41,7 @@
 			
 			.favoriteTypeContainer {
 			    margin-left: auto;
-			    margin-right: 10px;
+			    margin-right: 20px;
 			    margin-top :5px;
 			    font-size: 16px;
 			}
@@ -48,7 +52,7 @@
 			}
 			
 			.favoriteAddress{
-				margin-right: 10px;
+				margin-right: 20px;
 				font-size: 5px;
 				color: #979797;
 			}
@@ -59,10 +63,10 @@
 			}
 
             .image-container img {
-                width: 230px;
-                height: 160px;
+                width: 240px;
+                height: 170px;
                 cursor: pointer;
-                margin-right : 10px;
+                margin-right : 20px;
             }
             
 			.image-wrapper {
@@ -72,26 +76,30 @@
 			
 			.image-wrapper i.bi-heart-fill {
 			    position: absolute;
-			    bottom: 0;
-			    right: 20px;
+			   	top: 5px;
+			    right: 30px;
 			    font-size: 28px;
 			    color: #dc3545;
+			    cursor: pointer;
 			}  
 			
 			
 			
 
 /* --------------------------------------------------------------------------- */
-
+	
 
 			.commTitle{
-				margin-left: 170px;
-				margin-bottom: 20px;
+				margin: 0 auto;
+  				width: 80%;
+  				padding: 0 90px;
 			}			
 			.comment-community-table {
 			    display: flex;
-			    justify-content: center;
-			    margin-bottom: 100px;
+			    margin: 50px auto 200px auto;
+  				width: 80%;
+  				justify-content: space-between;
+  				padding: 0 150px;
 			}	
 			
 			.comment-community-table td a {
@@ -99,7 +107,7 @@
 			    white-space: nowrap;
 			    overflow: hidden;
 			    text-overflow: ellipsis;
-			    max-width: 330px;
+			    max-width: 350px;
 			    text-decoration: none;
 			    color: black;
 			}	
@@ -111,17 +119,10 @@
 			    margin-top: 5px;
 			}		
 			
-		    .communityTable {
-		        margin-right: 40px;
-		        width: 330px;
+		    .communityTable , .commentTable {
+		        width: 350px;
 		    }
 		
-
-		    .commentTable {
-		        margin-left: 40px;
-		        width: 330px;
-		        
-		    }
 			.commentTitle {
 			    font-size: 20px;
 			    font-weight: 600;
@@ -136,7 +137,7 @@
 			    align-items: center;
 			    margin-bottom: 10px;
 			    padding-bottom : 5px;
-			    border-bottom: 1px solid #8B8B8B;
+			    border-bottom: 2px solid #C0C0C0;
 			    
 			}
 			
@@ -150,7 +151,7 @@
 			    align-items: center;
 			    margin-bottom: 10px;
 			    padding-bottom : 5px;
-			    border-bottom: 1px solid #8B8B8B;
+			    border-bottom: 2px solid #C0C0C0;
 			}
 			.commentBigTitle a{
 			    text-decoration: none;
@@ -165,7 +166,7 @@
 			    border-bottom-width: 1px;
 			    border-bottom-style: dotted;
 			    border-bottom-color: #E3E3E3;
-			    width: 330px;
+			    width: 350px;
 			    padding: 2px;			    
 			    
 			}
@@ -173,10 +174,18 @@
 			    border-bottom-width: 1px;
 			    border-bottom-style: dotted;
 			    border-bottom-color: #E3E3E3;
-			    width: 330px;
+			    width: 350px;
 			    padding: 2px;			    
 			    
-			}			
+			}	
+			
+		    .noMessage {
+		        text-align: center;
+		        font-size: 16px;
+		        color: #9C9A9A;	
+		    }	
+		    
+			
 </style>
 
 </th:block>
@@ -186,7 +195,7 @@
 	<div class="favorite-list">
 		<div class="favoriteBigTitle">
             <h3 class="list-title"> 찜목록 </h3>		
-            <a th:href="@{/favoriteList}" class="list-button">더보기</a>
+            <a th:href="@{mypage/favorite/list}" class="list-button">더보기</a>
         </div>
 		<div class="image-container">
 		    <div th:each="favorite, status : ${favorites}" class="comparison-item" th:if="${status.index < 3}">
@@ -207,6 +216,7 @@
 				</div>	        
 		    </div>
 		</div>
+		<p th:if="${#lists.isEmpty(favorites)}" class="noMessage">찜한 매물이 없습니다!</p>
 	</div>
 
 
@@ -214,17 +224,22 @@
 
 <h3 class="commTitle">커뮤니티</h3>
 
-<div class="comment-community-table">		
+<div class="comment-community-table">
+
 	<div class="communityTable">
 		<div class="communityBigTitle">
 			<span class="communityTitle">작성한 게시글</span>
-			<a th:href="@{/content/list}" class="moreContent">더보기</a>
+			<a th:href="@{mypage/content/list}" class="moreContent">더보기</a>
 		</div>
-	
+        <table th:if="${#lists.isEmpty(top10Contents)}">
+            <tr>
+                <td class="noMessage">작성한 게시글이 없습니다!</td>
+            </tr>
+        </table>	
 		<table>
 			<tr th:each="community : ${top10Contents}">
 				<td>
-					<a th:href="@{/community/{id}(id=${community.postId})}">
+					<a th:href="@{/community/detail?postId={id}(id=${community.postId})}">
 						<span th:text="${community.title}"></span>
 					</a>
 				</td>
@@ -235,13 +250,18 @@
 	<div class="commentTable">
 		<div class="commentBigTitle">
 	        <span class="commentTitle">작성한 댓글</span>
-	        <a th:href="@{/comment/list}" class="moreComment">더보기</a>
+	        <a th:href="@{mypage/comment/list}" class="moreComment">더보기</a>
 		</div>
-		        
+		
+        <table th:if="${#lists.isEmpty(comments)}">
+            <tr>
+                 <td class="noMessage">작성한 댓글이 없습니다!</td>
+            </tr>
+        </table>		        
 		<table>
 	        <tr th:each="comment : ${comments}">
 	            <td>
-	                <a th:href="@{/community/{id}(id=${comment.post.postId})}">
+	                <a th:href="@{/community/detail?postId={id}(id=${comment.post.postId})}">
 	                    <span th:text="${comment.content}"></span>
 	                </a>
 	            </td>
@@ -252,8 +272,6 @@
 </div>	        
 </th:block>
 	
-	
-</th:block>
 <th:block layout:fragment="customScript">
 	<script th:inline="javascript" type="text/javascript">
 	function deleteFavorite(event) {

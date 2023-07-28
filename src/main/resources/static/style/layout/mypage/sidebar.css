@@ -2,6 +2,7 @@ aside.sidebar {
     min-width: 230px;
 	border-right: 2px solid #ccc; 
 	margin-bottom: 20px;
+	margin-right: 40px;
 }
 
 div.profile-wrapper {
@@ -15,9 +16,11 @@ div.profile-wrapper {
     overflow: hidden; 
     margin: 0 auto;
     margin-bottom: 10px;
+    margin-top: 50px;
 }
 
 .consumer-image img{
+	
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
@@ -29,7 +32,7 @@ p.consumer-name{
 
 
 div.menu-wrapper {
-	padding: 0 10px;
+	padding: 0 15px;
 }
 
 .menu-wrapper .menu{

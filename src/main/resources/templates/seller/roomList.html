@@ -6,50 +6,93 @@
 	    display: flex;
 	    justify-content: space-between;
 	    align-items: center;
-	    margin: 10px;
-	}	
-	#searchType {
-	    height: 30px;
-	}		
-	#searchInput {
-		height: 30px;
-	    width: 500px;
+	    margin: 20px;
+	    height: 150px;
 	}
 	
-	#searchBtn{
-		height: 29px;
-		border: 1px solid ; 
-		border-radius: 3px;
-		margin-left: 5px;
+ 	.searchBarWrapper {
+		margin: auto;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		width: 900px;
+	} 	
+	
+	#searchType {
+	    margin-right: 5px;
+	    height: 33px;
+	    vertical-align: middle;
+	    width:100px; 
+	}
+	
+			
+	#searchType:focus,
+	#searchType:active,
+    #searchInput:focus,
+	#searchInput:active {
+	    box-shadow: none;
+	    border-color: #434343;
+	    
+	}
 		
+	#searchInput {
+		height: 35px;
+	    width: 600px;
+	}
+	
+	#searchInput::placeholder {
+	    color: #999;
+	}	
+
+ 	#searchBtn{
+		height: 35px;
+		margin-left: 5px;
+		background-color: #434343;
+		border: none;
+		
+	} 
+	.checkBoxWrapper {
+		align-self: flex-end;
+		margin-right: 30px;
+	}
+	.room-image{
+		width: 50px;
+		height: 50px;
 	}		
 	.tableWrapper {
-	  border: 1px solid #ccc; 
-	  padding: 10px; 
+
+	  padding: 0 30px; 
+	  
 	}	
 	
 	table#roomTable{
 		width:100%;
+		
 	}	
 	
 	#roomTable th, #roomTable td {
-	  border: 1px solid #ccc; 
-	  padding: 8px;
-	  text-align: center;		
+		  border: 1px solid #ccc; 
+		  padding: 8px;
+		  text-align: center;		
 	}
  	
 	 #roomTable th {
-	  border-bottom: 2px solid #ccc;
+  		border-bottom: 2px solid #ccc;
 	  
 	}	
 
 	.deleteButtonWrapper{
 		text-align: right;
+		margin-right: 20px;
+		
 	}
 	#deleteSelectedRooms{
-		border: 2px solid #ccc; 
-	    border-radius: 2px;
+		border: 2px solid #434343;
+		background-color : #434343; 
+	    border-radius: 3px;
 	    margin: 15px 10px;
+	    color: white;
+	    padding: 5px 7px;
 	}
 	
 	.noResult {
@@ -58,62 +101,81 @@
 	        font-size: 20px;
 	        color: #999;	
 	}	
+	
 	 
-    .pagination {
-        margin: 35px 0;
-        justify-content: center;
-    }
+	.pagination {
+		padding: 0 auto;
+		margin: 50px auto;
+		display: flex;
+		justify-content: center;
+		position: relative;
+		bottom: 10px;
+
+	}       
+	.pagination a {
+		width: 30px;
+		height: 30px;
+		align-items: center;
+		justify-content: center;
+		float: left;
+		display: flex;
+		text-decoration: none;
+		color: #86C69F;
+		line-height: 1.5;
+		border-radius: 6px;
+	}
+	.pagination .arrow-l .bi-play-fill{
+		transform: rotate(180deg);
+	}
+	.pagination .num {
+		border: 1.5px solid #dbefcf;
+		margin: 0 3.5px;
+	}
+	.num:hover {
+		border: none;
+		background: #ebf5e4;
+		color: #76BB91;
+	}
+	.left:hover, .right:hover {
+		color: #76BB91;
+	}
+	.pagination a:active {
+		cursor: default;
+		color: #448860;
+	}
+	.pagination .active > a {
+		border: none;
+		background: #86C69F;
+		color: white;
+	}	
+	.pagination .disabled > a {
+	    pointer-events: none;
+	    cursor: default;
+    }  
     
-    .pagination ul {
-        list-style: none;
-        padding: 0;
-        display: inline-block;
-    }
     
-    .pagination ul li {
-        display: inline-block;
-    }
-    
-    .pagination ul li a {
-        display: inline-block;
-        padding: 2px 10px;
-        margin-right: 5px;
-        text-decoration: none;
-        background-color: white;
-        color: black;
-        border-radius: 3px;
-        border: 1px solid #D9D9D9;
-    }
-    
-    .pagination ul li a.active {
-        background-color: #D9D9D9;
-        color: black;
-    }    
-    .pagination a.disabled {
-        pointer-events: none;
-    }   
-    	
 	</style>
 </th:block>
 <th:block layout:fragment="content">
 <div class="content">
 	
 	 <form id="searchForm" th:action="@{/seller/room/list}" method="get">
-	
+		
+
 		<div class= "searchBarWrapper">
-			<select id="searchType" name="searchType">
+			<select id="searchType" name="searchType" class="form-select pt-1" >
 			    <option value="buildingName" th:selected="${searchType == 'buildingName'}">건물명</option>
 			    <option value="address" th:selected="${searchType == 'address'}">주소</option>
 			</select>
 		    
-		    <input type="text" id="searchInput" name="searchKeyword" placeholder="검색어 입력" th:value="${searchKeyword}">
-		    <button type="submit" id="searchBtn">검색</button>
+	        <input type="text" id="searchInput" name="searchKeyword" placeholder="검색어를 입력해주세요" th:value="${searchKeyword}" class="form-control" >
+	        <button type="submit" id="searchBtn" class="btn btn-primary pt-1">검색</button>
 	    </div>
 	    
 	    <div class= "checkBoxWrapper">
-			<input type="checkbox" name="type" value="원룸" onchange="submitForm()" th:checked="${types != null && types.contains('원룸')}"/> 원룸
-			<input type="checkbox" name="type" value="고시원" onchange="submitForm()" th:checked="${types != null && types.contains('고시원')}"/> 고시원
-			<input type="checkbox" name="type" value="오피스텔" onchange="submitForm()" th:checked="${types != null && types.contains('오피스텔')}"/> 오피스텔
+			<input type="checkbox" name="type" value="원룸" onchange="submitForm()" th:checked="${types != null && types.contains('원룸')}" class="form-check-input"/> 원룸
+			<input type="checkbox" name="type" value="고시원" onchange="submitForm()" th:checked="${types != null && types.contains('고시원')}"class="form-check-input"/> 고시원
+			<input type="checkbox" name="type" value="오피스텔" onchange="submitForm()" th:checked="${types != null && types.contains('오피스텔')}"class="form-check-input"/> 오피스텔
 		</div> 	
 	 </form>
 
@@ -125,10 +187,11 @@
 	             <tr>
 			         <th>
 			            <input type="checkbox" id="checkAllRooms">
-			         </th>             
-	                 <th>타입</th>
-	                 <th>건물명</th>
+			         </th> 
+			         <th>사진</th>
+			         <th>건물명</th>			                     
 	                 <th>주소</th>
+	                 <th>타입</th>                 
 	                 <th>월/전세</th>
 	                 <th>보증금</th>                 
 	                 <th>월세</th>
@@ -140,9 +203,12 @@
 			        <td>			      	
 			            <input type="checkbox" class="roomCheckbox" th:data-room-id="${room.roomId}" th:value="${room.roomId}" onclick="event.stopPropagation();">
 			        </td>
-			        <td th:text="${room.type}"></td>   
+			        <td>
+			        	<img th:src="@{/room/photo(roomId=${room.roomId})}" class="room-image" />
+			        </td> 
 			        <td th:text="${room.buildingName}"></td>
-			        <td th:text="${room.address}"></td>
+			        <td th:text="${room.address}"></td>			        
+			        <td th:text="${room.type}"></td>   
 			        <td th:text="${room.costType}"></td>
 			        <td th:text="${room.deposit}"></td>			      
 			        <td th:text="${room.monthCost}"></td>
@@ -163,17 +229,21 @@
    	 </div>     
    	 
 	<div class="pagination" th:if="${!rooms.empty}">
-	    <ul>
-	        <li>
-	            <a th:href="@{/seller/room/list(page=0, searchType=${searchType}, searchKeyword=${searchKeyword}, type=${types})}" th:class="${rooms.number == 0 ? 'disabled' : ''}">&lt;</a>
+	    <ul class="pagination pagination-modal">
+	        <li th:class="${rooms.number > 0 ? '' : 'disabled'}">
+	            <a th:href="@{/seller/room/list(page=${rooms.number - 1}, searchType=${searchType}, searchKeyword=${searchKeyword}, type=${types})}" class="arrow-lf left"><i class="bi bi-rewind-fill"></i></a>
 	        </li>
-	        <li th:each="pageNumber : ${#numbers.sequence(0, rooms.totalPages - 1)}">
-	            <a th:href="@{/seller/room/list(page=${pageNumber}, searchType=${searchType}, searchKeyword=${searchKeyword}, type=${types})}"
-	               th:text="${pageNumber + 1}"
-	               th:class="${rooms.number == pageNumber ? 'active' : ''}"></a>
+	        <li th:class="${rooms.number > 0 ? '' : 'disabled'}">
+	            <a th:href="@{/seller/room/list(page=${rooms.number - 1}, searchType=${searchType}, searchKeyword=${searchKeyword}, type=${types})}" class="arrow arrow-l left"><i class="bi bi-play-fill"></i></a>
 	        </li>
-	        <li>
-	            <a th:href="@{/seller/room/list(page=${rooms.totalPages - 1}, searchType=${searchType}, searchKeyword=${searchKeyword}, type=${types})}" th:class="${rooms.number == rooms.totalPages - 1 ? 'disabled' : ''}">&gt;</a>
+	        <li th:each="pageNumber : ${#numbers.sequence(0, rooms.totalPages - 1)}" th:class="${pageNumber == rooms.number ? 'active' : ''}">
+	            <a th:href="@{/seller/room/list(page=${pageNumber}, searchType=${searchType}, searchKeyword=${searchKeyword}, type=${types})}" th:text="${pageNumber + 1}" class="num"></a>
+	        </li>
+	        <li th:class="${rooms.number < rooms.totalPages - 1 ? '' : 'disabled'}">
+	            <a th:href="@{/seller/room/list(page=${rooms.number + 1}, searchType=${searchType}, searchKeyword=${searchKeyword}, type=${types})}" class="arrow arrow-r right"><i class="bi bi-play-fill"></i></a>
+	        </li>
+	        <li th:class="${rooms.number < rooms.totalPages - 1 ? '' : 'disabled'}">
+	            <a th:href="@{/seller/room/list(page=${rooms.totalPages - 1}, searchType=${searchType}, searchKeyword=${searchKeyword}, type=${types})}" class="arrow-rf right"><i class="bi bi-fast-forward-fill"></i></a>
 	        </li>
 	    </ul>
 	</div>

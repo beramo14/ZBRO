@@ -5,7 +5,7 @@ html, body {
 .main-wrapper {
 	display: flex;
 	flex-wrap: nowrap;
-	width: 1350px;
+	width: 1650px;
 	height: auto;
 	min-height: calc(100% - 106px); /* 우측 값 : nav 높이*/
 	margin: 0 auto ;
