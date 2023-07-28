@@ -4,19 +4,17 @@ import java.io.FileNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +24,7 @@ import com.zbro.dto.RoomReviewDTO;
 import com.zbro.dto.RoomSearchDTO;
 import com.zbro.main.service.FavoriteService;
 import com.zbro.main.service.RoomService;
+import com.zbro.main.service.UserService;
 import com.zbro.model.ConsumerUser;
 import com.zbro.model.Favorite;
 import com.zbro.model.Room;
@@ -34,9 +33,6 @@ import com.zbro.model.RoomReview;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.zbro.main.repository.RoomOptionRepository;
-import com.zbro.main.service.RoomService;
-import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
 import com.zbro.model.SellerUser;
 
@@ -50,13 +46,29 @@ public class RoomController {
 	
 	@Autowired
 	private FavoriteService favService;
+
+	@Autowired
+	private UserService userService;
 	
 	
 	
 	@GetMapping("/search")
-	public String searchView(RoomSearchDTO roomDTO, Model model) {
-		Long userId = 1L;
-		List<RoomSearchDTO> roomDTOList = roomService.searchRoomAndFavorite(roomDTO, userId);
+	public String searchView(RoomSearchDTO roomDTO, Authentication authentication, Model model) {
+		
+		List<RoomSearchDTO> roomDTOList = null;
+		
+		if(authentication != null) {
+			List<String> authorityList = authentication.getAuthorities().stream().map(authority->authority.getAuthority()).collect(Collectors.toList());
+			if(authorityList.contains("ROLE_CONSUMER") == true) {
+				ConsumerUser consumerUser = userService.getConsumerUserByEmail(authentication.getName());
+				roomDTOList = roomService.searchRoomAndFavorite(roomDTO, consumerUser);
+			} else {
+				roomDTOList = roomService.searchRoomAndFavorite(roomDTO, null);
+			}
+		} else {
+			roomDTOList = roomService.searchRoomAndFavorite(roomDTO, null);
+		}
+		
 		
 		model.addAttribute("rooms", roomDTOList);
 		model.addAttribute("roomSearchDTO", roomDTO);
@@ -95,14 +107,22 @@ public class RoomController {
 	
 	@PostMapping("/favorite")
 	@ResponseBody
-	public ResponseEntity<?> doFavorite(Room Room) {
+	public ResponseEntity<?> doFavorite(Room Room, Authentication authentication) {
+		
+		if(authentication != null) {
+			List<String> authorityList = authentication.getAuthorities().stream().map(authority->authority.getAuthority()).collect(Collectors.toList());
+			if(authorityList.contains("ROLE_CONSUMER") == false) {
+				return ResponseEntity.internalServerError().body(null);
+			}
+		} else {
+			return ResponseEntity.internalServerError().body(null);
+		}
 		
 		log.info("doFavorite = {}", Room);
 		Favorite fav = new Favorite();
 		
-		ConsumerUser user = new ConsumerUser();
-		user.setConsumerId(1L);
-		fav.setUser(user);
+		ConsumerUser consumerUser = userService.getConsumerUserByEmail(authentication.getName());
+		fav.setUser(consumerUser);
 		fav.setRoom(Room);
 		
 		Favorite savedFav = favService.favorite(fav);

@@ -54,7 +54,7 @@ public class RoomService {
 	private RoomReviewRepository roomReviewRepository;
 	
 	
-	public List<RoomSearchDTO> searchRoomAndFavorite(RoomSearchDTO roomDTO, Long userId) {
+	public List<RoomSearchDTO> searchRoomAndFavorite(RoomSearchDTO roomDTO, ConsumerUser consumerUser) {
 		
 		List<Room> findedRooms = new ArrayList<Room>();
 		
@@ -70,17 +70,16 @@ public class RoomService {
 		
 		List<RoomSearchDTO> roomDTOList = new ArrayList<>();
 		for(Room room : findedRooms) {
-			ConsumerUser user = new ConsumerUser();
-			user.setConsumerId(userId);
-			Optional<Favorite> findedFavorite = favRepository.findByUserAndRoom(user, room);
 			RoomSearchDTO findedRoomDTO = new RoomSearchDTO(room);
-			if(findedFavorite.isPresent() == true) {
-				findedRoomDTO.setFavorite(true);
-				findedRoomDTO.setFavoriteId(findedFavorite.get().getFavoriteId());
+			if(consumerUser != null) {
+				Optional<Favorite> findedFavorite = favRepository.findByUserAndRoom(consumerUser, room);
+				if(findedFavorite.isPresent() == true) {
+					findedRoomDTO.setFavorite(true);
+					findedRoomDTO.setFavoriteId(findedFavorite.get().getFavoriteId());
+				}
 			}
 			roomDTOList.add(findedRoomDTO);
 		}
-//		List<RoomSearchDTO> roomDTOList = RoomSearchDTO.convertToDTO(findedRooms);
 		
 		return roomDTOList;
 	}
@@ -167,5 +166,8 @@ public class RoomService {
 		return getRoomReview;
 		
 	}
+
+
+
 }
 
