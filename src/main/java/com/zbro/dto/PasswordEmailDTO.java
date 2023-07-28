@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PasswordEmailDTO {
 	
+	private String userType;
 	private String name;
 	private String email;
 	private String token;
@@ -38,6 +39,7 @@ public class PasswordEmailDTO {
 	private LocalDateTime createDateString;
 
 	public PasswordEmailDTO(ConsumerPasswordToken passwordToken) {
+		this.userType = "consumer";
 		this.name = passwordToken.getUser().getName();
 		this.email = passwordToken.getUser().getEmail();
 		this.token = passwordToken.getToken();
@@ -46,6 +48,7 @@ public class PasswordEmailDTO {
 	}
 	
 	public PasswordEmailDTO(SellerPasswordToken passwordToken) {
+		this.userType = "seller";
 		this.name = passwordToken.getUser().getName();
 		this.email = passwordToken.getUser().getEmail();
 		this.token = passwordToken.getToken();
