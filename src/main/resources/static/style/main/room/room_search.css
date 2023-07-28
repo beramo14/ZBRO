@@ -14,6 +14,10 @@
 	height: calc(100vh - 205px);
 	display: flex;
 }
+button.submit-btn {
+	border: 1px solid #47a385;
+    color: #47a385;
+}
 button.search-word-reset-button {
 	border: 0;
 	padding: 0;

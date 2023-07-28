@@ -14,7 +14,7 @@
 					<button type="button" class="search-word-reset-button" onclick="searchWordReset()"><i class="bi bi-x"></i></button>
 					<input type="text" name="searchWord" class="form-control me-1" style="width: 200px;" th:value="${roomSearchDTO.searchWord}"/>
 				</div>
-				<button type="submit" class="btn btn-outline-primary me-5">검색</button>
+				<button type="submit" class="btn submit-btn me-5">검색</button>
 				<select name="type" class="form-select me-1" style="width: 120px;">
 					<option value="none" th:selected="${roomSearchDTO.type.toString()} == 'none'">-유형-</option>
 					<option value="원룸" th:selected="${roomSearchDTO.type.toString()} == '원룸'">원룸</option>
