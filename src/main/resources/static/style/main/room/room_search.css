@@ -64,7 +64,7 @@ button.search-word-reset-button {
 	z-index: 1; 
 	height: 100%;
 	width: 138px;
-	background-image: linear-gradient(to bottom, white 2%, transparent 70%)
+	background-image: linear-gradient(to bottom, white -5%, transparent 50%);
 }
 
 .room-image {
@@ -110,8 +110,8 @@ p.room-cost {
 .favorite-button {
 	position: absolute;
 	z-index: 100; 
-	right: 10px;
-	top: 8px;	
+	right: 0;
+	top: 2px;	
 }
 .favorite-button > button {
 	border: unset;
