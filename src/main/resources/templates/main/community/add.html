@@ -24,7 +24,7 @@
 	</select>
 	<br />
 	<div>
-		<form action="/post_add" method="post">
+		<form action="/community/add" method="post">
 			<input type="hidden" id="type" name="type"  th:value="${type}">
 			<input type="hidden" id="categoryType" name="categoryType"  th:value="${ct}">
 			<input type="hidden" name="user" value="1"/>
@@ -32,7 +32,7 @@
 			<!-- <textarea name="content" rows="15" cols="90" placeholder="내용을 입력하세요" required></textarea><br /> -->
 			<!-- <div id="summernote"></div> -->
 			<textarea id="summernote" name="content" required></textarea>
-			<a th:href="@{/post_list(type=${type}, categoryType=${ct})}" class="btn">목록</a>
+			<a th:href="@{/community/list(type=${type}, categoryType=${ct})}" class="btn">목록</a>
 			<button type="submit" onclick="goWrite(this.form)">글쓰기</button>
 		</form>
 	</div>

@@ -11,7 +11,7 @@
 	</select>
 	<br />
 	<div>
-		<form action="/post_revise" method="post">
+		<form action="/community/edit" method="post">
 			<input type="hidden" id="type" name="type"  th:value="${type}">
 			<input type="hidden" id="categoryType" name="categoryType"  th:value="${ct}">
 			<input type="hidden" name="user" value="1"/>
@@ -19,7 +19,7 @@
 			<input type="hidden" name="viewCount" th:value="${post.viewCount}"/>
 			<input type="text" name="title" th:value="${post.title}" required/><br />
 			<textarea name="content" rows="15" cols="90" th:utext="${post.content}" required></textarea><br />
-			<a th:href="@{/post_list(type=${type}, categoryType=${ct})}" class="btn">목록</a>
+			<a th:href="@{/community/list(type=${type}, categoryType=${ct})}" class="btn">목록</a>
 			<button type="submit">수정하기</button>
 		</form>
 	</div>

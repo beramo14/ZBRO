@@ -17,7 +17,7 @@
 	<div class="postBlock">
 		<ul id="category">
 		    <li th:each="category : ${categories}" >
-		        <a th:href="@{/post_list(categoryType=${category}, type=${type})}" th:text="${category}"  th:class="${category.name()} == ${ct} ? 'black-underline' : ''" ></a>
+		        <a th:href="@{/community/list(categoryType=${category}, type=${type})}" th:text="${category}"  th:class="${category.name()} == ${ct} ? 'black-underline' : ''" ></a>
 		    </li>
 		</ul>
 	</div>
@@ -38,8 +38,8 @@
 			<div class="content-text draggable" th:text="${post.content}"/>
 			<div class="text-line"></div>
 			<div class="content-btns">
-				<a th:href="@{/post_list(type=${type}, categoryType=${ct})}" class="btn content-btn b1">목록</a>
-				<a th:href="@{/post_revise(postId=${post.postId})}" class="btn content-btn b2">수정</a>
+				<a th:href="@{/community/list(type=${type}, categoryType=${ct})}" class="btn content-btn b1">목록</a>
+				<a th:href="@{/community/edit(postId=${post.postId})}" class="btn content-btn b2">수정</a>
 				<a th:href="@{/post_delete(postId=${post.postId}, type=${type}, categoryType=${ct})}" class="btn content-btn b3">삭제</a>
 			</div>
 		</div>

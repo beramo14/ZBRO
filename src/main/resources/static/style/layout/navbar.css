@@ -2,14 +2,17 @@ body {
 	min-width: 900px
 }
 
+nav {
+	height: 90px;
+}
+
 .nav-link.btn.btn-link {
     border: 1px solid ;
     border-radius: 12px;
    	border-color:#acda93;
    	padding: 13px;
    	font-weight: bolder;
-   	/* font-size: 20px; */
-   	font-size: 17px;
+   	font-size: 19px;
     color : #acda93;
 }
 
@@ -21,15 +24,12 @@ body {
   
 .nav-item1 .nav-link {
 	font-weight: bolder;
-	/* font-size: 20px; */
-   	font-size: 17px;
+   	font-size: 19px;
 	color: #acda93;
 	margin: 15px 10px 15px 10px;
 }
 
 .navigation {
-  /* padding-top: 15px;
-  padding-bottom: 15px; */
   position: relative;
 }
 

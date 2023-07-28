@@ -53,16 +53,16 @@ public class SellerRoomController {
 	public String uploadFolder;
 	
 	// 매물등록 페이지 들어가기.
-		@GetMapping("/seller/room/insert")
+		@GetMapping("/seller/room/add")
 		public String roomAddView(Model model, RoomOptionType roomOptionType) {
 			List<RoomOptionType> optionTypes = roomService.getRoomOptionType();
 			model.addAttribute("optionTypes", optionTypes);
 			
-			return "seller/room/insert";
+			return "seller/room/add";
 		}
 
 		// 매물 등록하기
-		@PostMapping("/seller/room/insert")
+		@PostMapping("/seller/room/add")
 		public String roomAdd(@RequestParam("isRoomIn") boolean isRoomIn, 
 							  @RequestParam("isElevator") boolean isElevator,
 							  @RequestParam(value = "optionType", required = false) List<String> optionTypes,

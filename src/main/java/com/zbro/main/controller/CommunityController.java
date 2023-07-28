@@ -36,7 +36,7 @@ public class CommunityController {
 	@Autowired
 	private CommunityService commuService;
 	
-	@RequestMapping("/post_list")
+	@RequestMapping("/community/list")
 	public String postList(Model model,
 							@RequestParam(defaultValue = "0") int page,
 							@RequestParam(defaultValue = "10") int pageSize,
@@ -81,12 +81,12 @@ public class CommunityController {
 		model.addAttribute("categories", Category.values());
 		
 		
-		return "/main/community/post_list";
+		return "/main/community/list";
 	}
 
 	
 	
-	@GetMapping("/post_add")
+	@GetMapping("/community/add")
 	public String postAddView(Model model,
 							@RequestParam String type,
 							@RequestParam String categoryType) {
@@ -94,12 +94,12 @@ public class CommunityController {
 		model.addAttribute("type", type);
 		model.addAttribute("ct", categoryType);
 		model.addAttribute("categories", Category.values());
-		return "/main/community/post_add";
+		return "/main/community/add";
 	}
 	
 	
 	
-	@PostMapping("/post_add")
+	@PostMapping("/community/add")
 	public String postAdd(@RequestParam String type,
 						  @RequestParam String categoryType,
 						  @RequestParam String title,
@@ -112,12 +112,12 @@ public class CommunityController {
 		
 		redirectAttributes.addAttribute("type", type);
 		redirectAttributes.addAttribute("categoryType", categoryType);
-		return "redirect:post_list";
+		return "redirect:/community/list";
 	}
 	
 	
 	
-	@GetMapping("/post_detail")
+	@GetMapping("/community/detail")
 	public String postDetail(Model model,
 							 @RequestParam Long postId) {
 		
@@ -128,12 +128,12 @@ public class CommunityController {
 		model.addAttribute("ct", community.getCategoryType());
 		model.addAttribute("categories", Category.values());
 		
-		return "/main/community/post_detail";
+		return "/main/community/detail";
 	}
 	
 	
 	
-	@GetMapping("/post_revise")
+	@GetMapping("/community/edit")
 	public String postReviseView(Model model,
 								 @RequestParam Long postId) {
 		
@@ -143,12 +143,12 @@ public class CommunityController {
 		model.addAttribute("ct", community.getCategoryType());
 		model.addAttribute("categories", Category.values());
 		
-		return "/main/community/post_revise";
+		return "/main/community/edit";
 	}
 	
 	
 	
-	@PostMapping("/post_revise")
+	@PostMapping("/community/edit")
 	public String postRevise(@RequestParam String type,
 						  	 @RequestParam String categoryType,
 						  	 @RequestParam Long postId,
@@ -163,7 +163,7 @@ public class CommunityController {
 		commuService.postRevise(postType, categoryType, postId, title, content, user, viewCount);
 		
 		redirectAttributes.addAttribute("postId", postId);
-		return "redirect:post_detail";
+		return "redirect:/community/detail";
 	}
 	
 	
@@ -179,7 +179,7 @@ public class CommunityController {
 		redirectAttributes.addAttribute("type", type);
 		redirectAttributes.addAttribute("categoryType", categoryType);
 		
-		return "redirect:post_list";
+		return "redirect:community/list";
 	}
 	
 	
