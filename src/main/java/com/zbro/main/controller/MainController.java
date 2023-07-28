@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.security.AccessControlContext;
 import java.security.Permission;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,8 +35,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.zbro.main.service.MainService;
 import com.zbro.main.service.UserService;
+import com.zbro.model.ConsumerPasswordToken;
 import com.zbro.model.ConsumerUser;
 import com.zbro.model.RoomPhoto;
+import com.zbro.model.SellerPasswordToken;
 import com.zbro.model.SellerUser;
 
 import lombok.extern.slf4j.Slf4j;
@@ -240,6 +244,8 @@ public class MainController {
 		return ResponseEntity.ok().body(responseMap);
 	}
 	
+	
+	
 	@GetMapping("/consumer/login/find/account")
 	@ResponseBody
 	public ResponseEntity<?> findCounsumerAccount(@RequestParam("email") String email) {
@@ -264,7 +270,7 @@ public class MainController {
 		}
 		
 		userService.consumerPasswordChangeMail(findedUser.get());
-		return ResponseEntity.ok().body(null);
+		return ResponseEntity.ok().body("email-sended");
 	}
 	
 	@GetMapping("/seller/login/find/password")
@@ -279,6 +285,99 @@ public class MainController {
 		
 		userService.sellerPasswordChangeMail(findedUser.get());
 		return ResponseEntity.ok().body("email-sended");
+	}
+	
+	
+	
+	@GetMapping("/consumer/password/{token}")
+	public String consumerPasswordChangeView(@PathVariable("token") String token, Model model) {
+		
+		Optional<ConsumerPasswordToken> findedConsumerPasswordToken = userService.getConsumerPasswordTokenByToken(token);
+		
+		if(findedConsumerPasswordToken.isPresent() == true) {
+			ConsumerPasswordToken consumerPasswordToken = findedConsumerPasswordToken.get();
+			//현재 시간이 토큰만료일 후 인지 확인
+			if(LocalDateTime.now().isAfter(consumerPasswordToken.getExpiredDate()) == true) {
+				model.addAttribute("errorMessage", "링크가 만료되었습니다.");
+				return "login/password_change_error";
+			}
+		} else if(findedConsumerPasswordToken.isEmpty() == true) {
+			model.addAttribute("errorMessage", "토큰이 존재하지 않습니다.");
+			return "login/password_change_error";
+		}
+		
+		model.addAttribute("type", "consumer");
+		model.addAttribute("token", token);
+		
+		return "login/password_change";
+	}
+	
+	@GetMapping("/seller/password/{token}")
+	public String sellerPasswordChangeView(@PathVariable("token") String token, Model model) {
+		
+		Optional<SellerPasswordToken> findedSellerPasswordToken = userService.getSellerPasswordTokenByToken(token);
+		
+		if(findedSellerPasswordToken.isPresent() == true) {
+			SellerPasswordToken sellerPasswordToken = findedSellerPasswordToken.get();
+			//현재 시간이 토큰만료일 후 인지 확인
+			if(LocalDateTime.now().isAfter(sellerPasswordToken.getExpiredDate()) == true) {
+				model.addAttribute("errorMessage", "링크가 만료되었습니다.");
+				return "login/password_change_error";
+			}
+		} else if(findedSellerPasswordToken.isEmpty() == true) {
+			model.addAttribute("errorMessage", "토큰이 존재하지 않습니다.");
+			return "login/password_change_error";
+		}
+		
+		model.addAttribute("type", "seller");
+		model.addAttribute("token", token);
+		
+		return "login/password_change";
+	}
+	
+	@PostMapping("/consumer/password/change")
+	public String consumerPasswordChange(@RequestParam("token") String token, @RequestParam("changePassword") String password, Model model) {
+		Optional<ConsumerPasswordToken> findedConsumerPasswordToken = userService.getConsumerPasswordTokenByToken(token);
+		
+		if(findedConsumerPasswordToken.isPresent() == true) {
+			ConsumerPasswordToken consumerPasswordToken = findedConsumerPasswordToken.get();
+			//현재 시간이 토큰만료일 후 인지 확인
+			if(LocalDateTime.now().isAfter(consumerPasswordToken.getExpiredDate()) == true) {
+				model.addAttribute("errorMessage", "링크가 만료되었습니다.");
+				return "login/password_change_error";
+			}
+			//비밀번호 변경
+			userService.updateConsumerPassword(consumerPasswordToken.getUser(), password);
+			//토큰 삭제
+			userService.deleteConsumerPasswordToken(consumerPasswordToken);
+		} else if(findedConsumerPasswordToken.isEmpty() == true) {
+			model.addAttribute("errorMessage", "토큰이 존재하지 않습니다.");
+			return "login/password_change_error";
+		}
+		
+		return "redirect:/login";
+	}
+	@PostMapping("/seller/password/change")
+	public String sellerPasswordChange(@RequestParam("token") String token, @RequestParam("changePassword") String password, Model model) {
+		Optional<SellerPasswordToken> findedSellerPasswordToken = userService.getSellerPasswordTokenByToken(token);
+		
+		if(findedSellerPasswordToken.isPresent() == true) {
+			SellerPasswordToken sellerPasswordToken = findedSellerPasswordToken.get();
+			//현재 시간이 토큰만료일 후 인지 확인
+			if(LocalDateTime.now().isAfter(sellerPasswordToken.getExpiredDate()) == true) {
+				model.addAttribute("errorMessage", "링크가 만료되었습니다.");
+				return "login/password_change_error";
+			}
+			//비밀번호 변경
+			userService.updateSellerPassword(sellerPasswordToken.getUser(), password);
+			//토큰 삭제
+			userService.deleteSellerPasswordToken(sellerPasswordToken);
+		} else if(findedSellerPasswordToken.isEmpty() == true) {
+			model.addAttribute("errorMessage", "토큰이 존재하지 않습니다.");
+			return "login/password_change_error";
+		}
+		
+		return "redirect:/login";
 	}
 	
 	

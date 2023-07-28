@@ -76,7 +76,8 @@ public class WebSecurityConfig {
 	    		.antMatcher("/seller/**")
 	    		.authorizeHttpRequests( requestMatchers -> 
 		    		requestMatchers
-						.antMatchers("/seller/login").permitAll()
+						.antMatchers("/seller/login/**").permitAll()
+						.antMatchers("/seller/password/**").permitAll()
 						.antMatchers("/seller/**").hasAuthority("ROLE_SELLER")
 				)
 	    		.formLogin(login -> login.loginPage("/seller/login").loginProcessingUrl("/seller/login").successHandler(new SellerLoginSuccessHandler()));
