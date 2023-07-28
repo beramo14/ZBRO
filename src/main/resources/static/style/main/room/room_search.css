@@ -93,8 +93,17 @@ p.room-cost {
 	padding-bottom: 6px;
 }
 
-.room-item-intro{
-	line-height:115%;
+.room-item-intro {
+	text-align: left;
+	line-height: 115%;
+	max-width: 100%;
+    max-height: 70px;
+	overflow: hidden;
+	white-space: normal;
+	word-wrap: break-word;
+	display: -webkit-box;
+	-webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
 }
 
 
