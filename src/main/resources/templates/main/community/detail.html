@@ -288,7 +288,7 @@
 			
 			$.ajax({
 				type: "GET",
-				url: "get_comments", //댓글목록 가져오는 컨트롤러 경로
+				url: "/get_comments", //댓글목록 가져오는 컨트롤러 경로
 				data: { postId: postId },
 				success: function(result) {	//댓글목록 가져오기 성공
 					console.log('댓글목록 가져오기 성공')
