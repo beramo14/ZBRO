@@ -29,6 +29,8 @@ public class CommunityService {
 	private ConsumerUserRepository consumerUserRepo;
 	@Autowired
 	private CommentRepository commentRepo;
+	@Autowired
+	private ConsumerUserRepository consumerRepo;
 
 	
 	public Page<Community> getPosts(Pageable pageable, String searchType, String searchWord, PostType type, String categoryType) {
@@ -42,10 +44,11 @@ public class CommunityService {
 	        return commuRepo.findByTypeAndCategoryType(type, categoryType, pageable);
 	    }
 	}
-
-
-	public void postInsert(PostType postType, String categoryType, String title, String content, long userId) {
+	
+	
+	public void postInsert(PostType postType, String categoryType, String title, String content, String userEmail) {
 		ConsumerUser user = new ConsumerUser();
+		Long userId = consumerRepo.findByEmail(userEmail).get().getConsumerId();
 		user.setConsumerId(userId);
 		
 		// 나머지 매개변수를 사용하여 Community 객체 생성 및 저장
@@ -71,11 +74,12 @@ public class CommunityService {
 		}
 		else return null;
 	}
-
-
-	public void postRevise(PostType postType, String categoryType, Long postId, String title, String content,
-			long userId, int viewCount) {
+	
+	
+	public void postEdit(PostType postType, String categoryType, Long postId, String title, String content,
+			String userEmail, int viewCount) {
 		ConsumerUser user = new ConsumerUser();
+		Long userId = consumerRepo.findByEmail(userEmail).get().getConsumerId();
 		user.setConsumerId(userId);
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
@@ -94,6 +98,7 @@ public class CommunityService {
 		commuRepo.save(community);
 	}
 
+	
 	@Transactional
 	public void postDelete(Long postId) {
 		Community thisPost = commuRepo.findById(postId).get();

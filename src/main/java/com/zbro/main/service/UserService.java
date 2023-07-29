@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.zbro.dto.EmailDTO;
 import com.zbro.dto.PasswordEmailDTO;
 import com.zbro.mail.MailSendService;
+import com.zbro.main.repository.CommentRepository;
+import com.zbro.main.repository.CommunityRepository;
 import com.zbro.main.repository.ConsumerPasswordTokenRepository;
 import com.zbro.main.repository.ConsumerUserRepository;
 import com.zbro.main.repository.SellerPasswordTokenRepository;
@@ -48,6 +50,11 @@ public class UserService {
 	private final MailSendService mailSendService;
 	
 	private final PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private CommunityRepository commuRepo;
+	@Autowired
+	private CommentRepository commentRepo;
 	
 	
 	@Value("${file.biz}")
@@ -262,6 +269,17 @@ public class UserService {
 		SellerPasswordToken findedPasswordToken = sellerPasswordTokenRepository.findById(passwordToken.getUserId()).get();
 		mailSendService.sendPasswordChangeMail(new PasswordEmailDTO(findedPasswordToken));
 
+	}
+
+	public String getPostOwner(Long postId) {
+		Long postOwner = commuRepo.findById(postId).get().getUser().getConsumerId();
+		return consumerRepository.findById(postOwner).get().getEmail();
+	}
+
+	public Boolean CompareCommentUser(String loggedEmail, Long commentId) {
+		Long loggedUserId = consumerRepository.findByEmail(loggedEmail).get().getConsumerId();
+		Long commentOwnerId = commentRepo.findById(commentId).get().getUser().getConsumerId();
+		return (loggedUserId==commentOwnerId);
 	}
 
 
