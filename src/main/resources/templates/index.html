@@ -2,62 +2,335 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
 <th:block layout:fragment="customStyle">
 <style th:inline="css" type="text/css">
-
+	
+	.main-index-wrapper {
+		margin-top: -40px;
+	}
+	
+	.main-index-wrapper .banner {
+		position: absolute;
+		left:0;
+		height: 300px;
+		
+	}
+	
+	.main-index-wrapper .banner-image-wrapper {
+		z-index: 200;
+		height: 100%;
+		width: 100vw;
+		margin: 0;
+		padding: 0;
+	}
+	
+	.main-index-wrapper .banner-search-background {
+		z-index: 100;
+		position: absolute;
+		height: 100%;
+		width: 100vw;
+		margin: 0;
+		padding: 0;
+		background-color: rgba(240, 240, 240, 0.6);
+	}
+	
+	.main-index-wrapper .banner-image-wrapper img{
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	
+	.main-index-wrapper .content-wrapper {
+		margin-bottom: 80px;
+		padding-top: 300px;
+		padding: 300px 160px 0 160px;
+		
+	}
+	
+	.main-index-wrapper .banner-text-wrapper {
+		margin-bottom: 20px;
+		color: #43604E;
+	}
+	
+	.main-index-wrapper .banner-text-wrapper > p {
+		margin-bottom: 0.8rem;
+	}
+	
+	.main-index-wrapper .banner-search-wrapper {
+		z-index: 300;
+		transform: translateX(-50%);
+	    position: absolute;
+	    top: 60px;
+	    left: 50%;
+	}
+	
+	.main-index-wrapper .banner-search-wrapper .search-form {
+		position: relative;
+		padding-right: 30px;
+	}
+		
+	
+	.main-index-wrapper .search-form input.search-input {
+		position: relative;
+		border: 3px solid #76BB91;
+		border-radius: 10px;
+		width: 550px;
+		height: 45px;
+		padding-left: 20px;
+		z-index: 200;
+	}
+	
+	.main-index-wrapper .search-form button.search-button {
+		width: 50px;
+		height: 45px;
+		margin: -10px;
+		padding: 0;
+		padding-left: 5px;
+		border: 3px solid #76BB91;
+		border-radius: 0 10px 10px 0;
+		position: absolute;
+		right: 0;
+		top: 10px;
+		z-index: 100;
+		background-color: #76BB91;
+	}
+	
+	.main-index-wrapper .search-form button.search-button > .bi {
+		color: white;
+		font-size: 22px;
+		text-align: center;
+	}
+	
+	
+	
+	.main-index-wrapper .content-wrapper .content {
+		margin-top: 50px;
+	}
+	
+	.main-index-wrapper .recommend-room-preview {
+		padding: 20px 0;
+	}
+	
+	.recommend-room-preview .recommand-title {
+	    display: flex;
+	    align-items: baseline;
+	    flex-direction: row;
+	    flex-wrap: nowrap;
+	    justify-content: space-between;
+	    margin-bottom: 10px;
+	}
+	
+	.recommend-room-preview span.room-type {
+		color: #43604E;
+		font-size: 22px;
+		font-weight: bold;
+	}
+	
+	.recommend-room-preview a.room-more {
+		color: gray;
+		text-decoration: none;
+	}
+	
+	.recommend-room-list {
+	    display: flex;
+	    flex-direction: row;
+	    flex-wrap: nowrap;
+	    justify-content: space-between;
+	    align-items: flex-start;
+	    gap: 40px;
+	}
+	
+	.recommend-room-item {
+		width: 100%;
+	}
+	
+	.recommend-room-item .room-image {
+		width: 100%;
+	}
+	
+	.recommend-room-item .room-image > img {
+		width: 100%;
+		height: 150px;
+		object-fit: cover;
+	}
+	.recommend-room-item .room-info {
+		position: relative;
+	}
+	.room-info .room-info-price {
+		float: left;
+		font-size: 20px;
+		font-weight: bold;
+	}
+	
+	.room-info .room-info-other {
+		text-align: right;
+		position: absolute;
+		right: 0;
+		line-height: 1.2em;
+		padding-top: 5px;
+	}
+	.room-info-other-address {
+		color: gray;
+		font-size: 14px;
+	}
 </style>
 
 </th:block>
 <th:block layout:fragment="content">
 	
-	<div>
-		<h1>메인 페이지</h1>
-		<hr/>
-		<div>
-			<p>페이지를 꾸며보아요 ㅎㅎㅋㅋ^^;;</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>.</p>
-			<p>끝</p>
-			
+	<div class="main-index-wrapper">
+		<div class="banner">
+			<div class="banner-search-wrapper"> 
+				<div class="banner-text-wrapper">
+					<p>#1인가구 #홀로서기</p>
+					<h3>가고 싶은 집, 나만을 위한 공간</h3>
+					<h3>지브로에서 쉽고 간편하게 찾아보세요</h3>
+				</div>
+				<form action="" class="search-form">
+					<button type="submit" class="search-button"><i class="bi bi-search"></i></button>
+					<input type="text" class="search-input" placeholder="지역, 지하철역 검색"/>
+				</form>
+			</div>
+			<div class="banner-search-background"></div>
+			<div class="banner-image-wrapper">
+				<img th:src="@{/roominfoimg/roomin1.jpg}" alt="" />
+			</div>
+		</div>
+		<div class="content-wrapper">
+			<div class="content">
+				<div class="recommend-room">
+					<h2>추천매물</h2>
+					<hr style="border: 1px solid gray" />
+					<div class="recommend-room-preview recommend-room-other">
+						<div class="recommand-title">
+							<span class="room-type">원룸 / 오피스텔</span>
+							<a th:href="@{/room/search}" class="room-more">더보기</a>
+						</div>
+						<div class="recommend-room-list">
+							
+							
+							
+							<div class="recommend-room-item">
+								<div class="room-image">
+									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
+								</div>
+								<div class="room-info">
+									<span class="room-info-price">월세 100/65</span>
+									<div class="room-info-other">
+										<span>원룸</span><br />
+										<span class="room-info-other-address">강남구 원룸</span>
+									</div>
+								</div>
+							</div>
+							
+							<div class="recommend-room-item">
+								<div class="room-image">
+									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
+								</div>
+								<div class="room-info">
+									<span class="room-info-price">전세 2억 7,000</span>
+									<div class="room-info-other">
+										<span>오피스텔</span><br />
+										<span class="room-info-other-address">강남구 논현동</span>
+									</div>
+								</div>
+							</div>
+							
+							<div class="recommend-room-item">
+								<div class="room-image">
+									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
+								</div>
+								<div class="room-info">
+									<span class="room-info-price">월세 1000/50</span>
+									<div class="room-info-other">
+										<span>오피스텔</span><br />
+										<span class="room-info-other-address">강남구 논현동</span>
+									</div>
+								</div>
+							</div>
+							
+							<div class="recommend-room-item">
+								<div class="room-image">
+									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
+								</div>
+								<div class="room-info">
+									<span class="room-info-price">전세 2억 7,000</span>
+									<div class="room-info-other">
+										<span>오피스텔</span><br />
+										<span class="room-info-other-address">강남구 논현동</span>
+									</div>
+								</div>
+							</div>
+							
+							
+							
+						</div>
+					</div>
+					<div class="recommend-room-preview recommend-room-gositel mt-4">
+						<div class="recommand-title">
+							<span class="room-type">고시원</span>
+							<a th:href="@{/room/search}" class="room-more">더보기</a>
+						</div>
+						<div class="recommend-room-list">
+							
+							
+							
+							<div class="recommend-room-item">
+								<div class="room-image">
+									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
+								</div>
+								<div class="room-info">
+									<span class="room-info-price">월세 100/65</span>
+									<div class="room-info-other">
+										<span>원룸</span><br />
+										<span class="room-info-other-address">강남구 원룸</span>
+									</div>
+								</div>
+							</div>
+							
+							<div class="recommend-room-item">
+								<div class="room-image">
+									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
+								</div>
+								<div class="room-info">
+									<span class="room-info-price">전세 2억 7,000</span>
+									<div class="room-info-other">
+										<span>오피스텔</span><br />
+										<span class="room-info-other-address">강남구 논현동</span>
+									</div>
+								</div>
+							</div>
+							
+							<div class="recommend-room-item">
+								<div class="room-image">
+									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
+								</div>
+								<div class="room-info">
+									<span class="room-info-price">월세 1000/50</span>
+									<div class="room-info-other">
+										<span>오피스텔</span><br />
+										<span class="room-info-other-address">강남구 논현동</span>
+									</div>
+								</div>
+							</div>
+							
+							<div class="recommend-room-item">
+								<div class="room-image">
+									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
+								</div>
+								<div class="room-info">
+									<span class="room-info-price">전세 2억 7,000</span>
+									<div class="room-info-other">
+										<span>오피스텔</span><br />
+										<span class="room-info-other-address">강남구 논현동</span>
+									</div>
+								</div>
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	
