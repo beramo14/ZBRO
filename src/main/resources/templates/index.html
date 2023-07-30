@@ -11,7 +11,7 @@
 		position: absolute;
 		left:0;
 		height: 300px;
-		
+		  
 	}
 	
 	.main-index-wrapper .banner-image-wrapper {
@@ -184,9 +184,9 @@
 					<h3>가고 싶은 집, 나만을 위한 공간</h3>
 					<h3>지브로에서 쉽고 간편하게 찾아보세요</h3>
 				</div>
-				<form action="" class="search-form">
+				<form th:action="@{/room/search}" class="search-form">
 					<button type="submit" class="search-button"><i class="bi bi-search"></i></button>
-					<input type="text" class="search-input" placeholder="지역, 지하철역 검색"/>
+					<input type="text" class="search-input" name="searchWord" placeholder="지역, 지하철역 검색"/>
 				</form>
 			</div>
 			<div class="banner-search-background"></div>
