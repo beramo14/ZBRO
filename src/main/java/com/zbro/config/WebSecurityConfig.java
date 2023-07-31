@@ -51,7 +51,7 @@ public class WebSecurityConfig {
 	    				.antMatchers("/join/**").permitAll()
 	    				.antMatchers("/consumer/login").permitAll()
 				)
-	            .formLogin(login -> login.loginPage("/consumer/login").loginProcessingUrl("/consumer/login").defaultSuccessUrl("/"))
+	            .formLogin(login -> login.loginPage("/login").loginProcessingUrl("/consumer/login").defaultSuccessUrl("/"))
 	            .logout(logout -> logout.logoutSuccessUrl("/").invalidateHttpSession(true).deleteCookies("JSESSIONID"));
 		}
 
@@ -80,7 +80,7 @@ public class WebSecurityConfig {
 						.antMatchers("/seller/password/**").permitAll()
 						.antMatchers("/seller/**").hasAuthority("ROLE_SELLER")
 				)
-	    		.formLogin(login -> login.loginPage("/seller/login").loginProcessingUrl("/seller/login").successHandler(new SellerLoginSuccessHandler()));
+	    		.formLogin(login -> login.loginPage("/login").loginProcessingUrl("/seller/login").successHandler(new SellerLoginSuccessHandler()));
 		}
 
 		@Autowired

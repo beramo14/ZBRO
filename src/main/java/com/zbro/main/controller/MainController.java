@@ -183,7 +183,7 @@ public class MainController {
 	@GetMapping("/login")
 	public String loginSelectView() {
 		
-		return "login/login_select";
+		return "login/login";
 	}
 	
 	@GetMapping("/consumer/login")
