@@ -10,8 +10,6 @@
 
 <th:block layout:fragment="content">
 	<div class="postListBlock" id="typeTitle">
-		<!-- <span th:if="${type}=='꿀팁'" th:text="Tip" style="color: #ebeeea;"></span>
-		<span th:if="${type}=='질문'" th:text="Question" style="color: #ebeeea;"></span> -->
 		<span th:if="${type}=='꿀팁'" th:text="Tip" style="color: white;"></span>
 		<span th:if="${type}=='질문'" th:text="Question" style="color: white;"></span>
 		<h1 th:text="${type}" style="color: #47a385;"></h1>
@@ -30,7 +28,6 @@
 	<div class="postListBlock" id="postList-main">
 		<div id="postListSearch">
 			<h4><span th:text="${type}"/> 게시판 - <span th:text="${ct}"/></h4>
-			<!-- <label th:text="|${pageable.getPageNumber()*pageable.getPageSize()+1} of ${pageResult.getTotalElements()}|"></label> -->
 			<div>
 				<form action="/community/list" method="post" id="postForm">
 					<input type="hidden" id="type" name="type"  th:value="${type}">
@@ -109,7 +106,8 @@
 					</th:block>
 				</ul>
 			</div>
-			<a th:href="@{/community/add(type=${type}, categoryType=${ct})}" class="post-write btn">글쓰기</a>
+			<a th:if="${#authorization.expression('hasRole(''ROLE_CONSUMER'')')}" th:href="@{/community/add(type=${type}, categoryType=${ct})}" class="post-write btn">글쓰기</a>
+			<a th:unless="${#authorization.expression('hasRole(''ROLE_CONSUMER'')') or #authorization.expression('hasRole(''ROLE_SELLER'')')}" th:href="@{/login}" class="post-write btn">글쓰기</a>
 		</div>
 	</div>
 </th:block>

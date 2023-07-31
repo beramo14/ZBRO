@@ -225,6 +225,7 @@ public class MainController {
 			log.info("#### authentication.getAuthorities() : {}", authentication.getAuthorities().toArray()[0].toString());
 			
 			// Collection<GrantedAuthority> => List<String>
+			// 권한을 list의 String형태로 변환(비교하기 쉽게)
 			List<String> authorityList = authentication.getAuthorities().stream().map(authority->authority.getAuthority()).collect(Collectors.toList());
 			
 			//## 현재 로그인된 유저 이메일을 사용하여 유저 Entity를 조회
@@ -396,8 +397,12 @@ public class MainController {
 		Resource imageResource = userService.getProfileImageResource(findedConsumerUser.getProfilePhoto());
 		return ResponseEntity.ok().body(imageResource);
 	}
-
 	
+	@GetMapping("/default/profile/photo")
+	public ResponseEntity<Resource> getDefaultProfilePhoto() throws FileNotFoundException {
+		Resource imageResource = userService.getProfileImageResource("default.jpg");
+		return ResponseEntity.ok().body(imageResource);
+	}
 	
 	@GetMapping("/consumer/profile/photo2")
 	public ResponseEntity<Resource> getConsumerProfilePhoto2(String userId) throws FileNotFoundException {

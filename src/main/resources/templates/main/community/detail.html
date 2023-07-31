@@ -8,6 +8,10 @@
 </th:block>
 
 <th:block layout:fragment="content">
+	<div th:if="${loggedUser != null}">
+		<input th:type="hidden" th:value="${loggedUser.consumerId}" class="loggedUserId"/>
+	</div>
+	
 	<div class="postBlock" id="typeTitle">
 		<span th:if="${type.toString()}=='꿀팁'" th:text="Tip" style="color: white;"></span>
 		<span th:if="${type.toString()}=='질문'" th:text="Question" style="color: white;"></span>
@@ -39,8 +43,8 @@
 			<div class="text-line"></div>
 			<div class="content-btns">
 				<a th:href="@{/community/list(type=${type}, categoryType=${ct})}" class="btn content-btn b1">목록</a>
-				<a th:href="@{/community/edit(postId=${post.postId})}" class="btn content-btn b2">수정</a>
-				<a th:href="@{/post_delete(postId=${post.postId}, type=${type}, categoryType=${ct})}" class="btn content-btn b3">삭제</a>
+				<a th:if="${isMyPost} == 'isMyPost'" th:href="@{/community/edit(postId=${post.postId})}" class="btn content-btn b2">수정</a>
+				<a th:if="${isMyPost} == 'isMyPost'" th:href="@{/post_delete(postId=${post.postId}, type=${type}, categoryType=${ct})}" class="btn content-btn b3 content-del">삭제</a>
 			</div>
 		</div>
 		
@@ -52,9 +56,10 @@
 			<div id="commentList"></div>
 			
 			<!-- 댓글 작성 -->
-			<div class="commetnAdd-box"><!-- <div th:if="${뫄뫄 != null}"> -->
+			<div class="commetnAdd-box" th:unless="${#authorization.expression('hasRole(''ROLE_SELLER'')')}"><!-- <div th:if="${뫄뫄 != null}"> -->
 				<div class="imagePreview">
-					<img src="/consumer/profile/photo2?userId=2" alt="user Photo" class="profileImg"/>
+					<img th:if="${#authorization.expression('hasRole(''ROLE_CONSUMER'')')}" th:src="@{/consumer/profile/photo2(userId=${loggedUser.consumerId})}" alt="user Photo" class="profileImg"/>
+					<img th:unless="${#authorization.expression('hasRole(''ROLE_CONSUMER'')')}" src="/default/profile/photo" alt="default Photo" class="profileImg"/>
 				</div>
 				<textarea id="target-textarea" name="" class="content" rows="3" placeholder="댓글을 작성하세요" required></textarea>
 				<button class="commentAdd btn">등록</button>
@@ -69,8 +74,10 @@
 	<script th:inline="javascript">
 		function resize() {
 	        let textarea = document.getElementById("target-textarea");
-	        textarea.style.height = "auto"; // 자동으로 높이를 조정하도록 설정
-	        textarea.style.height = textarea.scrollHeight + 10 + "px"; // 스크롤이 생긴 후의 높이로 설정
+	        if(textarea) {
+		        textarea.style.height = "auto"; // 자동으로 높이를 조정하도록 설정
+		        textarea.style.height = textarea.scrollHeight + 10 + "px"; // 스크롤이 생긴 후의 높이로 설정
+	        }
 	    }
 	
 	    document.addEventListener("input", resize);
@@ -94,18 +101,28 @@
 			var contentText = $('.content-text').text();
 			$(".content-text").empty();
 			/* contentText = contentText.replace(/<br>/g, "\n"); */
-			console.log(contentTextHtml);
-			console.log(contentText);
+			/* console.log(contentTextHtml);
+			console.log(contentText); */
 			$('.content-text').append(contentText);
+			
+			// 게시글 삭제 확인알림
+			$(document).on("click", ".content-del", function() {
+				if(!confirm("게시글을 삭제하시겠습니까?")) {
+					return false;
+				}
+			});
 			
 			// 댓글작성 버튼클릭
 		 	$(".commentAdd").click(function() {
 	            var content = $(".content").val(); // 작성한 댓글
 	            content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
 	            var postId = [[${post.postId}]]; // 게시글 ID
-	            var userId = '2'
+	            var userId = $(".loggedUserId").val();
+				if(userId == null) {
+					alert('로그인 후 이용해주세요');
+				}
 	            
-	            if (content !== "") {
+	            if (content !== "" && userId != null) {
 	            	var commentDto = {
 	                    content: content,
 	                    postId: postId,
@@ -129,7 +146,7 @@
 	            }
 	        });
 			
-			// 삭제 버튼클릭
+			// 댓글삭제 버튼클릭
 		 	$(document).on("click", ".commentDel", function() {
 		 		var result = confirm("댓글을 삭제하시겠습니까?");
 		 		var commentId = $(this).closest('.commentsList').find('.commentId').val();
@@ -151,23 +168,25 @@
 		 	});
 			
 		 	
-			// 수정 버튼클릭
+			// 댓글 수정 버튼클릭
 		 	var isEditReplyMode = false;	// 수정/답글 폼이 열려있는지 여부를 저장하는 변수
 			$(document).on("click", ".commentEdit", function() {
 				if(isEditReplyMode) {
 					cancelReplyMode();
 					cancelEditMode();
 				}
+				/* 로그인정보 */
+				var loggedUser = $('.loggedUserId').val();
 				
 				var commentContent = $(this).closest('.commentsList').find("span.commentContent").html();
 				commentContent = commentContent.replace(/<br>/g, "\n");
 				var commentId = $(this).closest('.commentsList').find('.commentId').val();
 				var commentType = parseInt($(this).closest('.commentsList').find('.commentType').val());
 				var editForm = '<div class="editForm"> <div class="thisEdit" style="display: flex; margin-left: calc(50px * ' + commentType + ')">'
-					 + '<div class="imagePreview"> <img src="/consumer/profile/photo2?userId=2" alt="user Photo" class="profileImg"/> </div>'
+					 + '<div class="imagePreview"> <img src="/consumer/profile/photo2?userId=' + loggedUser + '" alt="user Photo" class="profileImg"/> </div>'
 	                 + '<textarea id="target-textarea" class="content" name="content" rows="3" placeholder="댓글을 작성하세요" required>' + commentContent + '</textarea>'
-	                 + '<button class="saveEdit btn">수정</button>'
-	                 + '<button class="cancelEdit btn">취소</button>'
+	                 + '<div class="editButtons"> <button class="saveEdit btn">수정</button>'
+	                 + '<button class="cancelEdit btn">취소</button> </div>'
 	                 + '</div> </div>'; 
                 
 	            $(this).closest('.commentsList').append(editForm);
@@ -191,7 +210,7 @@
 
 		            $.ajax({
 		                type: "GET",
-		                url: "/comment_revise", // 댓글작성을 처리하는 컨트롤러 경로
+		                url: "/comment_edit",
 		                data: { content:content, commentId:commentId, commentType:commentType},
 		                contentType: "application/json",
 		                success: function(result) {
@@ -217,13 +236,19 @@
 		 		var commentType = parseInt($(this).closest('.commentsList').find('.commentType').val())+1;
 		 		var editForm =
 		 		'<div class="replyForm"> <hr> <div class="thisReply" style="display: flex; margin-left: calc(50px * ' + commentType + ')">'
-		 		+'<div class="imagePreview"> <img src="/consumer/profile/photo2?userId=2" alt="user Photo" class="profileImg"/>	</div>'
+		 		+'<div class="imagePreview"> </div>'
 				+'<textarea id="target-textarea" name="" class="content" rows="3" placeholder="답글을 작성하세요" required></textarea>'
-				+'<button class="saveReply btn">등록</button>'
-				+'<button class="cancelReply btn">취소</button> </div>'
+				+'<div class="replyButtons"> <button class="saveReply btn">등록</button>'
+				+'<button class="cancelReply btn">취소</button> </div> </div>'
 				+'<div class="isReply" style="margin-left: calc(50px * ' + commentType + ' - 20px)"></div> </div>';
 				
 				$(this).closest('.commentsList').append(editForm);
+				var loggedUser = $(".loggedUserId").val();
+				if(loggedUser != null) {
+					$(this).closest('.commentsList').find('.imagePreview').append('<img src="/consumer/profile/photo2?userId=' + loggedUser + '" alt="user Photo" class="profileImg"/>');
+				} else {
+					$(this).closest('.commentsList').find('.imagePreview').append('<img src="/default/profile/photo" alt="default Photo" class="profileImg"/>');
+				}
 				isEditReplyMode = true;
 		 	});
 		 	
@@ -234,13 +259,16 @@
 		 	
 		 	// 답글등록 버튼클릭
 		 	$(document).on("click", ".saveReply", function() {
+		 		var userId = $(".loggedUserId").val();
+				if(userId == null) {
+					alert('로그인 후 이용해주세요');
+				}
 		 		var content = $(".content").val(); // 작성한 댓글
 	            content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
 	            var postId = [[${post.postId}]]; // 게시글 ID
-	            var userId = '2'
 	            var parentId = $(this).closest('.commentsList').find('.commentId').val();
 	            
-	            if (content !== "") {
+	            if (content !== "" && userId != null) {
 	            	var commentDto = {
 	                    content: content,
 	                    postId: postId,
@@ -285,6 +313,7 @@
 		// 댓글목록 가져오기
 		function loadComments() {
 			var postId = [[${post.postId}]];
+			var hasSellerRole = [[${#authorization.expression('hasRole(''ROLE_SELLER'')')}]];
 			
 			$.ajax({
 				type: "GET",
@@ -306,6 +335,9 @@
 	                commentCount.empty();
 	                commentCount.append('댓글 '+allComments);
 	                
+	                /* 내 로그인 정보 */
+	                var loggedUser = $(".loggedUserId").val();
+	                
 	                for (var i = 0; i < result.length; i++) {
 	                    var comment = result[i];
 	                    var content = comment.content;
@@ -326,12 +358,20 @@
        					+ '<div class="imagePreview"> <img src="/consumer/profile/photo2?userId=' + userId + '" alt="user Photo" class="profileImg"/> </div>'
        					+ '<div class="comment-middle"> <div class="comment-name">' + userName + '</div>'
                         + '<span class="commentContent draggable">' + content + '</span> <div style="display: flex" class="comment-bottom"> <span style="margin-right:10px">' + formattedDate + '</span>'
-                        + '<div class="commentReply" style="cursor: pointer;">답글</div> </div> </div> <div class="comment-btn"> <span class="commentEdit" style="cursor: pointer;">수정</span> <span>｜</span> <span class="commentDel" style="cursor: pointer;">삭제</span> </div> </div> </div>';
-
+                        + '</div> </div> <div class="comment-btn"> </div> </div> </div>';
+						
 	                    commentList.append(commentHtml);
+	                    if(!hasSellerRole) {
+	                    	var addReplyAuthority = $(".comment-bottom").last();
+	                    	addReplyAuthority.append('<div class="commentReply" style="cursor: pointer;">답글</div>');
+	                    }
+                        if(loggedUser == userId) {
+                        	var addCommentAuthority = $(".comment-btn").last();
+                        	addCommentAuthority.append('<span class="commentEdit" style="cursor: pointer;">수정</span> <span>｜</span> <span class="commentDel" style="cursor: pointer;">삭제</span>')
+                        }
 	                    if(parentId !== null) {
 	                    	var addChildComment = $(".commentsList").last();
-	                    	addChildComment.append('<div class="isChildComment" style="margin-left: calc(50px * ' + commentType + ' - 20px)"></div>')
+	                    	addChildComment.append('<div class="isChildComment" style="margin-left: calc(50px * ' + commentType + ' - 20px)"></div>');
 	                    }
 	                }
 	            },

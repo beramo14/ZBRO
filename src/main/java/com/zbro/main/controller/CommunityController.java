@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +25,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.zbro.dto.CommentDto;
 import com.zbro.dto.PageInfo;
 import com.zbro.main.service.CommunityService;
+import com.zbro.main.service.UserService;
 import com.zbro.model.Comment;
 import com.zbro.model.Community;
 import com.zbro.model.ConsumerUser;
+import com.zbro.model.SellerUser;
 import com.zbro.type.Category;
 import com.zbro.type.PostType;
 
@@ -35,6 +38,9 @@ public class CommunityController {
 	
 	@Autowired
 	private CommunityService commuService;
+	
+	@Autowired
+	private UserService userService;
 	
 	@RequestMapping("/community/list")
 	public String postList(Model model,
@@ -80,7 +86,6 @@ public class CommunityController {
 		model.addAttribute("type", type);
 		model.addAttribute("categories", Category.values());
 		
-
 		return "main/community/list";
 	}
 
@@ -89,12 +94,20 @@ public class CommunityController {
 	@GetMapping("/community/add")
 	public String postAddView(Model model,
 							@RequestParam String type,
-							@RequestParam String categoryType) {
-		
-		model.addAttribute("type", type);
-		model.addAttribute("ct", categoryType);
-		model.addAttribute("categories", Category.values());
-		return "main/community/add";
+							@RequestParam String categoryType,
+							Authentication authentication) {
+		if(authentication != null) {
+			List<String> authorityList = authentication.getAuthorities().stream().map(authority->authority.getAuthority()).collect(Collectors.toList());
+			if(authorityList.contains("ROLE_CONSUMER")) {
+				model.addAttribute("type", type);
+				model.addAttribute("ct", categoryType);
+				model.addAttribute("categories", Category.values());
+				return "main/community/add";
+			} else {
+				model.addAttribute("message", "구매자 로그인 후 이용해주세요");
+				return "common/alert";
+			}
+		} else return "login/login_select";
 	}
 	
 	
@@ -104,11 +117,12 @@ public class CommunityController {
 						  @RequestParam String categoryType,
 						  @RequestParam String title,
 						  @RequestParam String content,
-						  @RequestParam(defaultValue = "1") long user,
-						  RedirectAttributes redirectAttributes) {
+						  RedirectAttributes redirectAttributes,
+						  Authentication authentication) {
 		PostType postType = PostType.valueOf(type);
 		
-		commuService.postInsert(postType, categoryType, title, content, user);
+		String userEmail = authentication.getName();
+		commuService.postInsert(postType, categoryType, title, content, userEmail);
 		
 		redirectAttributes.addAttribute("type", type);
 		redirectAttributes.addAttribute("categoryType", categoryType);
@@ -119,48 +133,78 @@ public class CommunityController {
 	
 	@GetMapping("/community/detail")
 	public String postDetail(Model model,
-							 @RequestParam Long postId) {
-		
+							 @RequestParam Long postId,
+							 Authentication authentication) {
+
 		Community community = commuService.getPost(postId);
 		
 		model.addAttribute("post", community);
 		model.addAttribute("type", community.getType());
 		model.addAttribute("ct", community.getCategoryType());
 		model.addAttribute("categories", Category.values());
-
+		
+		
+		// 게시글 작성자/로그인정보 비교
+		if(authentication != null) {
+			List<String> authorityList = authentication.getAuthorities().stream().map(authority->authority.getAuthority()).collect(Collectors.toList());
+			String postOwnerEmail = userService.getPostOwner(postId);
+			
+			if(authorityList.contains("ROLE_CONSUMER")) {
+				ConsumerUser loggedUser = userService.findConsumerAccountByEmail(authentication.getName()).get();
+				model.addAttribute("loggedUser", loggedUser);
+				if(postOwnerEmail.equalsIgnoreCase(authentication.getName())) {
+					model.addAttribute("isMyPost", "isMyPost");
+				}
+			}
+		}
+		
 		return "main/community/detail";
 	}
 	
 	
 	
 	@GetMapping("/community/edit")
-	public String postReviseView(Model model,
-								 @RequestParam Long postId) {
-		
-		Community community = commuService.getPost(postId);
-		model.addAttribute("post", community);
-		model.addAttribute("type", community.getType());
-		model.addAttribute("ct", community.getCategoryType());
-		model.addAttribute("categories", Category.values());
-
-		return "main/community/edit";
+	public String postEditView(Model model,
+								 @RequestParam Long postId,
+								 Authentication authentication) {
+		if(authentication != null) {
+			List<String> authorityList = authentication.getAuthorities().stream().map(authority->authority.getAuthority()).collect(Collectors.toList());
+			String postOwnerEmail = userService.getPostOwner(postId);
+			
+			if(authorityList.contains("ROLE_CONSUMER") && postOwnerEmail.equalsIgnoreCase(authentication.getName())) {
+				Community community = commuService.getPost(postId);
+				model.addAttribute("post", community);
+				model.addAttribute("type", community.getType());
+				model.addAttribute("ct", community.getCategoryType());
+				model.addAttribute("categories", Category.values());
+				
+				return "main/community/edit";
+			} else {
+				model.addAttribute("message", "권한이 없습니다.");
+				return "common/alert";
+			}
+		} else {
+			model.addAttribute("message", "권한이 없습니다.");
+			return "main/community/edit";
+		}
 	}
 	
 	
 	
 	@PostMapping("/community/edit")
-	public String postRevise(@RequestParam String type,
+	public String postEdit(@RequestParam String type,
 						  	 @RequestParam String categoryType,
 						  	 @RequestParam Long postId,
 						  	 @RequestParam String title,
 						  	 @RequestParam String content,
 						  	 @RequestParam int viewCount,
-						  	 @RequestParam(defaultValue = "1") long user,
-						  	 RedirectAttributes redirectAttributes) {
+						  	 RedirectAttributes redirectAttributes,
+						  	 Authentication authentication) {
 		
 		PostType postType = PostType.valueOf(type);
 		
-		commuService.postRevise(postType, categoryType, postId, title, content, user, viewCount);
+		String userEmail = authentication.getName();
+		commuService.postEdit(postType, categoryType, postId, title, content, userEmail, viewCount);
 		
 		redirectAttributes.addAttribute("postId", postId);
 		return "redirect:/community/detail";
@@ -172,14 +216,27 @@ public class CommunityController {
 	public String postDelete(@RequestParam Long postId,
 							 @RequestParam String type,
 							 @RequestParam String categoryType,
-							 RedirectAttributes redirectAttributes) {
-		
-		commuService.postDelete(postId);
-		
-		redirectAttributes.addAttribute("type", type);
-		redirectAttributes.addAttribute("categoryType", categoryType);
-		
-		return "redirect:community/list";
+							 RedirectAttributes redirectAttributes,
+							 Authentication authentication,
+							 Model model) {
+		if(authentication != null) {
+			List<String> authorityList = authentication.getAuthorities().stream().map(authority->authority.getAuthority()).collect(Collectors.toList());
+			String postOwnerEmail = userService.getPostOwner(postId);
+			
+			if(authorityList.contains("ROLE_CONSUMER") && postOwnerEmail.equalsIgnoreCase(authentication.getName())) {
+				commuService.postDelete(postId);
+				
+				redirectAttributes.addAttribute("type", type);
+				redirectAttributes.addAttribute("categoryType", categoryType);
+				return "redirect:community/list";
+			} else {
+				model.addAttribute("message", "권한이 없습니다.");
+				return "common/alert";
+			}
+		} else {
+			model.addAttribute("message", "권한이 없습니다.");
+			return "common/alert";
+		}
 	}
 	
 	
@@ -187,8 +244,12 @@ public class CommunityController {
 	
 	/*		댓글 관련		*/
 	@PostMapping("/comment_add")
-	public ResponseEntity<?> commentAdd(@RequestBody CommentDto commentDto) {
-		commuService.addComment(commentDto);
+	public ResponseEntity<?> commentAdd(@RequestBody CommentDto commentDto,
+										Authentication authentication) {
+		if(authentication != null) {
+			List<String> authorityList = authentication.getAuthorities().stream().map(authority->authority.getAuthority()).collect(Collectors.toList());
+			if(authorityList.contains("ROLE_CONSUMER")) commuService.addComment(commentDto);
+		}
 		return ResponseEntity.ok().build();
 	}
 	
@@ -241,14 +302,20 @@ public class CommunityController {
 	
 	
 	@GetMapping("/comment_delete")
-	public ResponseEntity<?> commentDel(@RequestParam("commentId") Long commentId) {
-		Comment thisComment = commuService.getThisComment(commentId);
-		List<Comment> allComments = commuService.getAllComments();
-		
-		delChildComment(thisComment, allComments);
-//		System.out.println("삭제된 댓글 : " + thisComment.getCommentId());
-		commuService.delComment(commentId);
-		
+	public ResponseEntity<?> commentDel(@RequestParam("commentId") Long commentId,
+										Authentication authentication) {
+		if(authentication != null) {
+			List<String> authorityList = authentication.getAuthorities().stream().map(authority->authority.getAuthority()).collect(Collectors.toList());
+			Boolean CompareLoginInfo = userService.CompareCommentUser(authentication.getName(), commentId);
+			if(authorityList.contains("ROLE_CONSUMER") && CompareLoginInfo) {
+				Comment thisComment = commuService.getThisComment(commentId);
+				List<Comment> allComments = commuService.getAllComments();
+				
+				delChildComment(thisComment, allComments);
+//				System.out.println("삭제된 댓글 : " + thisComment.getCommentId());
+				commuService.delComment(commentId);
+			}
+		}
 		
 		return ResponseEntity.ok().build();
 	}
@@ -266,12 +333,19 @@ public class CommunityController {
 	
 	
 	
-	@GetMapping("/comment_revise")
+	@GetMapping("/comment_edit")
 	public ResponseEntity<?> commentRevise(@RequestParam("commentId") Long commentId,
 										   @RequestParam("content") String content,
-										   @RequestParam("commentType") int commentType) {
+										   @RequestParam("commentType") int commentType,
+										   Authentication authentication) {
+		if(authentication != null) {
+			List<String> authorityList = authentication.getAuthorities().stream().map(authority->authority.getAuthority()).collect(Collectors.toList());
+			Boolean CompareLoginInfo = userService.CompareCommentUser(authentication.getName(), commentId);
+			if(authorityList.contains("ROLE_CONSUMER") && CompareLoginInfo) {
+				commuService.reviseComment(commentId, content, commentType);
+			}
+		}
 		
-		commuService.reviseComment(commentId, content, commentType);
 		return ResponseEntity.ok().build();
 	}
 	
