@@ -47,9 +47,7 @@ public class CommunityService {
 	
 	
 	public void postInsert(PostType postType, String categoryType, String title, String content, String userEmail) {
-		ConsumerUser user = new ConsumerUser();
-		Long userId = consumerRepo.findByEmail(userEmail).get().getConsumerId();
-		user.setConsumerId(userId);
+		ConsumerUser user = consumerRepo.findByEmail(userEmail).get();
 		
 		// 나머지 매개변수를 사용하여 Community 객체 생성 및 저장
 		Community community = new Community();
@@ -78,12 +76,7 @@ public class CommunityService {
 	
 	public void postEdit(PostType postType, String categoryType, Long postId, String title, String content,
 			String userEmail, int viewCount) {
-		ConsumerUser user = new ConsumerUser();
-		Long userId = consumerRepo.findByEmail(userEmail).get().getConsumerId();
-		user.setConsumerId(userId);
-		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-		String formattedDateTime = LocalDateTime.now().format(formatter);
+		ConsumerUser user = consumerRepo.findByEmail(userEmail).get();
 		
 		Community community = new Community();
 		community.setType(postType);
@@ -93,7 +86,7 @@ public class CommunityService {
 		community.setContent(content);
 		community.setUser(user);
 		community.setViewCount(viewCount);
-		community.setUpdateDate(LocalDateTime.parse(formattedDateTime, formatter));
+		community.setUpdateDate(LocalDateTime.now());
 		
 		commuRepo.save(community);
 	}
