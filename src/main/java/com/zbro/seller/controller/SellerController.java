@@ -26,6 +26,7 @@ import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
 import com.zbro.model.RoomOptionType;
 import com.zbro.model.RoomPhoto;
+import com.zbro.model.RoomReview;
 import com.zbro.model.SellerUser;
 import com.zbro.seller.service.SellerRoomService;
 
@@ -232,5 +233,29 @@ public class SellerController {
 		}
 		
 	}
+	@GetMapping("seller/room/review")
+	public List<RoomReview> getroomReviewdetail(@RequestParam("sellerId")Long sellerId, Model model) {
+		Long sellerId1 = 2L;
+	    List<RoomReview> roomReview = roomService.getRoomReview(sellerId1);
+	    model.addAttribute("reviews", roomReview);
+	    return roomReview;
+	}
 	
+	@GetMapping("seller/room/reviewdetail")
+	public List<RoomReview> getroomReviewdetaiList(@RequestParam("reviewId")Long reviewId, Model model) {
+	    List<RoomReview> roomReview3 = roomService.getRoomReviewDetail(reviewId);
+	    System.out.println(roomReview3);
+	    model.addAttribute("reviews", roomReview3);
+	    return roomReview3;
+	} 
+	
+	
+	@GetMapping("seller/room/detail_test")
+	public String detail_test () {
+		
+		// 파라미터를 roomId로 받아와서 매물 등록 정보를 펼쳐
+		return "seller/room/detail_test";
+		
+	}
 }
+	
