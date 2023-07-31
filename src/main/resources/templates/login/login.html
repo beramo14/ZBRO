@@ -84,12 +84,15 @@
 		text-align: center;
 		margin-bottom: 30px;
 	}
+	.modal-content-title h4 {
+		font-weight: bold;
+	}
 	.modal-content-title p {
 		margin: 0;
 	}
 	
 	.modal-content{
-		margin-bottom: 70px;
+		margin-bottom: 40px;
 	}
 	
 	.modal-background {
@@ -103,6 +106,10 @@
 	}
 	.modal-message .message-error {
 		color: red;
+	}
+	
+	.modal-form-input-wrapper {
+		width: 300px;
 	}
 	
 	.login-select {
@@ -120,6 +127,7 @@
 	button.btn-green {
 		 background-color: #76BB91;
 		 color:white;
+		 border-radius: 0;
 	}
 	
 	button.btn-green:hover {
@@ -144,9 +152,6 @@
 		border: var(--bs-border-width) solid var(--bs-border-color) !important;
 		border-color: none;
 		box-shadow: none !important;
-	}
-	.login-form input {
-		
 	}
 	
 </style>
@@ -199,13 +204,13 @@
 		</div>
 		<div class="modal-content" style="align-items: center;">
 			<div class="modal-content-title">
-				<h2>계정찾기</h2>
+				<h4>계정찾기</h4>
 			</div>
 			<div>
 				<form action="#" id="user-find">
-					<div class="modal-form-input-wrapper" style="margin: 0 auto; text-align: center;">
-						<input type="email" name="email" id="findEmail" class="form-control form-control-lg" placeholder="이메일을 입력해주세요." style="display: inline-block; width: auto; vertical-align: middle;" required/>
-						<button type="submit" class="btn btn-lg btn-primary" style="display: inline-block; width: auto; vertical-align: middle;">찾기</button>
+					<div class="modal-form-input-wrapper" style="margin: 0 auto; text-align: center; display: flex;">
+						<input type="email" name="email" id="findEmail" class="form-control" placeholder="이메일을 입력해주세요." style="width: 80%; vertical-align: middle;" required/>
+						<button type="submit" class="btn btn-green" style="width: 20%; vertical-align: middle;">찾기</button>
 					</div>
 					<div class="modal-message" style="text-align: left;">
 						<span class="message-user-exists" style="display:none;">계정이 존재합니다.</span>
@@ -224,15 +229,14 @@
 		</div>
 		<div class="modal-content" style="align-items: center;">
 			<div class="modal-content-title">
-				<h2>비밀번호 찾기</h2>
-				<p>비밀번호를 찾고자하는 계정의 이메일을 입력해주세요.</p>
+				<h4>비밀번호 찾기</h4>
 			</div>
 			<div>
 				<!--확인 코드 이메일 발송 폼-->
 				<form action="#" id="password-find-form" class="mb-2">
-					<div class="modal-form-input-wrapper" style="margin: 0 auto; text-align: center;">
-						<input type="email" name="email" id="changePasswordByEmail" class="form-control form-control-lg" placeholder="이메일을 입력해주세요." style="display: inline-block; width: auto; vertical-align: middle;" required/>
-						<button type="submit" class="btn btn-lg btn-primary" style="display: inline-block; width: auto; vertical-align: middle;">찾기</button>
+					<div class="modal-form-input-wrapper" style="display: flex;margin: 0 auto; text-align: center; ">
+						<input type="email" name="email" id="changePasswordByEmail" class="form-control" placeholder="이메일을 입력해주세요." style="width: 80%; vertical-align: middle;" required/>
+						<button type="submit" class="btn btn-green" style="width: 20%; vertical-align: middle;">찾기</button>
 					</div>
 				</form>
 				<div class="modal-message" style="text-align: left;">
