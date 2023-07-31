@@ -20,13 +20,15 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.zbro.main.repository.RoomReviewRepository;
 import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
 import com.zbro.model.RoomOptionType;
 import com.zbro.model.RoomPhoto;
-import com.zbro.model.SellerUser;
 import com.zbro.seller.repository.SellerRoomFavoriteRepository;
+import com.zbro.model.RoomReview;
 import com.zbro.model.SellerUser;
+import com.zbro.seller.repository.SellerReviewRepository;
 import com.zbro.seller.repository.SellerRoomOptionRepository;
 import com.zbro.seller.repository.SellerRoomOptionTypeRepository;
 import com.zbro.seller.repository.SellerRoomPhotoRepository;
@@ -36,26 +38,37 @@ import com.zbro.seller.repository.SellerRoomReviewRepository;
 
 @Service
 public class SellerRoomService {
-	
+
 	@Autowired
 	private SellerRoomRepository roomRepo;
+	
 	@Autowired
 	private SellerRoomOptionRepository roomOptionRepo;
+	
 	@Autowired
 	private SellerRoomOptionTypeRepository roomOptionTypeRepo;
+	
 	@Autowired
 	private SellerRoomPhotoRepository roomPhotoRepo;
+	
 	@Autowired
 	private SellerRoomFavoriteRepository roomFavoriteRepo;
+	
 	@Autowired
 	private SellerRoomUserRepository sellerUserRepo;
-	
-	@Value("${file.images.room-photo}")
-	private String fileRoomPhotoPath;
 	
 	@Autowired
 	private SellerRoomReviewRepository roomReviewRepo;
 
+	@Autowired
+	private SellerReviewRepository sellerReviewRepo;
+	
+	
+	
+	@Value("${file.images.room-photo}")
+	private String fileRoomPhotoPath;
+	
+	
 
 	public void insertRoom(Room room) {
 		roomRepo.save(room);
@@ -67,17 +80,15 @@ public class SellerRoomService {
 
 	public List<RoomOptionType> getRoomOptionType() {
 		List<RoomOptionType> findOptionTypes = roomOptionTypeRepo.findAll();
-		
+
 		Collections.sort(findOptionTypes, Comparator.comparingInt(RoomOptionType::getSortOrder));
-		
-		return findOptionTypes;
+
+		return findOptionTypes;	
 	}
 
 	public void insertRoomPhoto(RoomPhoto roomPhoto) {
 		roomPhotoRepo.save(roomPhoto);
 	}
-
-	
 
 	
 	
@@ -193,4 +204,15 @@ public class SellerRoomService {
 		roomRepo.deleteById(roomId);
 	}
 
+	public List<RoomReview> getRoomReviewDetail(Long reviewId) {
+	        List<RoomReview> sellerRoomReview2 = sellerReviewRepo.findByreviewId(reviewId);
+	        return sellerRoomReview2;
+	}
+	 
+	public List<RoomReview> getRoomReview(Long sellerId) {
+		List<RoomReview> sellerRoomReview = sellerReviewRepo.findByRoom_Seller_SellerId(sellerId);
+		return sellerRoomReview;
+	}
+	
+	
 }
