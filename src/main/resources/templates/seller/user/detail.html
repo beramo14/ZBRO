@@ -180,7 +180,7 @@
 						<button type="button" id="modify-button" class="btn btn-primary me-3">수정</button>
 						<button type="submit" id="save-button" class="btn btn-success d-none me-3">저장</button>
 						<a id="cancle-button" class="btn btn-secondary d-none" href="javascript:window.location.reload(true)">취소</a>
-						<button type="button" id="delete-button" class="btn btn-secondary">탈퇴</button>
+						<button type="button" id="delete-button" class="btn btn-secondary" onclick="deleteSeller()">탈퇴</button>
 					</div>
 				</form>
 		</div>
@@ -221,6 +221,20 @@
 </th:block>
 <th:block layout:fragment="customScript">
 	<script th:inline="javascript" type="text/javascript">
+		
+		function deleteSeller(){
+			
+			if(confirm("탈퇴하시겠습니까?") == true) {
+				$.ajax({
+					method: "DELETE",
+					url: "/seller/user/delete",
+					success: function(res) {
+						alert("탈퇴처리되었습니다.");
+						location.href="/logout";
+					}
+				})
+			} 
+		}
 		
 		function passwordChangeModalClose() {
 			$("#password-change-modal").hide();

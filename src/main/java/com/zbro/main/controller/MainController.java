@@ -176,23 +176,26 @@ public class MainController {
 	
 	
 	@GetMapping("/login")
-	public String loginSelectView(@RequestParam(value="type", defaultValue="consumer") String loginType, Model model) {
-		
-		model.addAttribute("loginType", loginType);
+	public String loginSelectView(Model model) {
+		model.addAttribute("loginType", "consumer");
 		
 		return "login/login";
 	}
 	
+	
+	
 	@GetMapping("/consumer/login")
-	public String loginConsumerView() {
-		
-		return "login/consumer_login";
+	public String loginConsumerView(Model model) {
+		model.addAttribute("loginType", "consumer");
+		return "login/login";
+		//return "login/consumer_login";
 	}
 	
 	@GetMapping("/seller/login")
-	public String loginSellerView() {
-		
-		return "login/seller_login";
+	public String loginSellerView(Model model) {
+		model.addAttribute("loginType", "seller");
+		return "login/login";
+		//return "login/seller_login";
 	}
 	
 	

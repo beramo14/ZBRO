@@ -34,6 +34,7 @@ import com.zbro.model.ConsumerPasswordToken;
 import com.zbro.model.ConsumerUser;
 import com.zbro.model.SellerPasswordToken;
 import com.zbro.model.SellerUser;
+import com.zbro.type.UserStatusType;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -141,6 +142,12 @@ public class UserService {
 		
 		return sellerRepository.save(findedSellerUser);
 		
+	}
+	
+	public SellerUser deleteSellerUser(SellerUser sellerUser) {
+		sellerUser.setStatus(UserStatusType.DELETE);
+		
+		return sellerRepository.save(sellerUser);
 	}
 	
 	

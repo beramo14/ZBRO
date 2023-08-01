@@ -76,7 +76,7 @@ public class SellerUser {
 	
 	@Comment("상태")
 	@Enumerated(EnumType.STRING)
-	@Column(updatable = false, insertable = false, columnDefinition = "VARCHAR(10) DEFAULT 'ACTIVE'")
+	@Column(insertable = false, columnDefinition = "VARCHAR(10) DEFAULT 'ACTIVE'")
 	private UserStatusType status;
 	
 	@Comment("등록일")

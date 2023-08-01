@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.zbro.main.repository.ConsumerUserRepository;
 import com.zbro.model.ConsumerUser;
+import com.zbro.type.UserStatusType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,8 +26,9 @@ public class ConsumerUserLoginService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		
 		ConsumerUser user = consumerRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("ConsumerUser not found with email: " + email));
-
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities(user));
+		
+		boolean isEnable = (user.getStatus() == UserStatusType.ACTIVE)? true : false;
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), isEnable, true, true, true, getAuthorities(user));
 	}
 	
 	private Collection<? extends GrantedAuthority> getAuthorities(ConsumerUser user) {

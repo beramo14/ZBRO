@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.zbro.main.repository.SellerUserRepository;
 import com.zbro.model.SellerUser;
+import com.zbro.type.UserStatusType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,9 +26,10 @@ public class SellerUserLoginService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		
-		SellerUser seller = sellerRepository.findByEmail(email).orElseThrow( () -> new UsernameNotFoundException("Seller not found with email: " + email) );
+		SellerUser user = sellerRepository.findByEmail(email).orElseThrow( () -> new UsernameNotFoundException("Seller not found with email: " + email) );
 		
-        return new org.springframework.security.core.userdetails.User(seller.getEmail(), seller.getPassword(), getAuthorities(seller.isAdmission()));
+		boolean isEnable = (user.getStatus() == UserStatusType.ACTIVE)? true : false;
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), isEnable, true, true, true, getAuthorities(user.isAdmission()));
 	}
 	
 	private Collection<? extends GrantedAuthority> getAuthorities(boolean isAdmission) {

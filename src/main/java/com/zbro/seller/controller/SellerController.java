@@ -22,10 +22,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zbro.main.service.UserService;
@@ -36,6 +38,7 @@ import com.zbro.model.RoomPhoto;
 import com.zbro.model.RoomReview;
 import com.zbro.model.SellerUser;
 import com.zbro.seller.service.SellerRoomService;
+import com.zbro.type.UserStatusType;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -131,6 +134,16 @@ public class SellerController {
 		session.setAttribute("sellerName", savedSeller.getName());
 		
 		return "redirect:/seller/user";
+	}
+	
+	@DeleteMapping("/seller/user/delete")
+	@ResponseBody
+	public ResponseEntity<?> sellerUserDelete(Principal principal) {
+		SellerUser findedSellerUser = sellerUserService.getSellerUserByEmail(principal.getName());
+		
+		sellerUserService.deleteSellerUser(findedSellerUser);
+		
+		return ResponseEntity.ok().body(true);
 	}
 	
 	
