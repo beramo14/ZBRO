@@ -15,6 +15,12 @@ public interface RoomRepository extends JpaRepository<Room, Long>{
 	List<Room> findRoomsByTypeAndAddressContaining(RoomType type, String searchWord);
 	List<Room> findRoomsByCostTypeAndAddressContaining(CostType costType, String searchWord);
 	List<Room> findRoomsByTypeAndCostTypeAndAddressContaining(RoomType type, CostType costType, String searchWord);
+	
 	List<Room> findBySeller(SellerUser selleruser);
+
+	List<Room> findTop4ByAddressContainingOrderByRoomIdDesc(String searchWord);
+	
+	List<Room> findTop4ByTypeInAndAddressContainingOrderByRoomIdDesc(List<RoomType> typeList, String region);
+	List<Room> findTop4ByTypeInOrderByRoomIdDesc(List<RoomType> typeList);
 
 }
