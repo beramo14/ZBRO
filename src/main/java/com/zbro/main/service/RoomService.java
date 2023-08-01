@@ -14,6 +14,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import com.zbro.dto.IndexRoomListDTO;
 import com.zbro.dto.RoomReviewDTO;
 import com.zbro.dto.RoomSearchDTO;
 import com.zbro.main.repository.FavoritRepository;
@@ -166,6 +167,41 @@ public class RoomService {
 		return getRoomReview;
 		
 	}
+
+
+
+	public IndexRoomListDTO getRoomByRegion(List<RoomType> roomTypeList, IndexRoomListDTO indexRoomDTO) {
+		
+		IndexRoomListDTO resultIndexRoomDTO = new IndexRoomListDTO();
+		
+		List<Room> regionThirdRoomList = roomRepository.findTop4ByTypeInAndAddressContainingOrderByRoomIdDesc(roomTypeList, indexRoomDTO.getRegionThirdDepth());
+		if(regionThirdRoomList.size() >= 4) {
+			resultIndexRoomDTO.setResultRegion(indexRoomDTO.getRegionThirdDepth());
+			resultIndexRoomDTO.setResultRoomList(regionThirdRoomList);
+			return resultIndexRoomDTO;
+		}
+		
+		List<Room> regionSecondRoomList = roomRepository.findTop4ByTypeInAndAddressContainingOrderByRoomIdDesc(roomTypeList, indexRoomDTO.getRegionSecondDepth());
+		if(regionSecondRoomList.size() >= 4) {
+			resultIndexRoomDTO.setResultRegion(indexRoomDTO.getRegionSecondDepth());
+			resultIndexRoomDTO.setResultRoomList(regionSecondRoomList);
+			return resultIndexRoomDTO;
+		}
+		
+		List<Room> regionFirstRoomList = roomRepository.findTop4ByTypeInAndAddressContainingOrderByRoomIdDesc(roomTypeList, indexRoomDTO.getRegionFirstDepth());
+		if(regionFirstRoomList.size() >= 4) {
+			resultIndexRoomDTO.setResultRegion(indexRoomDTO.getRegionFirstDepth());
+			resultIndexRoomDTO.setResultRoomList(regionFirstRoomList);
+			return resultIndexRoomDTO;
+		}
+		
+		List<Room> createDateOrderedRoomList = roomRepository.findTop4ByTypeInOrderByRoomIdDesc(roomTypeList);
+		resultIndexRoomDTO.setResultRoomList(createDateOrderedRoomList);
+		
+		
+		return resultIndexRoomDTO;
+	}
+	
 
 
 

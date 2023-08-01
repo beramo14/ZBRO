@@ -3,6 +3,10 @@
 <th:block layout:fragment="customStyle">
 <style th:inline="css" type="text/css">
 	
+	body{
+		overflow-x: hidden;
+	}
+	
 	.main-index-wrapper {
 		margin-top: -40px;
 	}
@@ -139,6 +143,7 @@
 	}
 	
 	.recommend-room-item {
+		cursor: pointer;
 		width: 100%;
 	}
 	
@@ -199,135 +204,19 @@
 				<div class="recommend-room">
 					<h2>추천매물</h2>
 					<hr style="border: 1px solid gray" />
-					<div class="recommend-room-preview recommend-room-other">
+					<div class="recommend-room-preview">
 						<div class="recommand-title">
 							<span class="room-type">원룸 / 오피스텔</span>
 							<a th:href="@{/room/search}" class="room-more">더보기</a>
 						</div>
-						<div class="recommend-room-list">
-							
-							
-							
-							<div class="recommend-room-item">
-								<div class="room-image">
-									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
-								</div>
-								<div class="room-info">
-									<span class="room-info-price">월세 100/65</span>
-									<div class="room-info-other">
-										<span>원룸</span><br />
-										<span class="room-info-other-address">강남구 원룸</span>
-									</div>
-								</div>
-							</div>
-							
-							<div class="recommend-room-item">
-								<div class="room-image">
-									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
-								</div>
-								<div class="room-info">
-									<span class="room-info-price">전세 2억 7,000</span>
-									<div class="room-info-other">
-										<span>오피스텔</span><br />
-										<span class="room-info-other-address">강남구 논현동</span>
-									</div>
-								</div>
-							</div>
-							
-							<div class="recommend-room-item">
-								<div class="room-image">
-									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
-								</div>
-								<div class="room-info">
-									<span class="room-info-price">월세 1000/50</span>
-									<div class="room-info-other">
-										<span>오피스텔</span><br />
-										<span class="room-info-other-address">강남구 논현동</span>
-									</div>
-								</div>
-							</div>
-							
-							<div class="recommend-room-item">
-								<div class="room-image">
-									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
-								</div>
-								<div class="room-info">
-									<span class="room-info-price">전세 2억 7,000</span>
-									<div class="room-info-other">
-										<span>오피스텔</span><br />
-										<span class="room-info-other-address">강남구 논현동</span>
-									</div>
-								</div>
-							</div>
-							
-							
-							
-						</div>
+						<div class="recommend-room-list recommend-room-other"></div>
 					</div>
-					<div class="recommend-room-preview recommend-room-gositel mt-4">
+					<div class="recommend-room-preview mt-4">
 						<div class="recommand-title">
 							<span class="room-type">고시원</span>
-							<a th:href="@{/room/search}" class="room-more">더보기</a>
+							<a th:href="@{/room/search?type=고시원}" class="room-more">더보기</a>
 						</div>
-						<div class="recommend-room-list">
-							
-							
-							
-							<div class="recommend-room-item">
-								<div class="room-image">
-									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
-								</div>
-								<div class="room-info">
-									<span class="room-info-price">월세 100/65</span>
-									<div class="room-info-other">
-										<span>원룸</span><br />
-										<span class="room-info-other-address">강남구 원룸</span>
-									</div>
-								</div>
-							</div>
-							
-							<div class="recommend-room-item">
-								<div class="room-image">
-									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
-								</div>
-								<div class="room-info">
-									<span class="room-info-price">전세 2억 7,000</span>
-									<div class="room-info-other">
-										<span>오피스텔</span><br />
-										<span class="room-info-other-address">강남구 논현동</span>
-									</div>
-								</div>
-							</div>
-							
-							<div class="recommend-room-item">
-								<div class="room-image">
-									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
-								</div>
-								<div class="room-info">
-									<span class="room-info-price">월세 1000/50</span>
-									<div class="room-info-other">
-										<span>오피스텔</span><br />
-										<span class="room-info-other-address">강남구 논현동</span>
-									</div>
-								</div>
-							</div>
-							
-							<div class="recommend-room-item">
-								<div class="room-image">
-									<img th:src="@{/roominfoimg/roomin1.jpg}" alt=""/>
-								</div>
-								<div class="room-info">
-									<span class="room-info-price">전세 2억 7,000</span>
-									<div class="room-info-other">
-										<span>오피스텔</span><br />
-										<span class="room-info-other-address">강남구 논현동</span>
-									</div>
-								</div>
-							</div>
-							
-							
-							
-						</div>
+						<div class="recommend-room-list recommend-room-gositel"></div>
 					</div>
 				</div>
 			</div>
@@ -336,9 +225,134 @@
 	
 </th:block>
 <th:block layout:fragment="customScript">
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8797ef24169da67f855167ed9d5ded62&libraries=services"></script>
+	<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 	<script th:inline="javascript" type="text/javascript">
-		//커스텀 스크립트
+		
+		$(document).ready(function () {
+			
+			var geocoder = new kakao.maps.services.Geocoder();
+			
+			if (navigator.geolocation) {
+		    
+			    // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+			    navigator.geolocation.getCurrentPosition( function(position) {
+			        let lat = position.coords.latitude; // 위도
+			        let lng = position.coords.longitude; // 경도
+			        
+			        centerPosition = new kakao.maps.LatLng(lat, lng);
+			        geocoder.coord2Address(lng, lat, function(result, status) {
+						if (status === kakao.maps.services.Status.OK) {
+							if(result.length > 0) {
+								let findedAddress = result[0].address;
+								
+								console.log(findedAddress.address_name, findedAddress.region_1depth_name, findedAddress.region_2depth_name, findedAddress.region_3depth_name);
+								
+								getRoomList("고시원", findedAddress);
+								getRoomList("원룸/오피스텔", findedAddress);
+								
+							}
+						}
+					});
+			    }, noGeoLocation);
+			} else {
+				noGeoLocation();
+			}
+		});
+		
+		
+		//viewType:고시원, 원룸/오피스텔
+		function getRoomList(viewType, findedAddress) {
+			$.ajax({
+				url:"/index/room",
+				method:"post",
+				data: {
+					"viewType":viewType,
+					"regionFirstDepth" : findedAddress.region_1depth_name,
+					"regionSecondDepth" : findedAddress.region_2depth_name,
+					"regionThirdDepth" : findedAddress.region_3depth_name
+				},
+				success: function(res) {
+					//성공시 html 그리기
+					console.log(res, res.resultRoomList[0]);
+					let template = Handlebars.compile($("#recommend-room-item-template").html());
+					let templateNull = Handlebars.compile($("#recommend-room-item-null-template").html());
+					
+					for(let i=0; i<4; i++) {
+						let item = template(res.resultRoomList[i]);
+						if(res.resultRoomList[i] === undefined) {
+							item = templateNull();
+						}
+						
+						if(viewType === "고시원") {
+							$(".recommend-room-gositel").append(item);
+						} else if(viewType === "원룸/오피스텔") {
+							$(".recommend-room-other").append(item);
+						}
+					}
+					
+				},
+				error: function(error) {
+					console.log(error);
+				}
+			});
+		}
+		Handlebars.registerHelper('addressCut', function(astring) {
+			if(astring != null){
+				return astring.split(" ")[0]+" "+astring.split(" ")[1];
+			}
+		});
+		Handlebars.registerHelper('roomInfoPrice', function(costType, deposit, mounthCost){
+			if(costType === "월세") {
+				if(deposit == 0) {
+					return costType+" "+mounthCost;
+				}
+				return costType+" "+deposit+"/"+mounthCost;
+			} else if(costType === "전세") {
+				return costType+" "+deposit;
+			}
+		});
+		
+		function noGeoLocation() {
+			let findedAddress = {
+					"region_1depth_name" : "",
+					"region_2depth_name" : "",
+					"region_3depth_name" : "",
+				}
+				getRoomList("고시원", findedAddress);
+				getRoomList("원룸/오피스텔", findedAddress);
+		}
+	
 	</script>
+	
+	<script id="recommend-room-item-template" type="text/x-handlebars-template">
+		<div class="recommend-room-item" onclick="location.href='/room/detail/{{roomId}}'">
+			<div class="room-image">
+				<img src="/room/photo?roomId={{roomId}}" alt=""/>
+			</div>
+			<div class="room-info">
+				<span class="room-info-price">{{roomInfoPrice costType deposit monthCost}}</span>
+				<div class="room-info-other">
+					<span>{{type}}</span> <br />
+					<span class="room-info-other-address">{{addressCut address}}</span>
+				</div>
+			</div>
+		</div>
+	</script>
+	<script id="recommend-room-item-null-template" type="text/x-handlebars-template">
+		<div class="recommend-room-item">
+			<div class="room-image">
+			</div>
+			<div class="room-info">
+				<span class="room-info-price"></span>
+				<div class="room-info-other">
+					<span></span> <br />
+					<span class="room-info-other-address"></span>
+				</div>
+			</div>
+		</div>
+	</script>
+	
 </th:block>
 
     

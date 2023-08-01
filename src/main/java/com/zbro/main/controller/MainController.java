@@ -1,45 +1,37 @@
 package com.zbro.main.controller;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.security.AccessControlContext;
-import java.security.Permission;
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
-import javax.security.auth.Subject;
 
-import org.hibernate.engine.transaction.spi.JoinStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.zbro.main.service.MainService;
+import com.zbro.dto.IndexRoomListDTO;
+import com.zbro.main.service.RoomService;
 import com.zbro.main.service.UserService;
 import com.zbro.model.ConsumerPasswordToken;
 import com.zbro.model.ConsumerUser;
-import com.zbro.model.RoomPhoto;
 import com.zbro.model.SellerPasswordToken;
 import com.zbro.model.SellerUser;
+import com.zbro.type.RoomType;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,35 +40,38 @@ import lombok.extern.slf4j.Slf4j;
 public class MainController {
 	
 	@Autowired
-	private MainService mainService;
+	private UserService userService;
 	
 	@Autowired
-	private UserService userService;
+	private RoomService roomService;
 	
 	
 	@GetMapping("/")
 	public String mainPage() {
 		
-		//sysout
-		System.out.println("called index mapper");
 		
-		//Slf4j log
-		log.debug("called index mapper"); //debug level에서 실행시 표시(별도 설정 필요)
-		log.info("called index mapper");
-		log.warn("called index mapper");
-		log.error("called index mapper");
-		
-		//slf4j log 사용시 되도록이면 + 연산자 사용하지 말고 slf4j의 치환문자를 사용하자
-		log.info("Hello {}{}!!!","world"," tester");
-		
-		// 개발할때 잠깐 확인용으로 sysout 사용해도 상관없음
-		// 가능 하면 Slf4j logger사용
-		// logger사용 이유 : 어디서 로그 찍었는지 확인할 수 있음
 		
 		
 		return "index";
+	}
+	
+	@PostMapping("/index/room")
+	@ResponseBody
+	public ResponseEntity<?> getIndexRoomList(IndexRoomListDTO indexRoomDTO) {
 		
+		log.info("1:{}, 2:{}, 3:{}", indexRoomDTO.getRegionFirstDepth(), indexRoomDTO.getRegionSecondDepth(), indexRoomDTO.getRegionThirdDepth());
 		
+		List<RoomType> roomTypeList = new ArrayList<RoomType>();
+		if(indexRoomDTO.getViewType().equals("고시원") == true) {
+			roomTypeList.add(RoomType.고시원);
+		} else if(indexRoomDTO.getViewType().equals("원룸/오피스텔") == true) {
+			roomTypeList.add(RoomType.원룸);
+			roomTypeList.add(RoomType.오피스텔);
+		}
+		
+		IndexRoomListDTO resultIndexRoomDTO = roomService.getRoomByRegion(roomTypeList, indexRoomDTO);
+		
+		return ResponseEntity.ok().body(resultIndexRoomDTO);
 	}
 	
 	
