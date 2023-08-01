@@ -181,7 +181,9 @@ public class MainController {
 	
 	
 	@GetMapping("/login")
-	public String loginSelectView() {
+	public String loginSelectView(@RequestParam(value="type", defaultValue="consumer") String loginType, Model model) {
+		
+		model.addAttribute("loginType", loginType);
 		
 		return "login/login";
 	}

@@ -164,11 +164,11 @@
 			<h1 class="title">로그인</h1>
 			<ul class="nav nav-tabs login-select" role="tablist">
 				<li class="nav-item w-50" role="presentation">
-					<input type="radio" name="loginType" id="consumerLoginRadio" value="consumer" checked hidden/>
+					<input type="radio" name="loginType" id="consumerLoginRadio" value="consumer" th:checked="${loginType == 'consumer'}" hidden/>
 					<label for="consumerLoginRadio" class="nav-link w-100" data-bs-toggle="tab" style="border-radius: 0;">구매자</label>
 				</li>
 				<li class="nav-item w-50" role="presentation">
-					<input type="radio" name="loginType" id="sellerLoginRadio" value="seller" hidden/>
+					<input type="radio" name="loginType" id="sellerLoginRadio" value="seller" th:checked="${loginType == 'seller'}" hidden/>
 					<label for="sellerLoginRadio" class="nav-link w-100" data-bs-toggle="tab" style="border-radius: 0;">판매자</label>
 				</li>
 			</ul>
