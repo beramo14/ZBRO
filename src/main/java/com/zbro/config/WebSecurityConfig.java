@@ -48,6 +48,7 @@ public class WebSecurityConfig {
 	    		.antMatcher("/**")
 	    		.authorizeHttpRequests( requestMatchers -> 
 	    			requestMatchers
+	    				.antMatchers("/mypage/**").hasAuthority("ROLE_CONSUMER")
 	    				.antMatchers("/join/**").permitAll()
 	    				.antMatchers("/consumer/login").permitAll()
 				)
