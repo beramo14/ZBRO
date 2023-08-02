@@ -24,9 +24,11 @@ public class RoomSearchDTO {
 	
 	private Long roomId;
 	private String address;
+	private String shortAddress;
 	private String intro;
 	private int monthCost;
 	private int deposit;
+	private double size;
 	private Long favoriteId;
 	private boolean isFavorite = false;
 	
@@ -36,9 +38,11 @@ public class RoomSearchDTO {
 		this.type = (room.getType() == null)? RoomType.none : room.getType();
 		this.costType = (room.getCostType() == null)? CostType.none : room.getCostType();
 		this.address = (room.getAddress() == null)? "" : room.getAddress();
+		setShortAddress(room.getAddress());
 		this.intro = (room.getIntro() == null)? "" : room.getIntro();
 		this.monthCost = room.getMonthCost();
 		this.deposit = room.getDeposit();
+		this.size = room.getSize();
 	}
 	
 	public static List<RoomSearchDTO> convertToDTO(List<Room> rooms) {
@@ -46,6 +50,19 @@ public class RoomSearchDTO {
 	                    .map(RoomSearchDTO::new)
 	                    .collect(Collectors.toList());
     }
+	
+	public void setShortAddress(String address) {
+		String[] splitedAddress = address.split("\\s");
+		
+		if(splitedAddress.length >= 4) {
+			this.shortAddress = splitedAddress[0]+" "+splitedAddress[1]+" "+splitedAddress[2];
+		} else if(splitedAddress.length >= 3) {
+			this.shortAddress = splitedAddress[0]+" "+splitedAddress[1];
+		} else {
+			this.shortAddress = address;
+		}
+		
+	}
 	
 //	public void setType(RoomType type) {
 //		if(type == null) {

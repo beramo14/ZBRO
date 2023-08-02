@@ -45,7 +45,7 @@ button.search-word-reset-button {
 }
 
 .room-list {
-	width: 340px;
+	width: 370px;
 	/*border: 1px solid blue;*/
 	border: 1px solid lightgray;
 	overflow-y: scroll;
@@ -59,7 +59,7 @@ button.search-word-reset-button {
 }
 
 .room-item {
-	height: 155px;
+	height: 170px;
 	/*border: 1px solid green;*/
 	border: 1px solid lightgray;
 	margin: 0px;
@@ -100,15 +100,21 @@ button.search-word-reset-button {
 }
 
 p.room-cost {
-	font-size: 1.32rem;
+	font-size: 1.28rem;
 	font-weight: bold;
-	line-height: 100%;
 	padding-bottom: 3px;
+    padding-top: 5px;
 }
 
-.room-item-type {
+.room-item-other {
 	color: gray;
-	padding-bottom: 6px;
+	padding-bottom: 18px;
+	font-size: 14px;
+}
+.room-item-address {
+	color: gray;
+	padding-bottom: 4px;
+	font-size: 13px;
 }
 
 .room-item-intro {
@@ -116,12 +122,9 @@ p.room-cost {
 	line-height: 115%;
 	max-width: 100%;
     max-height: 70px;
-	overflow: hidden;
-	white-space: normal;
-	word-wrap: break-word;
-	display: -webkit-box;
-	-webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 

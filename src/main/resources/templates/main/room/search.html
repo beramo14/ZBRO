@@ -6,23 +6,22 @@
 	</style>
 </th:block>
 <th:block layout:fragment="content">
-	
 	<div class="search-main-wrapper">
 		<div class="search-wrapper">
 			<form action="#" class="search-form" style="display: flex;">
 				<div style="width:auto; position:relative;">
 					<button type="button" class="search-word-reset-button" onclick="searchWordReset()"><i class="bi bi-x"></i></button>
-					<input type="text" name="searchWord" class="form-control search-input me-1" style="width: 270px;" th:value="${roomSearchDTO.searchWord}" placeholder="원하는 지역을 검색하세요"/>
+					<input type="text" name="searchWord" class="form-control search-input me-1" style="width: 295px;" th:value="${roomSearchDTO.searchWord}" placeholder="원하는 지역을 검색하세요"/>
 				</div>
-				<button type="submit" class="btn submit-btn me-5">검색</button>
-				<select name="type" class="form-select me-1" style="width: 120px;">
+				<button type="submit" class="btn submit-btn me-4">검색</button>
+				<select name="type" class="form-select me-2" style="width: 130px;">
 					<option value="none" th:selected="${roomSearchDTO.type.toString()} == 'none'">-유형-</option>
 					<option value="원룸" th:selected="${roomSearchDTO.type.toString()} == '원룸'">원룸</option>
 					<option value="오피스텔" th:selected="${roomSearchDTO.type.toString()} == '오피스텔'">오피스텔</option>
 					<option value="고시원" th:selected="${roomSearchDTO.type.toString()} == '고시원'">고시원</option>
 				</select>
 				
-				<select name="costType" class="form-select" style="width: 120px; ">
+				<select name="costType" class="form-select" style="width: 130px; ">
 					<option value="none" th:selected="${roomSearchDTO.costType.toString() == 'none'}">-전/월세-</option>
 					<option value="월세" th:selected="${roomSearchDTO.costType.toString() == '월세'}">월세</option>
 					<option value="전세" th:selected="${roomSearchDTO.costType.toString() == '전세'}">전세</option>
@@ -63,7 +62,11 @@
 				                	<span th:text="${room.deposit}">1000</span>
 				                </th:block>
 				            </p>
-					        <p class="room-item-type" th:text="${room.type}">원룸</p>
+					        <p class="room-item-address" th:text="${room.shortAddress}">서울 관악구 봉천동</p>
+					        <p class="room-item-other" >
+								<span th:text="${room.type}">원룸</span> /
+								<span th:text="${room.size}"></span>㎡
+							</p>
 					        <p class="room-item-intro" th:text="${room.intro}"></p>
 					    </div>
 					</div>
