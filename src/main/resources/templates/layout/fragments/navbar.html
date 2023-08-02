@@ -21,13 +21,16 @@
 						<li><a class="dropdown-item text-center" th:href="@{/community/list(type='질문')}">질문</a></li>
 					</ul>
 				</li>
-				<li class="nav-item1" sec:authorize="isAuthenticated()">
+				<li class="nav-item1" sec:authorize="hasRole('ROLE_CONSUMER')">
 					<a class="nav-link" th:href="@{/mypage}">마이페이지</a>
 				</li>
 				<li class="nav-item ms-4" sec:authorize="isAnonymous()">
 					<a class="nav-link btn btn-link m-0" th:href="@{/login}">로그인 | 회원가입</a>
 				</li>
-				<li class="nav-item ms-4" sec:authorize="isAuthenticated()">
+				<li class="nav-item ms-4" sec:authorize="hasRole('ROLE_SELLER')">
+					<a class="nav-link btn btn-link m-0" th:href="@{/seller}">판매자페이지</a>
+				</li>
+				<li class="nav-item ms-4" sec:authorize="hasRole('ROLE_CONSUMER')">
 					<a class="nav-link btn btn-link m-0" th:href="@{/logout}">로그아웃</a>
 				</li>
 			</ul>
