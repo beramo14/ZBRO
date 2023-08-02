@@ -2,6 +2,7 @@ package com.zbro.seller.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.List;
 
@@ -167,9 +168,10 @@ public class SellerController {
 		try {
 			Resource resource =  resourceLoader.getResource("file:/"+fileBizPath + sellerUser.getBizFile());
 			File file = resource.getFile();
+			String filename = URLEncoder.encode(file.getName(), "UTF-8");
 			
 			return ResponseEntity.ok()
-					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName())
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename)
 					.header(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.length()))
 					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM.toString())
 					.body(resource);
