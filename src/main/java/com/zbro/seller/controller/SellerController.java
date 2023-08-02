@@ -136,6 +136,16 @@ public class SellerController {
 		return "redirect:/seller/user";
 	}
 	
+	@PostMapping("/seller/user/password")
+	public ResponseEntity<?> sellerUserPasswordChange(@RequestParam("currentPassword") String currentPassword, @RequestParam("changePassword") String changePassword, Principal principal){
+		
+		log.info("currentPassword:{}, changePassword:{}",currentPassword ,changePassword);
+		SellerUser sellerUser = sellerUserService.getSellerUserByEmail(principal.getName());
+		String message = sellerUserService.sellerPasswordChange(sellerUser, currentPassword, changePassword);
+		
+		return ResponseEntity.ok().body(message);
+	}
+	
 	@DeleteMapping("/seller/user/delete")
 	@ResponseBody
 	public ResponseEntity<?> sellerUserDelete(Principal principal) {
@@ -145,6 +155,8 @@ public class SellerController {
 		
 		return ResponseEntity.ok().body(true);
 	}
+	
+	
 	
 	
 	

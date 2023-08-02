@@ -336,5 +336,15 @@ public class UserService {
 		return (loggedUserId==commentOwnerId);
 	}
 
+	public String sellerPasswordChange(SellerUser sellerUser, String currentPassword, String changePassword) {
+		if(passwordEncoder.matches(currentPassword, sellerUser.getPassword()) == true) {
+			sellerUser.setPassword(passwordEncoder.encode(changePassword));
+			sellerRepository.save(sellerUser);
+			return "success";
+		} else {
+			return "password-mismatch";
+		}
+	}
+
 
 }
