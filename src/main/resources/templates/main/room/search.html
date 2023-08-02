@@ -12,7 +12,7 @@
 			<form action="#" class="search-form" style="display: flex;">
 				<div style="width:auto; position:relative;">
 					<button type="button" class="search-word-reset-button" onclick="searchWordReset()"><i class="bi bi-x"></i></button>
-					<input type="text" name="searchWord" class="form-control me-1" style="width: 200px;" th:value="${roomSearchDTO.searchWord}"/>
+					<input type="text" name="searchWord" class="form-control search-input me-1" style="width: 270px;" th:value="${roomSearchDTO.searchWord}" placeholder="원하는 지역을 검색하세요"/>
 				</div>
 				<button type="submit" class="btn submit-btn me-5">검색</button>
 				<select name="type" class="form-select me-1" style="width: 120px;">

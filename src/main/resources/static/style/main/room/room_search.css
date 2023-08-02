@@ -14,12 +14,22 @@
 	height: calc(100vh - 205px);
 	display: flex;
 }
+
+input.search-input::placeholder{
+	color:#999;
+}
+.form-control:focus, .form-control:active, .form-select:focus, .form-select:active {
+    outline: none !important;
+    border: var(--bs-border-width) solid var(--bs-border-color) !important;
+    border-color: none;
+    box-shadow: none !important;
+}
 button.submit-btn {
-	border: 1px solid #47a385;
-    color: #47a385;
+	background-color: #76BB91;
+    color: white;
 }
 button.submit-btn:hover {
-    background-color: #86c69f;
+    background-color: rgb(82, 163, 113) !important;
     color: white;
 }
 button.search-word-reset-button {
