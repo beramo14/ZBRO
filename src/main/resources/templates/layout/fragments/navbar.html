@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <th:block th:fragment="navbar">
-<nav class="navbar navbar-expand-lg navbar-light bg-white navigation">
+<nav class="navbar navbar-light bg-white navigation">
 	<div class="container-fluid mx-4">
     	<a class="navbar-brand" href="/">
     		<img src="/images/navi_logo.png" alt="로고">
@@ -16,7 +16,7 @@
 					<a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
 					   꿀팁/질문
 					</a>
-					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="position: absolute;">
 						<li><a class="dropdown-item text-center" th:href="@{/community/list(type='꿀팁')}">꿀팁</a></li>
 						<li><a class="dropdown-item text-center" th:href="@{/community/list(type='질문')}">질문</a></li>
 					</ul>
