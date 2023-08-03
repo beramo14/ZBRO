@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/seller_layout}">
 <th:block layout:fragment="customHead">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -5,101 +6,161 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<link href="/style/seller/roomAdd.css" rel="stylesheet" type="text/css" />
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 </th:block>
 
 	
 <th:block layout:fragment="customStyle">
-	<style th:inline="css" type="text/css">
-		.myFile {
-			display: flex;
-		}
-		.imagePreview {
-			width: 3em;
-			height: 3em;
-		}
-	</style>
+	<style th:inline="css" type="text/css"></style><div class="detail-blocks">
 </th:block>
 
 
 <th:block layout:fragment="content">
 	<div class="content">
 		<h1>매물등록</h1>
+		
 		<div id="roomInsert">
 			<form id="saveForm" action="/seller/room/add" method="post" enctype="multipart/form-data" autocomplete="off">
-			    <div>
-					<input type="hidden" name="seller" value="1" /> <br />
-			        방 종류 <select name="type">
-			            <option value="원룸" selected>원룸</option>
-			            <option value="오피스텔">오피스텔</option>
-			            <option value="고시원">고시원</option>
-			        </select> <br />
-			        매물 간단소개 <input type="text" name="intro" value="간단소개"/> <br /> 
-			        매물 상세소개 <textarea name="description"></textarea> <br />
-			        건물명 <input type="text" name="buildingName"/> <br />
-			        주소 <input type="text" id="jibunAddress" name="address" placeholder="주소" onclick="execDaumPostcode()" readonly/>
-			        	<input type="button" onclick="execDaumPostcode()" value="주소 찾기"/><br/>
-			        호수 <input type="text" name="roomNumber"/> <br />
-			        월/전세 &nbsp 월세 <input type="radio" name="costType" value="월세" checked >
-			            &nbsp 전세 <input type="radio" name="costType" value="전세"> <br />
-			        <div id="monthlyCost">
-			            월세 <input type="number" name="monthCost" value="0"/>만 <br />
-			        </div>
-			        보증금 <input type="number" name="deposit" value="0"/>만 <br />
-			        관리비 <input type="number" name="manageCost" value="0"/>만 <br />
-			        면적 <input type="float" name="size" value="0"/>㎡ <br />
-			        방향 <input type="text" name="direction"/> <br />
-			        교통정보 <input type="text" name="transportInfo" /> <br />
-			        건물 층수 <input type="number" name="totalFloor" value="0"/> <br />
-			        매물 층수 <input type="number" name="roomFloor" value="0"/> <br />
-			        즉시입주 &nbsp 가능 <input type="radio" name="isRoomIn" value="true">
-			                     &nbsp 불가능 <input type="radio" name="isRoomIn" value="false" checked> <br />
-			        안전 <input type="text" name="securityInfo"/> <br />
-			        엘리베이터 &nbsp 있음 <input type="radio" name="isElevator" value="true">
-			                   &nbsp 없음 <input type="radio" name="isElevator" value="false" checked> <br />
-			        냉난방 <input type="text" name="heatInfo"/> <br />
-			        주차장 <input type="text" name="parkingInfo"/> <br />
-			        인터넷 <input type="text" name="internetInfo"/> <br />
-			        성별분리 <input type="text" name="genderInfo"/> <br />
-			        <div style="border: 1px solid gray; width:400px">
-			    		<h3>공용 옵션</h3>
-			    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == true}">
-			    			<th:block th:if="${optionType.sortOrder == 6}"><br /></th:block>
-						    <label>
-						        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}" />
-						        <span th:text="${optionType.optionName}"></span>
-						    </label>
-						</th:block>
-			    	</div>
-			    	<div style="border: 1px solid gray; width:400px">
-			    		<h3>방 옵션</h3>
-			    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == false}">
-						    <label>
-						        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}" />
-						        <span th:text="${optionType.optionName}"></span>
-						    </label>
-						</th:block>
-			    	</div>
-			        <div id="offer" style="display: none;">
-			            제공식사 <input type="text" name="foodOffer"/> <br />
-			            제공비품 <input type="text" name="amenityOffer"/> <br />
-			        </div>
-			        <br />
-			        이미지등록<br />
-			        <div class="file_list">
-			        	<div class="myFile">
-				        	<div class="imagePreview"></div>
-		                    <div class="file_input">
-		                        <input type="text" name="fileName" readonly />
-		                        <label> 첨부파일
-		                            <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
-		                        </label>
-		                    </div>
-		                    <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
-		                    <button type="button" onclick="addFile();" class="btns fn_add_btn"><span>파일 추가</span></button>
+			    <div id="formElements">
+					<input type="hidden" name="seller" value="1" />
+					<div class="info-blocks">
+						<div class="detail-blocks">
+					        <span class="left-div">월/전세</span>
+					        <div class="middle-div cost-type">
+						        <input type="radio" name="costType" value="월세" checked ><span> 월세</span><input type="radio" name="costType" value="전세"> 전세
+					        </div>
+						</div>
+						<div class="detail-blocks">
+					        <span class="left-div">가격</span>
+					        <div class="middle-div monthlyCost">
+						        <div id="monthlyCost">월세 <input type="number" name="monthCost" value="0"/> 만원</div>
+						        <div>보증금 <input type="number" name="deposit" value="0"/> 만원</div>
+						        <div>관리비 <input type="number" name="manageCost" value="0"/> 만원</div>
+					        </div>
+						</div>
+					</div>
+			        <div class="info-blocks">
+			        	<div class="detail-blocks">
+				        	<span class="left-div">방 종류</span> 
+					        <select name="type">
+					            <option value="원룸" selected>원룸</option>
+					            <option value="오피스텔">오피스텔</option>
+					            <option value="고시원">고시원</option>
+					        </select>
 			        	</div>
-		            </div>
+			        	<div class="detail-blocks">
+					        <span class="left-div">즉시 입주</span> 
+					        <input type="radio" name="isRoomIn" value="true">가능
+					        &nbsp <input type="radio" name="isRoomIn" value="false" checked>불가능
+			        	</div>
+			        	<div class="detail-blocks">
+					        <span class="left-div">건물명</span> <input type="text" name="buildingName"/>
+			        	</div>
+			        	<div class="detail-blocks">
+					        <span class="left-div">주소</span> <input type="text" id="jibunAddress" name="address" placeholder="주소를 검색해주세요" onclick="execDaumPostcode()" readonly/>
+					        <input type="button" onclick="execDaumPostcode()" value="주소 찾기"/>
+			        	</div>
+			        	<div class="detail-blocks">
+			        		<span class="left-div"></span>
+					        <input type="text" name="roomNumber" placeholder="상세 주소를 입력해주세요   ex) 103호"/>
+			        	</div>
+			        </div>
+			        <div class="info-blocks" id="roomImage-block">
+			        	<div class="detail-blocks">
+					        <span class="left-div">매물 사진</span>
+					        <div class="file_list">
+					        	<div class="myFile">
+						        	<div class="imagePreview"></div>
+				                    <div class="file_input">
+				                        <input type="text" name="fileName" readonly />
+				                        <label> 첨부파일
+				                            <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
+				                        </label>
+				                    </div>
+				                    <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
+				                    <button type="button" onclick="addFile();" class="btns fn_add_btn"><span>파일 추가</span></button>
+					        	</div>
+				            </div>
+			        	</div>
+			        	<div class="detail-blocks">
+				            <span class="left-div">매물/건물층</span>
+					        <input type="number" name="roomFloor" value="0"/>/<input type="number" name="totalFloor" value="0"/>층
+			        	</div>
+			        	<div class="detail-blocks">
+					        <span class="left-div">면적</span> <input type="float" name="size" value="0"/>㎡
+			        	</div>
+			        	<div class="detail-blocks">
+					        <span class="left-div">방향</span> <input type="text" name="direction" placeholder="ec) 남향"/>
+			        	</div>
+			        	<div class="detail-blocks">
+					        <span class="left-div">냉난방</span> <input type="text" name="heatInfo" placeholder="ec) 개별난방"/>
+			        	</div>
+			        	<div class="detail-blocks">
+					        <span class="left-div">엘리베이터</span>
+					        <input type="radio" name="isElevator" value="true">있음
+					        &nbsp <input type="radio" name="isElevator" value="false" checked>없음
+			        	</div>
+			        	<div class="detail-blocks">
+					        <span class="left-div">주차</span> <input type="text" name="parkingInfo" placeholder="ec) 총 8대"/>
+			        	</div>
+			        	<div class="detail-blocks">
+					        <span class="left-div">안전 시설</span> <input type="text" name="securityInfo" placeholder="건물 내 안전 시설을 입력해주세요  ex) CCTV, 현관 도어락, 각 방 도어락"/>
+			        	</div>
+			        	<div class="detail-blocks">
+					        <span class="left-div">인터넷</span> <input type="text" name="internetInfo" placeholder="유선, 무선 WIFI, 개별 인터넷 설치가능"/>
+			        	</div>
+			        	<div class="detail-blocks">
+					        <span class="left-div">성별분리</span> <input type="text" name="genderInfo" placeholder="남여층 분리되어 있음"/>
+			        	</div>
+				        <div id="offer" style="display: none;">
+				        	<div class="detail-blocks">
+					            <span class="left-div">제공 식사</span> <input type="text" name="foodOffer" placeholder="ex) 라면, 밥, 김치, 커피, 차"/>
+				        	</div>
+				        	<div class="detail-blocks">
+					            <span class="left-div">제공 비품</span> <input type="text" name="amenityOffer" placeholder="ex) 세탁세제"/>
+				        	</div>
+				        </div>
+			        </div>
+			        <div class="info-blocks">
+			        	<div class="detail-blocks">
+				        	<span class="left-div">공용 옵션</span>
+			    			<div>
+					    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == true}">
+					    			<th:block th:if="${optionType.sortOrder == 6}"><br /></th:block>
+								    <label>
+								        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}" />
+								        <span th:text="${optionType.optionName}"></span>
+								    </label>
+								</th:block>
+			    			</div>
+			        	</div>
+			        	<div class="detail-blocks">
+				        	<span class="left-div">방 옵션</span>
+				        	<div>
+					    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == false}">
+					    			<th:block th:if="${optionType.optionName == '냉장고' or optionType.optionName == '침대'}"><br /></th:block>
+								    <label>
+								        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}" />
+								        <span th:text="${optionType.optionName}"></span>
+								    </label>
+								</th:block>
+				        	</div>
+			        	</div>
+			    	</div>
+			    	<div class="info-blocks">
+			    		<div class="detail-blocks">
+					        <span class="left-div">교통정보</span> <input type="text" name="transportInfo" placeholder="주변 교통시설을 입력해주세요  ex) 강남역 도보 10분"/>
+			    		</div>
+			    		<div class="detail-blocks">
+					        <span class="left-div">매물 소개</span> <input type="text" name="intro" placeholder="한줄 소개를 입력해 주세요"/>
+			    		</div>
+			    		<div class="detail-blocks">
+					        <span class="left-div"></span> <textarea name="description" placeholder="상세 소개를 입력해 주세요 "></textarea>
+			    		</div>
+			    	</div>
 			    </div>
-			    <button type="submit">등록하기</button>
+			    <button type="submit">등록</button>
 			</form>
 		</div>
 	</div>
@@ -184,7 +245,8 @@
 		
 		        const img = document.createElement('img');
 		        img.src = e.target.result;
-		        img.style.maxWidth = '100%'; // 이미지의 너비를 조정합니다.
+		        /* img.style.maxWidth = '100%'; */ // 이미지의 너비를 조정합니다.
+		        img.classList.add('roomImg');
 		        imagePreview.appendChild(img);
 		    }
 		
@@ -261,7 +323,7 @@
 	      const selectedValue = document.querySelector('input[name="costType"]:checked').value;
 
 	      if (selectedValue === '월세') {
-	        monthlyCostDiv.style.display = 'block';
+	        monthlyCostDiv.style.display = 'inline-block';
 	      } else {
 	        monthlyCostDiv.style.display = 'none';
 	        monthlyCostInput.value = 0;	//숨길 때마다 값 초기화

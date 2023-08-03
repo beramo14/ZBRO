@@ -6,74 +6,89 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<link href="/style/seller/roomAdd.css" rel="stylesheet" type="text/css" />
 </th:block>
 
 
 <th:block layout:fragment="customStyle">
-	<style th:inline="css" type="text/css">
-		.myFile {
-			display: flex;
-		}
-		.imagePreview {
-			flex-shrink: 0;
-			width: 32px;
-			height: 32px;
-			overflow: hidden;
-		}
-		.roomImg {
-			width:100%;
-		    height:100%;
-		    object-fit:cover;
-		}
-	</style>
+	<style th:inline="css" type="text/css"></style>
 </th:block>
 
 
 <th:block layout:fragment="content">
 	<div class="content">
-		<h1>매물 detail</h1>
+		<h1>매물상세</h1>
 		
 		<div id="roomInsert">
 			<form id="saveForm" action="/seller/room/edit" method="post" enctype="multipart/form-data" autocomplete="off">
 			    <div id="formElements">
-					<input type="hidden" name="seller" th:value="${room.seller.sellerId}" /> <br />
-					<input type="hidden" name="roomId" th:value="${room.roomId}" /> <br />
-					<input type="hidden" name="isPhotoEdit" id="isPhotoEdit" value="0" /> <br />
-			        방 종류 <select name="type">
-					    <option value="원룸" th:selected="${room.type.toString() == '원룸'}">원룸</option>
-					    <option value="오피스텔" th:selected="${room.type.toString() == '오피스텔'}">오피스텔</option>
-					    <option value="고시원" th:selected="${room.type.toString() == '고시원'}">고시원</option>
-					</select>
-					 <br />
-			        매물 간단소개 <input type="text" name="intro" th:value="${room.intro}"/> <br /> 
-			        매물 상세소개 <textarea name="description" th:text="${room.description}"></textarea> <br />
-			        건물명 <input type="text" name="buildingName" th:value="${room.buildingName}"/> <br />
-			        주소 <input type="text" id="jibunAddress" name="address" placeholder="주소" onclick="execDaumPostcode()" th:value="${room.address}" readonly/>
-			        	<input type="button" onclick="execDaumPostcode()" value="주소 찾기"><br>
-			        호수 <input type="text" name="roomNumber" th:value="${room.roomNumber}"/> <br />
-			        월/전세 &nbsp 월세 <input type="radio" name="costType" value="월세" th:checked="${room.costType.toString() == '월세'}" >
-			            &nbsp 전세 <input type="radio" name="costType" value="전세" th:checked="${room.costType.toString() == '전세'}" > <br />
-			        <div id="monthlyCost">
-			            월세 <input type="number" name="monthCost" th:value="${room.monthCost}"/>만 <br />
+					<input type="hidden" name="seller" th:value="${room.seller.sellerId}" />
+					<input type="hidden" name="roomId" th:value="${room.roomId}" />
+					<input type="hidden" name="isPhotoEdit" id="isPhotoEdit" value="0" />
+					<div class="info-blocks">
+				        <span class="left-div">월/전세</span>
+				        
+				        <input type="radio" name="costType" value="월세" th:checked="${room.costType.toString() == '월세'}" >월세
+			            &nbsp <input type="radio" name="costType" value="전세" th:checked="${room.costType.toString() == '전세'}" >전세 <br />
+			            <span class="left-div">가격</span> 
+				        <div id="monthlyCost">
+				            월세 <input type="number" name="monthCost" th:value="${room.monthCost}"/>만원
+				        </div>
+				        보증금 <input type="number" name="deposit" th:value="${room.deposit}"/>만원
+				        관리비 <input type="number" name="manageCost" th:value="${room.manageCost}"/>만원
+					</div>
+			        <div class="info-blocks">
+			        	<span class="left-div">방 종류</span> 
+				        <select name="type">
+						    <option value="원룸" th:selected="${room.type.toString() == '원룸'}">원룸</option>
+						    <option value="오피스텔" th:selected="${room.type.toString() == '오피스텔'}">오피스텔</option>
+						    <option value="고시원" th:selected="${room.type.toString() == '고시원'}">고시원</option>
+						</select>
+						<br />
+						<span class="left-div">즉시 입주</span> 
+				        <input type="radio" name="isRoomIn" th:checked="${room.isRoomIn == true}">가능
+				        &nbsp <input type="radio" name="isRoomIn" value="false" th:checked="${room.isRoomIn == false}">불가능 <br />
+				        <span class="left-div">건물명</span> <input type="text" name="buildingName" th:value="${room.buildingName}"/> <br />
+				        <span class="left-div">주소</span> <input type="text" id="jibunAddress" name="address" placeholder="주소를 검색해주세요" onclick="execDaumPostcode()" th:value="${room.address}" readonly/>
+				        	<input type="button" onclick="execDaumPostcode()" value="주소 찾기"><br>
+				        <span class="left-div"></span> <input type="text" name="roomNumber" th:value="${room.roomNumber}" placeholder="상세 주소를 입력해주세요   ex) 103호"/> <br />
 			        </div>
-			        보증금 <input type="number" name="deposit" th:value="${room.deposit}"/>만 <br />
-			        관리비 <input type="number" name="manageCost" th:value="${room.manageCost}"/>만 <br />
-			        면적 <input type="float" name="size" th:value="${room.size}"/>㎡ <br />
-			        방향 <input type="text" name="direction" th:value="${room.direction}"/> <br />
-			        교통정보 <input type="text" name="transportInfo" th:value="${room.transportInfo}"/> <br />
-			        건물 층수 <input type="number" name="totalFloor" th:value="${room.totalFloor}"/> <br />
-			        매물 층수 <input type="number" name="roomFloor" th:value="${room.roomFloor}"/> <br />
-			        즉시입주 &nbsp 가능 <input type="radio" name="isRoomIn" th:checked="${room.isRoomIn == true}">
-			                     &nbsp 불가능 <input type="radio" name="isRoomIn" value="false" th:checked="${room.isRoomIn == false}"> <br />
-			        안전 <input type="text" name="securityInfo" th:value="${room.securityInfo}"/> <br />
-			        엘리베이터 &nbsp 있음 <input type="radio" name="isElevator" value="true" th:checked="${room.isElevator == true}">
-			                   &nbsp 없음 <input type="radio" name="isElevator" value="false" th:checked="${room.isElevator == false}"> <br />
-			        냉난방 <input type="text" name="heatInfo" th:value="${room.heatInfo}"/> <br />
-			        주차장 <input type="text" name="parkingInfo" th:value="${room.parkingInfo}"/> <br />
-			        인터넷 <input type="text" name="internetInfo" th:value="${room.internetInfo}"/> <br />
-			        성별분리 <input type="text" name="genderInfo" th:value="${room.genderInfo}"/> <br />
-			        <div style="border: 1px solid gray; width:400px">
-			    		<h3>공용 옵션</h3>
+			        <div class="info-blocks" id="roomImage-block">
+				        <span class="left-div">매물 사진</span>
+				        <div class="file_list" th:each="roomPhoto : ${roomPhotos}">
+				        	<div class="myFile">
+					        	<div class="imagePreview">
+					        		<img th:src="@{'/seller/room/photo?photoId=' + ${roomPhoto.photoId}}" alt="Room Photo" class="roomImg"/>
+					        	</div>
+			                    <div class="file_input">
+			                        <input type="text" name="fileName" readonly th:value="${roomPhoto.fileName}"/>
+			                        <label> 첨부파일
+			                            <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
+			                        </label>
+			                    </div>
+			                    <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
+				        	</div>
+			            </div> <br />
+			            <span class="left-div">매물/건물층</span>
+				        <input type="number" name="roomFloor" th:value="${room.roomFloor}"/>/
+				        <input type="number" name="totalFloor" th:value="${room.totalFloor}"/>층 <br />
+				        <span class="left-div">면적</span> <input type="float" name="size" th:value="${room.size}"/>㎡ <br />
+				        <span class="left-div">방향</span> <input type="text" name="direction" th:value="${room.direction}"/> <br />
+				        <span class="left-div">냉난방</span> <input type="text" name="heatInfo" th:value="${room.heatInfo}"/> <br />
+				        <span class="left-div">엘리베이터</span>
+				        <input type="radio" name="isElevator" value="true" th:checked="${room.isElevator == true}">있음
+				        &nbsp <input type="radio" name="isElevator" value="false" th:checked="${room.isElevator == false}">없음 <br />
+				        <span class="left-div">주차</span> <input type="text" name="parkingInfo" th:value="${room.parkingInfo}"/> <br />
+				        <span class="left-div">안전 시설</span> <input type="text" name="securityInfo" th:value="${room.securityInfo}"/> <br />
+				        <span class="left-div">인터넷</span> <input type="text" name="internetInfo" th:value="${room.internetInfo}"/> <br />
+				        <span class="left-div">성별분리</span> <input type="text" name="genderInfo" th:value="${room.genderInfo}"/> <br />
+				        <div id="offer" >
+				            <span class="left-div">제공 식사</span> <input type="text" name="foodOffer" th:value="${room.foodOffer}"/> <br />
+				            <span class="left-div">제공 비품</span> <input type="text" name="amenityOffer" th:value="${room.amenityOffer}"/> <br />
+				        </div>
+			        </div>
+			        <div class="info-blocks">
+			        	<span class="left-div">공용 옵션</span>
 			    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == true}">
 			    			<th:block th:if="${optionType.sortOrder == 6}"><br /></th:block>
 						    <label>
@@ -82,10 +97,10 @@
 						        <span th:text="${optionType.optionName}"></span>
 						    </label>
 						</th:block>
-			    	</div>
-			    	<div style="border: 1px solid gray; width:400px">
-			    		<h3>방 옵션</h3>
+						<br />
+			        	<span class="left-div">방 옵션</span>
 			    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == false}">
+			    			<th:block th:if="${optionType.optionName == '냉장고' or optionType.optionName == '침대'}"><br /></th:block>
 						    <label>
 						        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}"
 						        		th:checked="${thisRoomOptions.![optionType.optionType].contains(optionType.optionType)}"/>
@@ -93,31 +108,17 @@
 						    </label>
 						</th:block>
 			    	</div>
-			        <!-- <div id="offer" style="display: none;"> -->
-			        <div id="offer" >
-			            제공식사 <input type="text" name="foodOffer" th:value="${room.foodOffer}"/> <br />
-			            제공비품 <input type="text" name="amenityOffer" th:value="${room.amenityOffer}"/> <br />
-			        </div>
-			        <br />
-			        이미지등록<br />
-			        <div class="file_list" th:each="roomPhoto : ${roomPhotos}">
-			        	<div class="myFile">
-				        	<div class="imagePreview" style="overflow: hidden">
-				        		<img th:src="@{'/seller/room/photo?photoId=' + ${roomPhoto.photoId}}" alt="Room Photo" class="roomImg"/>
-				        	</div>
-		                    <div class="file_input">
-		                        <input type="text" name="fileName" readonly th:value="${roomPhoto.fileName}"/>
-		                        <label> 첨부파일
-		                            <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
-		                        </label>
-		                    </div>
-		                    <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
-			        	</div>
-		            </div>
+			    	<div class="info-blocks">
+				        <span class="left-div">교통정보</span> <input type="text" name="transportInfo" th:value="${room.transportInfo}"/> <br />
+				        <span class="left-div">매물 소개</span> <input type="text" name="intro" th:value="${room.intro}"/> <br /> 
+				        <span class="left-div"></span> <textarea name="description" th:text="${room.description}"></textarea> <br />
+			    	</div>
 			    </div>
-			    <button type="submit">수정하기</button>
-			    <a th:href="@{/seller/room/delete(roomId=${room.roomId})}" class="btn">삭제</a>
-			    <a th:href="@{/seller/room/list}" class="btn">목록</a>
+			    <div class="edit-btns">
+				    <button type="submit">수정</button>
+				    <a th:href="@{/seller/room/delete(roomId=${room.roomId})}" class="btn">삭제</a>
+				    <a th:href="@{/seller/room/list}" class="btn">목록</a>
+			    </div>
 			</form>
 		</div>
 	</div>
@@ -139,7 +140,7 @@
 		$(document).ready(function() {
 			/* 불러올 이미지 없으면 기본폼 생성 */
 			if(isPhoto) {
-				var formElements = document.getElementById('formElements');
+				var formElements = document.getElementById('roomImage-block');
 				var addDefaultImageForm = `
 					<div class="file_list">
 			        	<div class="myFile">
@@ -154,7 +155,7 @@
 			        	</div>
 		            </div>
 				`;
-				formElements.insertAdjacentHTML('beforeend', addDefaultImageForm);
+				formElements.insertAdjacentHTML('afterbegin', addDefaultImageForm);
 			}
 			
 			
@@ -169,8 +170,8 @@
 				첫번째 인자 : 위치 지정
 				두번째 인자 : 추가하려는 HTML문자열
 				
-				bdforebegin : 해당 요소 바로 앞에 추가
-				afterbefing : 해당 요소의 첫번째 자식 요소로 추가
+				beforebegin : 해당 요소 바로 앞에 추가
+				afterbegin : 해당 요소의 첫번째 자식 요소로 추가
 				beforeend : 해당 요소의 마지막 자식요소로 추가
 				afterend : 해당 요소 바로 뒤에 추가
 			*/
@@ -322,7 +323,7 @@
 	      const selectedValue = document.querySelector('input[name="costType"]:checked').value;
 
 	      if (selectedValue === '월세') {
-	        monthlyCostDiv.style.display = 'block';
+	        monthlyCostDiv.style.display = 'inline-block';
 	      } else {
 	        monthlyCostDiv.style.display = 'none';
 	        monthlyCostInput.value = 0;
