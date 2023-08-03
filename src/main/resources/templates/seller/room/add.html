@@ -79,21 +79,24 @@
 			        <div class="blank-box"></div>
 			        
 			        <div class="info-blocks" id="roomImage-block">
-			        	<div class="detail-blocks">
-					        <span class="left-div">매물 사진</span>
-					        <div class="file_list">
-					        	<div class="myFile">
-						        	<div class="imagePreview"></div>
-				                    <div class="file_input">
-				                        <input type="text" name="fileName" readonly />
-				                        <label> 첨부파일
+			        	<div class="detail-blocks" style="align-items: flex-start;">
+					        <span class="left-div" style="margin-top:35px;">매물 사진</span>
+					        <div class="middle-div">
+						        <div class="file_list">
+						        	<div class="myFile">
+							        	<div class="imagePreview" onclick="openFileInput(event)"><span class="plus-icon">+</span></div>
+					                    <div class="file_input">
+					                        <input type="hidden" name="fileName" readonly />
 				                            <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
-				                        </label>
-				                    </div>
-				                    <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
-				                    <button type="button" onclick="addFile();" class="btns fn_add_btn"><span>파일 추가</span></button>
-					        	</div>
-				            </div>
+					                    </div>
+					                    <!-- <button type="button" onclick="removeFile(this);" class="btns del_btn"><i class="bi bi-x-lg"></i></button> -->
+					                    <button type="button" onclick="removeFile(this);" class="btns del_btn"><span style="color: white;" class="minus-icon">ㅡ</span></button>
+					                   	<span style="display: none;">메인사진</span>
+						        	</div>
+					            </div>
+			                    <button type="button" onclick="addFile();" class="btns fn_add_btn"><span style="color: white;">파일 추가</span></button>
+			                    <span style="font-size: 0.9em; color: #c7c7c7;">최대 5장 등록 가능합니다</span>
+					        </div>
 			        	</div>
 			        	<div class="detail-blocks">
 				            <span class="left-div">매물/건물층</span>
@@ -220,6 +223,13 @@
 		var totalFileCount = 5;
 		var fileCount = 1;
 		
+		// 파일 선택(imagePriview)
+		function openFileInput(event) {
+			const targetDiv = event.currentTarget;
+		    const fileInput = targetDiv.closest('.myFile').querySelector('input[name="uploadFile"]');
+		    fileInput.click();
+		}
+		
 		// 파일 선택
 	    function selectFile(element) {
 			
@@ -260,6 +270,13 @@
 		        /* img.style.maxWidth = '100%'; */ // 이미지의 너비를 조정합니다.
 		        img.classList.add('roomImg');
 		        imagePreview.appendChild(img);
+		        
+		        const cancleBtn = element.closest('.myFile').querySelector('.cancle-icon');
+		        if(cancleBtn) {
+			        cancleBtn.style.display = 'none';
+		        }
+		        const delBtn = element.closest('.myFile').querySelector('.btns.del_btn');
+		        delBtn.style.display = 'block';
 		    }
 		
 		    if (file) {
@@ -278,14 +295,13 @@
 	        const fileDiv = document.createElement('div');
 	        fileDiv.classList.add('myFile');
 	        fileDiv.innerHTML =`
-	        	<div class="imagePreview"></div>
+	        	<div class="imagePreview" onclick="openFileInput(event)"><span class="plus-icon">+</span></div>
 	        	<div class="file_input">
-	                <input type="text" readonly/>
-	                <label> 첨부파일
-	                    <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
-	                </label>
+	                <input type="hidden" readonly/>
+	                <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
 	            </div>
-	            <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
+	            <span class="cancle-icon" onclick="cancleFile(this);">ㅡ</span>
+	            <button type="button" onclick="removeFile(this);" class="btns del_btn"><span class="minus-icon" style="color: white;">ㅡ</span></button>
 	        `;
 	        document.querySelector('.file_list').appendChild(fileDiv);
 	        
@@ -298,6 +314,7 @@
 	        const fileAddBtn = element.nextElementSibling;
 	        if (fileAddBtn) {
 	            const inputs = element.previousElementSibling.querySelectorAll('input');
+	            console.log(inputs);
 	            inputs.forEach(input => input.value = '')
 	            
 	            // 미리보기 이미지 삭제
@@ -305,12 +322,26 @@
 				const imgElement = previewDiv.querySelector('img');
 				if (imgElement) {
 				    imgElement.remove(); // img 태그 삭제
+				    
+				    const plusIcon = document.createElement('span');
+			        plusIcon.classList.add('plus-icon');
+			        plusIcon.textContent = '+';
+			        previewDiv.appendChild(plusIcon);
+			        
+			        const delBtn = element.closest('.myFile').querySelector('.btns.del_btn');
+			        delBtn.style.display = 'none';
 				}
         
 	            return false;
 	        }
 	        element.parentElement.remove();
 	        
+	        fileCount = fileCount-1;
+	    }
+	 	
+	 	// 파일 추가 취소
+	    function cancleFile(element) {
+	        element.parentElement.remove();
 	        fileCount = fileCount-1;
 	    }
 	</script>
