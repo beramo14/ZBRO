@@ -27,13 +27,13 @@
 					<div class="info-blocks">
 						<div class="detail-blocks">
 					        <span class="left-div">월/전세</span>
-					        <div class="middle-div cost-type">
-						        <input type="radio" name="costType" value="월세" checked ><span> 월세</span><input type="radio" name="costType" value="전세"> 전세
+					        <div class="middle-div text-left">
+						        <input type="radio" name="costType" value="월세" checked ><span class="blank"> 월세</span><input type="radio" name="costType" value="전세"> 전세
 					        </div>
 						</div>
 						<div class="detail-blocks">
 					        <span class="left-div">가격</span>
-					        <div class="middle-div monthlyCost">
+					        <div class="middle-div monthlyCost text-left">
 						        <div id="monthlyCost">월세 <input type="number" name="monthCost" value="0"/> 만원</div>
 						        <div>보증금 <input type="number" name="deposit" value="0"/> 만원</div>
 						        <div>관리비 <input type="number" name="manageCost" value="0"/> 만원</div>
@@ -43,29 +43,41 @@
 			        <div class="info-blocks">
 			        	<div class="detail-blocks">
 				        	<span class="left-div">방 종류</span> 
-					        <select name="type">
-					            <option value="원룸" selected>원룸</option>
-					            <option value="오피스텔">오피스텔</option>
-					            <option value="고시원">고시원</option>
-					        </select>
+				        	<div class="middle-div">
+						        <select name="type">
+						            <option value="원룸" selected>원룸</option>
+						            <option value="오피스텔">오피스텔</option>
+						            <option value="고시원">고시원</option>
+						        </select>
+				        	</div>
 			        	</div>
 			        	<div class="detail-blocks">
 					        <span class="left-div">즉시 입주</span> 
-					        <input type="radio" name="isRoomIn" value="true">가능
-					        &nbsp <input type="radio" name="isRoomIn" value="false" checked>불가능
+			        		<div class="middle-div text-left">
+						        <input type="radio" name="isRoomIn" value="true"><span class="blank"> 가능</span><input type="radio" name="isRoomIn" value="false" checked> 불가능
+			        		</div>
 			        	</div>
 			        	<div class="detail-blocks">
-					        <span class="left-div">건물명</span> <input type="text" name="buildingName"/>
+					        <span class="left-div">건물명</span>
+					        <div class="middle-div">
+						        <input type="text" name="buildingName" class="middle-input"/>
+					        </div>
 			        	</div>
-			        	<div class="detail-blocks">
-					        <span class="left-div">주소</span> <input type="text" id="jibunAddress" name="address" placeholder="주소를 검색해주세요" onclick="execDaumPostcode()" readonly/>
-					        <input type="button" onclick="execDaumPostcode()" value="주소 찾기"/>
+			        	<div class="detail-blocks address-input">
+					        <span class="left-div">주소</span>
+					        <div class="middle-div">
+						        <input type="text" id="jibunAddress" name="address" class="middle-input address-search" placeholder="주소를 검색해주세요" onclick="execDaumPostcode()" readonly/>
+						        <i class="bi bi-search" onclick="execDaumPostcode()"></i>
+					        </div>
 			        	</div>
-			        	<div class="detail-blocks">
+			        	<div class="detail-blocks address-input" style="min-height: 30px;">
 			        		<span class="left-div"></span>
-					        <input type="text" name="roomNumber" placeholder="상세 주소를 입력해주세요   ex) 103호"/>
+					        <div class="middle-div"><input type="text" name="roomNumber" class="long-input" placeholder="상세 주소를 입력해주세요   ex) 103호"/></div>
 			        	</div>
 			        </div>
+			        
+			        <div class="blank-box"></div>
+			        
 			        <div class="info-blocks" id="roomImage-block">
 			        	<div class="detail-blocks">
 					        <span class="left-div">매물 사진</span>

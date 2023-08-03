@@ -1,8 +1,14 @@
 .main-content .content {
 	padding: 0;
 }
+.content {
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* ------------- input ------------- */
 input {
 	border: 2px solid #d9d9d9;
+	margin: 0;
 }
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
@@ -17,8 +23,28 @@ input:focus {
 	outline: none !important;
 	border-color: #c7c7c7;
 }
-.content {
-	font-family: 'Noto Sans KR', sans-serif;
+
+
+
+/* ------------- 공백 ------------- */
+.blank {
+	margin-right: 25px;
+}
+.blank-box {
+	width:100%;
+	margin-bottom: 50px;
+	min-height: 0px;
+	border: none;
+	border-top: 1px solid #d9d9d9;
+}
+.middle-input {
+	width:53%;
+}
+.long-input {
+	width:100%;
+}
+.text-left {
+	padding-left: 10px;
 }
 
 
@@ -38,7 +64,7 @@ input:focus {
 }
 .info-blocks {
 	background: red;
-	margin-bottom: 40px;
+	margin-bottom: 50px;
 }
 .info-blocks .detail-blocks {
 	min-height: 40px;
@@ -46,6 +72,7 @@ input:focus {
 	border: 1px solid black;
 	display: flex;
 	align-items: center;
+	margin-bottom: 10px;
 }
 .left-div {
 	background: #CCF5FF;
@@ -65,22 +92,32 @@ input:focus {
 	min-width: 700px;
 }
 
-.cost-type > span {
-	margin-right: 25px;
-}
 
-
+/* ------------- 가격 ------------- */
 .middle-div.monthlyCost {
 	display: flex;
 }
 .middle-div.monthlyCost > div {
-	margin-right: 80px;
+	/* min-width: 151px; */
+	margin-right: 10%;
 }
 .middle-div.monthlyCost input[type="number"] {
 	width: 80px;
 }
 #monthlyCost {
 	display: inline-block;
+}
+
+/* ------------- 주소 ------------- */
+.detail-blocks.address-input {
+	margin-bottom: 0;
+}
+.address-search:hover, .bi-search:hover {
+	cursor: pointer;
+}
+.bi-search {
+	position: relative;
+	right: 30px;
 }
 
 
