@@ -98,64 +98,94 @@
 			                    <span style="font-size: 0.9em; color: #c7c7c7;">최대 5장 등록 가능합니다</span>
 					        </div>
 			        	</div>
-			        	<div class="detail-blocks">
+			        	<div class="detail-blocks floor">
 				            <span class="left-div">매물/건물층</span>
-					        <input type="number" name="roomFloor" value="0"/>/<input type="number" name="totalFloor" value="0"/>층
+			        		<div class="middle-div">
+						        <input type="number" name="roomFloor" value="0"/><span style="margin: 0 7px;">/</span><input type="number" name="totalFloor" value="0"/><span style="margin-left: 7px;">층</span>
+			        		</div>
 			        	</div>
 			        	<div class="detail-blocks">
-					        <span class="left-div">면적</span> <input type="float" name="size" value="0"/>㎡
+					        <span class="left-div">면적</span>
+					        <div class="middle-div">
+						        <input type="float" name="size" value="0" class="short-input"/><span style="margin: 0 7px;">㎡</span>
+					        </div>
 			        	</div>
 			        	<div class="detail-blocks">
-					        <span class="left-div">방향</span> <input type="text" name="direction" placeholder="ec) 남향"/>
+					        <span class="left-div">방향</span>
+					        <div class="middle-div">
+						        <input type="text" name="direction" class="short-input" placeholder="ex) 남향"/>
+					        </div>
 			        	</div>
 			        	<div class="detail-blocks">
-					        <span class="left-div">냉난방</span> <input type="text" name="heatInfo" placeholder="ec) 개별난방"/>
+					        <span class="left-div">냉난방</span>
+					        <div class="middle-div">
+						        <input type="text" name="heatInfo" class="middle-input" placeholder="ex) 개별난방"/>
+					        </div>
 			        	</div>
 			        	<div class="detail-blocks">
 					        <span class="left-div">엘리베이터</span>
-					        <input type="radio" name="isElevator" value="true">있음
-					        &nbsp <input type="radio" name="isElevator" value="false" checked>없음
+					        <div class="middle-div text-left">
+						        <input type="radio" name="isElevator" value="true"><span class="blank"> 있음</span><input type="radio" name="isElevator" value="false" checked> 없음
+					        </div>
 			        	</div>
 			        	<div class="detail-blocks">
-					        <span class="left-div">주차</span> <input type="text" name="parkingInfo" placeholder="ec) 총 8대"/>
+					        <span class="left-div">주차</span>
+					        <div class="middle-div">
+						        <input type="text" name="parkingInfo" class="middle-input" placeholder="ex) 총 8대"/>
+					        </div>
 			        	</div>
 			        	<div class="detail-blocks">
-					        <span class="left-div">안전 시설</span> <input type="text" name="securityInfo" placeholder="건물 내 안전 시설을 입력해주세요  ex) CCTV, 현관 도어락, 각 방 도어락"/>
+					        <span class="left-div">안전 시설</span>
+					        <div class="middle-div">
+						        <input type="text" name="securityInfo" class="long-input" placeholder="건물 내 안전 시설을 입력해주세요  ex) CCTV, 현관 도어락, 각 방 도어락"/>
+					        </div>
 			        	</div>
 			        	<div class="detail-blocks">
-					        <span class="left-div">인터넷</span> <input type="text" name="internetInfo" placeholder="유선, 무선 WIFI, 개별 인터넷 설치가능"/>
+					        <span class="left-div">인터넷</span>
+					        <div class="middle-div">
+						        <input type="text" name="internetInfo" class="long-input" placeholder="유선, 무선 WIFI, 개별 인터넷 설치가능"/>
+					        </div>
 			        	</div>
 			        	<div class="detail-blocks">
-					        <span class="left-div">성별분리</span> <input type="text" name="genderInfo" placeholder="남여층 분리되어 있음"/>
+					        <span class="left-div">성별분리</span>
+					        <div class="middle-div">
+						        <input type="text" name="genderInfo" class="long-input" placeholder="남여층 분리되어 있음"/>
+					        </div>
 			        	</div>
 				        <div id="offer" style="display: none;">
 				        	<div class="detail-blocks">
-					            <span class="left-div">제공 식사</span> <input type="text" name="foodOffer" placeholder="ex) 라면, 밥, 김치, 커피, 차"/>
+					            <span class="left-div">제공 식사</span>
+					            <div class="middle-div">
+						            <input type="text" name="foodOffer" class="long-input" placeholder="ex) 라면, 밥, 김치, 커피, 차"/>
+					            </div>
 				        	</div>
 				        	<div class="detail-blocks">
-					            <span class="left-div">제공 비품</span> <input type="text" name="amenityOffer" placeholder="ex) 세탁세제"/>
+					            <span class="left-div">제공 비품</span>
+					            <div class="middle-div">
+						            <input type="text" name="amenityOffer" class="long-input" placeholder="ex) 세탁세제"/>
+					            </div>
 				        	</div>
 				        </div>
 			        </div>
 			        <div class="info-blocks">
-			        	<div class="detail-blocks">
+			        	<div class="detail-blocks option-select">
 				        	<span class="left-div">공용 옵션</span>
-			    			<div>
+			    			<div class="middle-div">
 					    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == true}">
 					    			<th:block th:if="${optionType.sortOrder == 6}"><br /></th:block>
-								    <label>
+								    <label class="option-selects">
 								        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}" />
 								        <span th:text="${optionType.optionName}"></span>
 								    </label>
 								</th:block>
 			    			</div>
 			        	</div>
-			        	<div class="detail-blocks">
+			        	<div class="detail-blocks option-select">
 				        	<span class="left-div">방 옵션</span>
-				        	<div>
+				        	<div class="middle-div">
 					    		<th:block th:each="optionType : ${optionTypes}" th:if="${optionType.isShare == false}">
 					    			<th:block th:if="${optionType.optionName == '냉장고' or optionType.optionName == '침대'}"><br /></th:block>
-								    <label>
+								    <label class="option-selects">
 								        <input type="checkbox" th:name="'optionType'" th:value="${optionType.optionType}" />
 								        <span th:text="${optionType.optionName}"></span>
 								    </label>
