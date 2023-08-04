@@ -306,9 +306,9 @@
 			
 			//기본 로그인타입 설정
 			$("input[name='loginType']:checked")[0].labels[0].click();
-			$("input[name='loginType']").change( function(e) {
-				console.log(e.target.value);
-				let loginType = e.target.value;
+			$("input[name='loginType']:checked").change( function(e) {
+				console.log($("input[name='loginType']:checked").val());
+				let loginType = $("input[name='loginType']:checked").val();
 				
 				let loginForm = $("#login-form");
 				loginForm[0].reset();
@@ -321,8 +321,8 @@
 				}
 				
 				$("#joinButton").attr("href","/join/"+loginType);
-				
 			});
+			$("input[name='loginType']:checked").change();
 			
 			
 			$("#user-find").submit(function(e) {
