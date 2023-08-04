@@ -1,5 +1,5 @@
 .main-content .content {
-	padding: 0;
+	padding: 0 0 30px 0;
 }
 .content {
 	font-family: 'Noto Sans KR', sans-serif;
@@ -7,8 +7,9 @@
 
 /* ------------- input ------------- */
 input {
-	border: 2px solid #d9d9d9;
+	border: 2px solid #ebebeb;
 	margin: 0;
+	padding: 0 7px;
 }
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
@@ -17,11 +18,29 @@ input[type="number"]::-webkit-inner-spin-button {
             appearance: none;
 }
 input[type="number"], input[type="text"] {
-	height: 30px;
+	height: 35px;
 }
 input:focus {
 	outline: none !important;
-	border-color: #c7c7c7;
+	border-color: #cacec8;
+}
+input::placeholder {
+	color: #cacec8;
+}
+
+/* ------------- textarea ------------- */
+textarea {
+	resize: none;
+	padding: 7px;
+	/* flex-grow: 1; */
+	border: 2px solid #ebeeea;
+}
+textarea:focus {
+	border: 2px solid #cacec8;
+	outline: none;
+}
+textarea::placeholder {
+	color: #cacec8;
 }
 
 /* ------------- 공백 ------------- */
@@ -51,32 +70,32 @@ input:focus {
 
 /* ------------- title ------------- */
 .content > h1 {
-	background: blue;
+	/* background: blue; */
 	padding: 15px;
 }
 
 
 /* ------------- 내용 전체 ------------- */
 #roomInsert {
-	background: blue;
+	/* background: blue; */
 	width: 90%;
 	min-width: 930px;
 	margin: 50px auto 10px;
 }
 .info-blocks {
-	background: red;
+	/* background: red; */
 	margin-bottom: 50px;
 }
 .info-blocks .detail-blocks {
 	min-height: 40px;
-	background: green;
-	border: 1px solid black;
+	/* background: green; */
+	/* border: 1px solid black; */
 	display: flex;
 	align-items: center;
 	margin-bottom: 13px;
 }
 .left-div {
-	background: #CCF5FF;
+	/* background: #CCF5FF; */
 	display: inline-block;
 	/* width: 200px; */
 	width: 10%;
@@ -87,7 +106,7 @@ input:focus {
 	margin-right: 60px;
 }
 .middle-div {
-	background: #FFCFDE;
+	/* background: #FFCFDE; */
 	font-size: 1.04em;
 	width: 72%;
 	min-width: 700px;
@@ -130,7 +149,7 @@ input:focus {
 }
 .myFile {
 	position: relative;
-	background: orange;
+	/* background: orange; */
 	margin-right: 25px;
 }
 .imagePreview {
@@ -195,15 +214,55 @@ input:focus {
 	/* margin: auto 5px; */
 }
 
-/* ------------- 이미지 삭제 ------------- */
+/* ------------- 옵션선택 ------------- */
 .detail-blocks.option-select {
 	display: flex;
 	align-items: flex-start;
+	padding-left: 10px;
 }
 .option-selects {
 	height: 30px;
 }
 .option-selects > span {
 	display: inline-block;
-	width: 90px;
+	width: 110px;
 }
+
+
+
+/* ------------- 하단 버튼 ------------- */
+.bottom-btns {
+	/* background: green; */
+	display: flex;
+	padding: 0 30px;
+	height: 38px;
+	position: relative;
+}
+.left-btn {
+	background: none;
+	border: 1px solid black;
+	border-radius: 18px;
+	font-weight: bold;
+	font-size: 1.1em;
+	padding: 0 18px;
+}
+.right-btns {
+	position: absolute;
+	display: flex;
+	height: 38px;
+	align-items: center;
+	right: 30px;
+}
+.right-btns > * {
+	font-weight: bold;
+	font-size: 1.1em;	
+	border: 1px solid black;
+	color: black;
+	border-radius: 18px;
+	padding: 5px 18px;
+ }
+ .btn.del-btn {
+ 	margin-left: 15px;
+ 	border: 1px solid red;
+ 	color: red;
+ }

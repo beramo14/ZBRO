@@ -89,7 +89,6 @@
 					                        <input type="hidden" name="fileName" readonly />
 				                            <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
 					                    </div>
-					                    <!-- <button type="button" onclick="removeFile(this);" class="btns del_btn"><i class="bi bi-x-lg"></i></button> -->
 					                    <button type="button" onclick="removeFile(this);" class="btns del_btn"><span style="color: white;" class="minus-icon">ㅡ</span></button>
 					                   	<span style="display: none;">메인사진</span>
 						        	</div>
@@ -117,15 +116,15 @@
 					        </div>
 			        	</div>
 			        	<div class="detail-blocks">
-					        <span class="left-div">냉난방</span>
-					        <div class="middle-div">
-						        <input type="text" name="heatInfo" class="middle-input" placeholder="ex) 개별난방"/>
-					        </div>
-			        	</div>
-			        	<div class="detail-blocks">
 					        <span class="left-div">엘리베이터</span>
 					        <div class="middle-div text-left">
 						        <input type="radio" name="isElevator" value="true"><span class="blank"> 있음</span><input type="radio" name="isElevator" value="false" checked> 없음
+					        </div>
+			        	</div>
+			        	<div class="detail-blocks">
+					        <span class="left-div">냉난방</span>
+					        <div class="middle-div">
+						        <input type="text" name="heatInfo" class="middle-input" placeholder="ex) 개별난방"/>
 					        </div>
 			        	</div>
 			        	<div class="detail-blocks">
@@ -193,19 +192,33 @@
 				        	</div>
 			        	</div>
 			    	</div>
+			    	
+			    	<div class="blank-box"></div>
+			    	
 			    	<div class="info-blocks">
 			    		<div class="detail-blocks">
-					        <span class="left-div">교통정보</span> <input type="text" name="transportInfo" placeholder="주변 교통시설을 입력해주세요  ex) 강남역 도보 10분"/>
+					        <span class="left-div">교통정보</span>
+					        <div class="middle-div">
+						        <input type="text" name="transportInfo" class="long-input" placeholder="주변 교통시설을 입력해주세요  ex) 강남역 도보 10분"/>
+					        </div>
+			    		</div>
+			    		<div class="detail-blocks" style="margin-bottom: 0;">
+					        <span class="left-div">매물 소개</span>
+					        <div class="middle-div">
+						        <input type="text" name="intro" class="long-input" placeholder="한줄 소개를 입력해 주세요"/>
+					        </div>
 			    		</div>
 			    		<div class="detail-blocks">
-					        <span class="left-div">매물 소개</span> <input type="text" name="intro" placeholder="한줄 소개를 입력해 주세요"/>
-			    		</div>
-			    		<div class="detail-blocks">
-					        <span class="left-div"></span> <textarea name="description" placeholder="상세 소개를 입력해 주세요 "></textarea>
+					        <span class="left-div"></span>
+					        <div class="middle-div">
+						        <textarea id="target-textarea" name="description" class="long-input" rows="5" placeholder="상세 소개를 입력해 주세요 "></textarea>
+					        </div>
 			    		</div>
 			    	</div>
 			    </div>
-			    <button type="submit">등록</button>
+			    <div class="bottom-btns">
+				    <button type="submit" id="roomAddBtn" class="left-btn">등록</button>
+			    </div>
 			</form>
 		</div>
 	</div>
@@ -213,6 +226,29 @@
 
 
 <th:block layout:fragment="customScript">
+	<!-- textarea 자동길이조절 -->
+	<script th:inline="javascript" type="text/javascript">
+		function resize() {
+	        let textarea = document.getElementById("target-textarea");
+	        if(textarea) {
+		        textarea.style.height = "auto"; // 자동으로 높이를 조정하도록 설정
+		        textarea.style.height = textarea.scrollHeight + 7 + "px"; // 스크롤이 생긴 후의 높이로 설정
+	        }
+	    }
+	
+	    document.addEventListener("input", resize);
+	    window.addEventListener("load", resize);
+	</script>
+	
+	<!-- textarea 줄바꿈 변환 -->
+	<script th:inline="javascript" type="text/javascript">
+		$("#roomAddBtn").click(function() {
+			var content = $("#target-textarea").val();
+			content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+			$("#target-textarea").val(content);
+		})
+	</script>
+	
 	<script th:inline="javascript" type="text/javascript">
 		//참고:https://joonopark92.tistory.com/77
 	    //도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합해 올바른 주소를 구성

@@ -52,7 +52,7 @@ public class SellerRoomController {
 	@Value("${file.images.room-photo}")
 	public String uploadFolder;
 	
-	// 매물등록 페이지 들어가기.
+		// 매물등록 페이지 들어가기.
 		@GetMapping("/seller/room/add")
 		public String roomAddView(Model model, RoomOptionType roomOptionType) {
 			List<RoomOptionType> optionTypes = roomService.getRoomOptionType();

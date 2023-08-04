@@ -114,10 +114,12 @@
 				        <span class="left-div"></span> <textarea name="description" th:text="${room.description}"></textarea> <br />
 			    	</div>
 			    </div>
-			    <div class="edit-btns">
-				    <button type="submit">수정</button>
-				    <a th:href="@{/seller/room/delete(roomId=${room.roomId})}" class="btn">삭제</a>
-				    <a th:href="@{/seller/room/list}" class="btn">목록</a>
+			    <div class="bottom-btns">
+				    <button type="submit" id="roomAddBtn" class="left-btn">수정</button>
+				    <div class="right-btns">
+					    <a th:href="@{/seller/room/list}" class="btn list-btn">목록</a>
+					    <a th:href="@{/seller/room/delete(roomId=${room.roomId})}" class="btn del-btn">삭제</a>
+				    </div>
 			    </div>
 			</form>
 		</div>
