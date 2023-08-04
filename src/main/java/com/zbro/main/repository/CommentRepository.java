@@ -14,7 +14,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long>{
 	
     Page<Comment> findByUserConsumerId(Long consumerId, Pageable pageable);
 	
-	List<Comment> findTop8ByUserConsumerIdOrderByCreateDateDesc(Long consumerId);
+	List<Comment> findTop6ByUserConsumerIdOrderByCreateDateDesc(Long consumerId);
 	
 	List<Comment> findAllByPost(Community post);
 
