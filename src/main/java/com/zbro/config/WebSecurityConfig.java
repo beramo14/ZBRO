@@ -105,6 +105,7 @@ public class WebSecurityConfig {
 			session.setAttribute("sellerId", seller.getSellerId());
 			session.setAttribute("sellerName", seller.getName());
 			session.setAttribute("sellerIsAdmission", seller.isAdmission());
+			session.setAttribute("sellerIsBiz", seller.isBiz());
 			
 			response.sendRedirect("/seller");
 		}

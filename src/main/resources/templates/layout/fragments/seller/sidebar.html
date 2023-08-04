@@ -22,7 +22,7 @@
 				<div class="menu">
 					<p class="outer-menu"><a href="/seller/user">회원정보</a></p>
 				</div>
-				<div class="menu">
+				<div class="menu" th:if="${session.sellerIsBiz && session.sellerIsAdmission}">
 					<p class="outer-menu"><a href="/seller/room/list">매물</a></p>
 					<ul class="inner-menu-list">
 						<li><a href="/seller/room/add">매물등록</a></li>
