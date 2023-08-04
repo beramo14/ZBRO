@@ -154,8 +154,8 @@ textarea::placeholder {
 }
 .imagePreview {
 	flex-shrink: 0;
-	width: 90px;
-	height: 90px;
+	width: 110px;
+	height: 110px;
 	overflow: hidden;
 	display: flex;
 	justify-content: center;
