@@ -69,7 +69,7 @@ public class SellerController {
 	@GetMapping("/seller")
 	public String sellerMainPage() {
 		
-		return "seller/index";
+		return "redirect:/seller/user";
 	}
 	
 	/**
