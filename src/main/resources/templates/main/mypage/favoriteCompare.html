@@ -141,13 +141,14 @@
 		    justify-content: space-between;
 		    align-items: center;		 	
 			font-size: 15px;
-			 color: #9C9A9A;
+			color: #9C9A9A;
 		 } 
 		
 		 .checkWrapSmall button {			
 			border: none;
 		  	padding: 8px;
-			border-radius: 15px;
+			border-radius: 13px;
+			font-weight: bold;
 		} 
 
 		.checkWrap {
@@ -185,7 +186,9 @@
              text-align: center;
              color: black;
              cursor: pointer;
-             font-size: 40px;
+             font-size: 35px;
+             font-weight: 700;
+             
 
 		}
          .filter-arrow-left {
@@ -233,7 +236,7 @@
 		
 		.favoriteTypeContainer {
 		    margin-left: auto;
-		    margin-right: 10px;
+		    margin-right: 1px;
 		    margin-top :5px;
 		    font-size: 16px;
 		}
@@ -244,7 +247,7 @@
 		}
 		
 		.favoriteAddress{
-			margin-right: 10px;
+			margin-right: 1px;
 			font-size: 5px;
 			color: #979797;
 		}   
@@ -261,6 +264,7 @@
 		    flex-direction: row;
 		    justify-content: center;
 		    gap: 10px;
+		     
 		  }    
 		                 
          .comparison-item {
@@ -271,6 +275,7 @@
              left: 70px;
              text-align: center;
              margin-bottom: 150px;
+             box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.1);  
 
          }
  
@@ -357,7 +362,7 @@
 		
 		
 		.favoriteFoodOffer , .favoriteAmenityOffer {
-			font-weight: bold;
+			
 			margin-bottom: 80px;
 		} 
 			
@@ -370,11 +375,13 @@
 		     padding: 10px;
 		     overflow-wrap: break-word;
 		}  
-		
+		.memo::placeholder {
+		    color: #999;
+		}		
 		
 		.memo-button {
 			border: 1px solid #CDCDCD;
-			border-radius: 10px;
+			border-radius: 8px;
 			padding: 3px 7px;
 			margin-bottom: 100px;
 		}
@@ -431,14 +438,14 @@
     <div class="main-contents">
         <div class="comparison-title">
         	<div class="big-title">매물 비교</div>
-        	<div class="small-title">한 눈에 비교하며 내게 맞는 방을 고르세요 </div>
+        	<div class="small-title">한 눈에 비교하며 내게 맞는 방을 고르세요 !</div>
         </div>
         
 		<div class="checkWrapTitle">
 		    <div class="checkWrapBig">방 선택</div>
 		    <div class="checkWrapSmall">
-		        <span>최대 4개 선택 가능합니다</span>
-		        <button onclick="deselectCheckboxes()">방 재선택</button>
+		        <span>최대 4개까지 선택 가능합니다</span>
+		        <button onclick="deselectCheckboxes()">재선택</button>
 		    </div>
 		</div>
 
@@ -462,7 +469,7 @@
 				    </div>
 				</div>
 				<div class="favoriteAddressContainer">
-				    <span class="favoriteAddress" th:text="${#strings.substringAfter(favorite.room.address, '시 ')}"></span>
+				    <span class="favoriteAddress" th:text="${#strings.substringAfter(favorite.room.address, ' ')}"></span>
 				</div>
             </div>
 

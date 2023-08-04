@@ -7,6 +7,7 @@
         font-size: 30px;
         font-weight: 550;
         margin: 70px 0 35px 0;	
+
 	}
 	
 	.compareButton {
@@ -41,7 +42,7 @@
 
      .image-container img {
          width: 255px;
-         height: 205px;
+         height: 190px;
          cursor: pointer;
          margin-top: 30px;
      }
@@ -59,8 +60,13 @@
 	    font-size: 32px;
 	    color: #dc3545;
 	    cursor: pointer;
+	    
 	}  
-		          
+	
+	.bi-heart-fill::before {
+    text-shadow: 2px 3px 3px rgba(0,0,0,0.4);
+	}	
+	          
 	.favoriteCost {
 		font-size: 20px;
 		font-weight: bold;
@@ -117,7 +123,7 @@
 				    </div>
 				</div>
 				<div class="favoriteAddressContainer">
-				    <span class="favoriteAddress" th:text="${#strings.substringAfter(favorite.room.address, '시 ')}"></span>
+				    <span class="favoriteAddress" th:text="${#strings.substringAfter(favorite.room.address, ' ')}"></span>
 				</div>
 				
 		    </div>

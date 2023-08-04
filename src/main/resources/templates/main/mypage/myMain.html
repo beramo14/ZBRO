@@ -5,8 +5,13 @@
 
 
 			.favorite-list{
-				margin: 100px auto 100px auto;
-				width: 80%;
+				margin: 100px auto 30px auto;
+				width: 70%;				
+				border: 1px solid #F3F3F3; 
+				padding: 10px 30px 20px; 
+				border-radius: 7px; 
+				box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.1);  
+				
 
 			}
 
@@ -18,12 +23,18 @@
 			.favoriteBigTitle{
 				display: flex;
 				justify-content: space-between;
-				margin-bottom: 30px;
-				padding: 0 90px;
+				margin: 20px 0 10px;
+				padding: 0 0px;				
+				border: 2px;
+				color: #43604E;
 
 
 			}
-			
+			.list-title{
+				font-size: 22px;
+				font-weight: 550;
+				
+			}
 			.favoriteBigTitle a{
 			    text-decoration: none;
 			    color: #ADADAD;
@@ -83,23 +94,28 @@
 			    cursor: pointer;
 			}  
 			
-			
+			.bi-heart-fill::before {
+    			text-shadow: 2px 3px 3px rgba(0,0,0,0.4);
+			}
 			
 
 /* --------------------------------------------------------------------------- */
-	
-
-			.commTitle{
-				margin: 0 auto;
-  				width: 80%;
-  				padding: 0 90px;
-			}			
+		  .comBigWrapper{
+		    	border: 1px solid #F3F3F3; 
+		    	border-radius: 7px;
+		    	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.1);  
+		    	width: 70%; 
+		    	margin: 0 auto; 
+		    		
+		    	 		  	
+		  } 	
+		
 			.comment-community-table {
 			    display: flex;
-			    margin: 50px auto 200px auto;
+			    margin: 50px auto 40px;
   				width: 80%;
   				justify-content: space-between;
-  				padding: 0 150px;
+  				
 			}	
 			
 			.comment-community-table td a {
@@ -107,9 +123,10 @@
 			    white-space: nowrap;
 			    overflow: hidden;
 			    text-overflow: ellipsis;
-			    max-width: 350px;
+			    max-width: 320px;
+			    padding : 1px 10px;
 			    text-decoration: none;
-			    color: black;
+			    color: #43604E;
 			}	
 						
 			
@@ -121,70 +138,55 @@
 			
 		    .communityTable , .commentTable {
 		        width: 350px;
+		        
 		    }
 		
-			.commentTitle {
-			    font-size: 20px;
-			    font-weight: 600;
-			}
-			.communityTitle {
-			    font-size: 20px;
-			    font-weight: 600;
-			}
-			.communityBigTitle {
-			    display: flex;
-			    justify-content: space-between;
-			    align-items: center;
-			    margin-bottom: 10px;
-			    padding-bottom : 5px;
-			    border-bottom: 2px solid #C0C0C0;
+			.commentTitle,.communityTitle {
+			    font-size: 17px;
+			    font-weight: 550;
 			    
 			}
-			
-			.moreContent {
-			    margin-left: auto;
-			}    		          
 
-			.commentBigTitle {
+			.communityBigTitle, .commentBigTitle  {
 			    display: flex;
 			    justify-content: space-between;
 			    align-items: center;
 			    margin-bottom: 10px;
 			    padding-bottom : 5px;
-			    border-bottom: 2px solid #C0C0C0;
+			    border: 1px solid #E8E8E8; 
+			    border-radius: 7px;
+			    padding: 7px 10px; 
+			    background-color: #F9F8F8; 
 			}
+			
+			.moreContent, .moreComment {
+			    margin-left: auto;
+			    font-size: 14px;
+			}    		          
+
 			.commentBigTitle a{
 			    text-decoration: none;
 			    color: #ADADAD;
 			    margin-top: 5px;
 			}	
-			.moreComment{
-				margin-left: auto;
-			}
 			
-			.comment-community-table .communityTable td {
+			.comment-community-table .communityTable td
+			, .comment-community-table .commentTable td {
 			    border-bottom-width: 1px;
 			    border-bottom-style: dotted;
 			    border-bottom-color: #E3E3E3;
-			    width: 350px;
-			    padding: 2px;			    
+			    width: 340px;
+			    padding: 2px;	
+	    
 			    
 			}
-			.comment-community-table .commentTable td {
-			    border-bottom-width: 1px;
-			    border-bottom-style: dotted;
-			    border-bottom-color: #E3E3E3;
-			    width: 350px;
-			    padding: 2px;			    
-			    
-			}	
 			
 		    .noMessage {
 		        text-align: center;
 		        font-size: 16px;
 		        color: #9C9A9A;	
 		    }	
-		    
+ 
 			
 </style>
 
@@ -194,7 +196,7 @@
 
 	<div class="favorite-list">
 		<div class="favoriteBigTitle">
-            <h3 class="list-title"> 찜목록 </h3>		
+            <div class="list-title"> 찜목록 </div>		
             <a th:href="@{mypage/favorite/list}" class="list-button">더보기</a>
         </div>
 		<div class="image-container">
@@ -212,7 +214,7 @@
 				    </div>
 				</div>
 				<div class="favoriteAddressContainer">
-				    <span class="favoriteAddress" th:text="${#strings.substringAfter(favorite.room.address, '시 ')}"></span>
+				    <span class="favoriteAddress" th:text="${#strings.substringAfter(favorite.room.address, ' ')}"></span>
 				</div>	        
 		    </div>
 		</div>
@@ -221,55 +223,55 @@
 
 
 
+	<div class="comBigWrapper ">
 
-<h3 class="commTitle">커뮤니티</h3>
 
-<div class="comment-community-table">
-
-	<div class="communityTable">
-		<div class="communityBigTitle">
-			<span class="communityTitle">작성한 게시글</span>
-			<a th:href="@{mypage/content/list}" class="moreContent">더보기</a>
+	<div class="comment-community-table">
+	
+		<div class="communityTable">
+			<div class="communityBigTitle">
+				<span class="communityTitle">작성 게시글</span>
+				<a th:href="@{mypage/content/list}" class="moreContent">더보기</a>
+			</div>
+	        <table th:if="${#lists.isEmpty(top10Contents)}">
+	            <tr>
+	                <td class="noMessage">작성한 게시글이 없습니다!</td>
+	            </tr>
+	        </table>	
+			<table>
+				<tr th:each="community : ${top10Contents}">
+					<td>
+						<a th:href="@{/community/detail?postId={id}(id=${community.postId})}">
+							<span th:text="${community.title}"></span>
+						</a>
+					</td>
+				</tr>
+			</table>
 		</div>
-        <table th:if="${#lists.isEmpty(top10Contents)}">
-            <tr>
-                <td class="noMessage">작성한 게시글이 없습니다!</td>
-            </tr>
-        </table>	
-		<table>
-			<tr th:each="community : ${top10Contents}">
-				<td>
-					<a th:href="@{/community/detail?postId={id}(id=${community.postId})}">
-						<span th:text="${community.title}"></span>
-					</a>
-				</td>
-			</tr>
-		</table>
-	</div>
-
-	<div class="commentTable">
-		<div class="commentBigTitle">
-	        <span class="commentTitle">작성한 댓글</span>
-	        <a th:href="@{mypage/comment/list}" class="moreComment">더보기</a>
-		</div>
-		
-        <table th:if="${#lists.isEmpty(comments)}">
-            <tr>
-                 <td class="noMessage">작성한 댓글이 없습니다!</td>
-            </tr>
-        </table>		        
-		<table>
-	        <tr th:each="comment : ${comments}">
-	            <td>
-	                <a th:href="@{/community/detail?postId={id}(id=${comment.post.postId})}">
-	                    <span th:text="${comment.content}"></span>
-	                </a>
-	            </td>
-	        </tr>
-		</table>
-	</div>        
-       
-</div>	        
+	
+		<div class="commentTable">
+			<div class="commentBigTitle">
+		        <span class="commentTitle">작성 댓글</span>
+		        <a th:href="@{mypage/comment/list}" class="moreComment">더보기</a>
+			</div>
+			
+	        <table th:if="${#lists.isEmpty(comments)}">
+	            <tr>
+	                 <td class="noMessage">작성한 댓글이 없습니다!</td>
+	            </tr>
+	        </table>		        
+			<table>
+		        <tr th:each="comment : ${comments}">
+		            <td>
+		                <a th:href="@{/community/detail?postId={id}(id=${comment.post.postId})}">
+		                    <span th:text="${comment.content}"></span>
+		                </a>
+		            </td>
+		        </tr>
+			</table>
+		</div>        
+	   </div>    
+	</div>	        
 </th:block>
 	
 <th:block layout:fragment="customScript">

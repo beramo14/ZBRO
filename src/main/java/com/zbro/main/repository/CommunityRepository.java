@@ -23,7 +23,7 @@ import com.zbro.type.PostType;
 
 public interface CommunityRepository extends JpaRepository<Community, Long> {
  
-	 	List<Community> findTop8ByUserConsumerIdOrderByCreateDateDesc(Long consumerId);
+	 	List<Community> findTop6ByUserConsumerIdOrderByCreateDateDesc(Long consumerId);
 		 
 		Page<Community> findByUserConsumerIdAndTypeOrderByCreateDateDesc(Long userId, PostType type, Pageable pageable);
 

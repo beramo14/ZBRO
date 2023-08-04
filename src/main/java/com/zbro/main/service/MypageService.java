@@ -142,14 +142,14 @@ public class MypageService {
     
     public List<Community> getTop10() {
         Long userId = getLoggedInUserId();
-        return communityRepository.findTop8ByUserConsumerIdOrderByCreateDateDesc(userId);
+        return communityRepository.findTop6ByUserConsumerIdOrderByCreateDateDesc(userId);
     }
 
 
     
 	public List<Comment> getComments10ByUser() {
 		Long userId = getLoggedInUserId();
-		return commentRepository.findTop8ByUserConsumerIdOrderByCreateDateDesc(userId);
+		return commentRepository.findTop6ByUserConsumerIdOrderByCreateDateDesc(userId);
 	}
 
 	public Page<RoomReview> getReviewsByLoggedInUser(int page, int size) {

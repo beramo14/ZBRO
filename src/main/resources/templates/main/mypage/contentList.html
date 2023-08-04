@@ -5,19 +5,23 @@
 		
     .communityWrapTitle {
         text-align: center;
-        font-size: 30px;
+        font-size: 26px;
         font-weight: 550;
-        margin: 100px 0;
+        margin: 150px 0 50px;
+        color: #43604E;
     }
+    
     .commumityWrap{
-    	padding: 0 200px;
-    	
-    }
+    	padding: 5px 30px 20px; 
+    	border: 2px solid #F3F3F3; 
+    	border-radius: 7px; 
+    	margin: 0 180px;	
+    	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.1);    	
+    }   
 
 
 	ul.nav {
-		border-top: 2px solid #97a888; 
-		border-bottom: 1px solid #97a888; 
+		border-bottom: 2px solid #DDE4E0; 
 	  	list-style-type: none;
 	  	
 	}
@@ -55,11 +59,12 @@
 	
 	table#communityTable td a {
 		text-decoration: none;
-		color: black;	    		
+		color: #43604E;	    		
 	}	
 	
 	ul.nav li a.selected {
     	font-weight: bold;
+    	color: #43604E;
     }
     
 	ul.nav li a:not(.selected) {
@@ -75,7 +80,7 @@
 
 	.pagination {
 		padding: 0 auto;
-		margin: 50px auto;
+		margin: 30px auto;
 		display: flex;
 		justify-content: center;
 		position: relative;
@@ -122,7 +127,9 @@
 	.pagination .disabled > a {
 	    pointer-events: none;
 	    cursor: default;
-    }    
+    }
+    
+         
         
 </style>
 
@@ -139,7 +146,7 @@
 		        <a class="nav-link" th:class="${type == '질문' ? 'selected' : ''}" href="?type=질문">질문</a>
 		    </li>
 			<li class="nav-item" style="margin-left: auto; ">
-			   <span class="date" style= "padding-right: 30px;" >작성일</span>
+			   <span class="date" style= "padding-right: 30px; color: #43604E;" >작성일</span>
 			</li>
 			</ul>
         
@@ -178,19 +185,19 @@
         
 		<div class="pagination" th:if="${type == '꿀팁'} and ${tipsPage.totalElements > 0}">
 		    <ul class="pagination pagination-modal">
-		        <li th:class="${tipsPage.number > 0 ? '' : 'disabled'}">
-		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${tipsPage.number - 1}}" class="arrow-lf left"><i class="bi bi-rewind-fill"></i></a>
+		        <li th:if="${tipsPage.number > 0}" th:class="${tipsPage.number > 0 ? '' : 'disabled'}">
+		            <a th:href="@{/mypage/content/list(type=${type}, page=0)}" class="arrow-lf left"><i class="bi bi-rewind-fill"></i></a>
 		        </li>
-		        <li th:class="${tipsPage.number > 0 ? '' : 'disabled'}">
+		        <li th:if="${tipsPage.number > 0}" th:class="${tipsPage.number > 0 ? '' : 'disabled'}">
 		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${tipsPage.number - 1}}" class="arrow arrow-l left"><i class="bi bi-play-fill"></i></a>
 		        </li>
 		        <li th:each="pageNumber : ${#numbers.sequence(0, tipsPage.totalPages - 1)}" th:class="${pageNumber == tipsPage.number ? 'active' : ''}">
 		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${pageNumber}}" th:text="${pageNumber + 1}" class="num"></a>
 		        </li>
-		        <li th:class="${tipsPage.number < tipsPage.totalPages - 1 ? '' : 'disabled'}">
+		        <li th:if="${tipsPage.number < tipsPage.totalPages - 1}" th:class="${tipsPage.number < tipsPage.totalPages - 1 ? '' : 'disabled'}">
 		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${tipsPage.number + 1}}" class="arrow arrow-r right"><i class="bi bi-play-fill"></i></a>
 		        </li>
-		        <li th:class="${tipsPage.number < tipsPage.totalPages - 1 ? '' : 'disabled'}">
+		        <li th:if="${tipsPage.number < tipsPage.totalPages - 1}" th:class="${tipsPage.number < tipsPage.totalPages - 1 ? '' : 'disabled'}">
 		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${tipsPage.totalPages - 1}}" class="arrow-rf right"><i class="bi bi-fast-forward-fill"></i></a>
 		        </li>
 		    </ul>
@@ -199,19 +206,19 @@
 				
 		<div class="pagination" th:if="${type == '질문'} and ${questionsPage.totalElements > 0}">
 		    <ul class="pagination pagination-modal">
-		        <li th:class="${questionsPage.number > 0 ? '' : 'disabled'}">
-		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${questionsPage.number - 1}}" class="arrow-lf left"><i class="bi bi-rewind-fill"></i></a>
+		        <li th:if="${questionsPage.number > 0}" th:class="${questionsPage.number > 0 ? '' : 'disabled'}">
+		            <a th:href="@{/mypage/content/list(type=${type}, page=0)}" class="arrow-lf left"><i class="bi bi-rewind-fill"></i></a>
 		        </li>
-		        <li th:class="${questionsPage.number > 0 ? '' : 'disabled'}">
+		        <li th:if="${questionsPage.number > 0}"  th:class="${questionsPage.number > 0 ? '' : 'disabled'}">
 		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${questionsPage.number - 1}}" class="arrow arrow-l left"><i class="bi bi-play-fill"></i></a>
 		        </li>
 		        <li th:each="pageNumber : ${#numbers.sequence(0, questionsPage.totalPages - 1)}" th:class="${pageNumber == questionsPage.number ? 'active' : ''}">
 		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${pageNumber}}" th:text="${pageNumber + 1}" class="num"></a>
 		        </li>
-		        <li th:class="${questionsPage.number < questionsPage.totalPages - 1 ? '' : 'disabled'}">
+		        <li th:if="${questionsPage.number < questionsPage.totalPages - 1}" th:class="${questionsPage.number < questionsPage.totalPages - 1 ? '' : 'disabled'}">
 		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${questionsPage.number + 1}}" class="arrow arrow-r right"><i class="bi bi-play-fill"></i></a>
 		        </li>
-		        <li th:class="${questionsPage.number < questionsPage.totalPages - 1 ? '' : 'disabled'}">
+		        <li th:if="${questionsPage.number < questionsPage.totalPages - 1}" th:class="${questionsPage.number < questionsPage.totalPages - 1 ? '' : 'disabled'}">
 		            <a th:href="@{${'/mypage/content/list'} + '?type=' + ${type} + '&amp;page=' + ${questionsPage.totalPages - 1}}" class="arrow-rf right"><i class="bi bi-fast-forward-fill"></i></a>
 		        </li>
 		    </ul>
