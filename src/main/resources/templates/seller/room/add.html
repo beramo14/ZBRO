@@ -12,7 +12,7 @@
 
 	
 <th:block layout:fragment="customStyle">
-	<style th:inline="css" type="text/css"></style><div class="detail-blocks">
+	<style th:inline="css" type="text/css"></style>
 </th:block>
 
 
@@ -333,7 +333,6 @@
 		
 		        const img = document.createElement('img');
 		        img.src = e.target.result;
-		        /* img.style.maxWidth = '100%'; */ // 이미지의 너비를 조정합니다.
 		        img.classList.add('roomImg');
 		        imagePreview.appendChild(img);
 		        
@@ -352,7 +351,6 @@
 		
 		// 파일 추가
 	    function addFile() {
-			
 	    	if(fileCount == totalFileCount) {
 				alert('최대 5개까지 등록 가능합니다');
 				return false;
@@ -363,7 +361,7 @@
 	        fileDiv.innerHTML =`
 	        	<div class="imagePreview" onclick="openFileInput(event)"><span class="plus-icon">+</span></div>
 	        	<div class="file_input">
-	                <input type="hidden" readonly/>
+	                <input type="hidden" name="fileName" readonly/>
 	                <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
 	            </div>
 	            <span class="cancle-icon" onclick="cancleFile(this);">ㅡ</span>
@@ -380,7 +378,6 @@
 	        const fileAddBtn = element.nextElementSibling;
 	        if (fileAddBtn) {
 	            const inputs = element.previousElementSibling.querySelectorAll('input');
-	            console.log(inputs);
 	            inputs.forEach(input => input.value = '')
 	            
 	            // 미리보기 이미지 삭제

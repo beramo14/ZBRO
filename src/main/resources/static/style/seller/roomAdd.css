@@ -231,6 +231,18 @@ textarea::placeholder {
 
 
 /* ------------- 하단 버튼 ------------- */
+.btn-dark {
+	color: black;
+	background: none;
+}
+.btn-danger {
+	color: red;
+	background: none;
+}
+.btn.btn-danger.del-btn:hover {
+	color: white;
+	border: 1px solid #ffffff00;
+}
 .bottom-btns {
 	/* background: green; */
 	display: flex;
@@ -240,7 +252,7 @@ textarea::placeholder {
 }
 .left-btn {
 	background: none;
-	border: 1px solid black;
+	border: 1.5px solid black;
 	border-radius: 18px;
 	font-weight: bold;
 	font-size: 1.1em;
@@ -256,13 +268,13 @@ textarea::placeholder {
 .right-btns > * {
 	font-weight: bold;
 	font-size: 1.1em;	
-	border: 1px solid black;
+	border: 1.5px solid black;
 	color: black;
 	border-radius: 18px;
 	padding: 5px 18px;
  }
  .btn.del-btn {
  	margin-left: 15px;
- 	border: 1px solid red;
+ 	border: 1.5px solid red;
  	color: red;
  }
