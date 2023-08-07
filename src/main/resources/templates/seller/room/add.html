@@ -60,19 +60,19 @@
 			        	<div class="detail-blocks">
 					        <span class="left-div">건물명</span>
 					        <div class="middle-div">
-						        <input type="text" name="buildingName" class="middle-input"/>
+						        <input type="text" name="buildingName" class="middle-input" required/>
 					        </div>
 			        	</div>
 			        	<div class="detail-blocks address-input">
 					        <span class="left-div">주소</span>
 					        <div class="middle-div">
-						        <input type="text" id="jibunAddress" name="address" class="middle-input address-search" placeholder="주소를 검색해주세요" onclick="execDaumPostcode()" readonly/>
+						        <input type="text" id="jibunAddress" name="address" class="middle-input address-search" placeholder="주소를 검색해주세요" onclick="execDaumPostcode()" readonly required/>
 						        <i class="bi bi-search" onclick="execDaumPostcode()"></i>
 					        </div>
 			        	</div>
 			        	<div class="detail-blocks address-input" style="min-height: 30px;">
 			        		<span class="left-div"></span>
-					        <div class="middle-div"><input type="text" name="roomNumber" class="long-input" placeholder="상세 주소를 입력해주세요   ex) 103호"/></div>
+					        <div class="middle-div"><input type="text" name="roomNumber" class="middle-input" placeholder="상세 주소를 입력해주세요   ex) 103호" required/></div>
 			        	</div>
 			        </div>
 			        
