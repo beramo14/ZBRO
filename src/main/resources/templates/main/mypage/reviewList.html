@@ -149,25 +149,25 @@
             </table>
         </div>
         
-        <div class="pagination" th:unless="${reviews.empty}">
-            <ul class="pagination pagination-modal">
-                <li th:class="${reviews.number > 0 ? '' : 'disabled'}">
-                    <a th:if="${reviews.number > 0}" th:href="@{/seller/room/review?page=0}" class="arrow-lf left"><i class="bi bi-rewind-fill"></i></a>
-                </li>
-                <li th:class="${reviews.number > 0 ? '' : 'disabled'}">
-                    <a th:if="${reviews.number > 0}" th:href="@{/seller/room/review(page=${reviews.number - 1})}" class="arrow arrow-l left"><i class="bi bi-play-fill"></i></a>
-                </li>
-                <li th:each="pageNumber : ${#numbers.sequence(0, reviews.totalPages - 1)}" th:class="${pageNumber == reviews.number ? 'active' : ''}">
-                    <a th:href="@{/seller/room/review(page=${pageNumber})}" th:text="${pageNumber + 1}" class="num"></a>
-                </li>
-                <li th:class="${reviews.number < reviews.totalPages - 1 ? '' : 'disabled'}">
-                    <a th:if="${reviews.number < reviews.totalPages - 1}" th:href="@{/seller/room/review(page=${reviews.number + 1})}" class="arrow arrow-r right"><i class="bi bi-play-fill"></i></a>
-                </li>
-                <li th:class="${reviews.number < reviews.totalPages - 1 ? '' : 'disabled'}">
-                    <a th:if="${reviews.number < reviews.totalPages - 1}" th:href="@{/seller/room/review(page=${reviews.totalPages - 1})}" class="arrow-rf right"><i class="bi bi-fast-forward-fill"></i></a>
-                </li>
-            </ul>
-        </div>  
+		<div class="page" th:unless="${reviews.empty}">
+		    <ul class="pagination pagination-modal">
+		        <li th:if="${reviews.number > 0}" th:class="${reviews.number > 0 ? '' : 'disabled'}">
+		            <a th:href="@{/mypage/review/list(page=0)}" class="arrow-lf left"><i class="bi bi-rewind-fill"></i></a>
+		        </li>
+		        <li th:if="${reviews.number > 0}" th:class="${reviews.number > 0 ? '' : 'disabled'}">
+		            <a th:href="@{/mypage/review/list(page=${reviews.number - 1})}" class="arrow arrow-l left"><i class="bi bi-play-fill"></i></a>
+		        </li>
+		        <li th:each="pageNumber : ${#numbers.sequence(0, reviews.totalPages - 1)}" th:class="${pageNumber == reviews.number ? 'active' : ''}">
+		            <a th:href="@{/mypage/review/list(page=${pageNumber})}" th:text="${pageNumber + 1}" class="num"></a>
+		        </li>
+		        <li th:if="${reviews.number < reviews.totalPages - 1}" th:class="${reviews.number < reviews.totalPages - 1 ? '' : 'disabled'}">
+		            <a th:href="@{/mypage/review/list(page=${reviews.number + 1})}" class="arrow arrow-r right"><i class="bi bi-play-fill"></i></a>
+		        </li>
+		        <li th:if="${reviews.number < reviews.totalPages - 1}" th:class="${reviews.number < reviews.totalPages - 1 ? '' : 'disabled'}">
+		            <a th:href="@{/mypage/review/list(page=${reviews.totalPages - 1})}" class="arrow-rf right"><i class="bi bi-fast-forward-fill"></i></a>
+		        </li>
+		    </ul>
+		</div>
     </th:block>
 
 <th:block layout:fragment="customScript">

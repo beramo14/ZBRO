@@ -64,7 +64,8 @@ public class MypageController {
         }
         return null;
     }		
-	
+
+    //매물비교
 	@GetMapping("/mypage/favorite/compare")
     public String favoriteComparePage(Model model, Principal principal) {
 		
@@ -86,14 +87,15 @@ public class MypageController {
     }
 	
 	
-
+	//매물비교 - favoriteId와 memo를 받아와 메모 업데이트
 	@PostMapping("/saveMemo")
 	public ResponseEntity<String> saveMemo(@RequestParam("favoriteId") Long favoriteId, @RequestParam("memo") String memo) {
 	    mypageService.saveMemo(favoriteId, memo);
+ 
 	    return ResponseEntity.ok().build();
 	}
 	
-
+	
 	@GetMapping("/mypage/favorite/list")
     public String favoriteListPage(Model model, Principal principal) {
         String redirectToLogin = checkLogin(principal);
@@ -110,7 +112,7 @@ public class MypageController {
     }
 	
 		
-	
+	//즐겨찾기 삭제
     @DeleteMapping("/favorites/{favoriteId}")
     public ResponseEntity<String> deleteFavorite(@PathVariable Long favoriteId) {
     	mypageService.deleteFavorite(favoriteId);
