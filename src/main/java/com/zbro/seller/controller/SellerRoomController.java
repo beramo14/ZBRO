@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.zbro.main.service.UserService;
 import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
 import com.zbro.model.RoomOptionType;
@@ -48,15 +50,21 @@ public class SellerRoomController {
 	
 	@Autowired
 	private SellerRoomService roomService;
+	@Autowired
+	private UserService sellerUserService;
 	
 	@Value("${file.images.room-photo}")
 	public String uploadFolder;
 	
-	// 매물등록 페이지 들어가기.
+		// 매물등록 페이지 들어가기.
 		@GetMapping("/seller/room/add")
-		public String roomAddView(Model model, RoomOptionType roomOptionType) {
+		public String roomAddView(Model model,
+								  RoomOptionType roomOptionType,
+								  Principal principal) {
 			List<RoomOptionType> optionTypes = roomService.getRoomOptionType();
 			model.addAttribute("optionTypes", optionTypes);
+			SellerUser myLoginInfo = sellerUserService.getSellerUserByEmail(principal.getName());
+			model.addAttribute("loginedSellerId", myLoginInfo.getSellerId());
 			
 			return "seller/room/add";
 		}
@@ -67,7 +75,15 @@ public class SellerRoomController {
 							  @RequestParam("isElevator") boolean isElevator,
 							  @RequestParam(value = "optionType", required = false) List<String> optionTypes,
 							  @RequestParam(value = "uploadFile", required = false) List<MultipartFile> files,
-							  Room room) throws Exception, IOException {
+							  Room room,
+							  Principal principal,
+							  Model model) throws Exception, IOException {
+			
+			SellerUser myLoginInfo = sellerUserService.getSellerUserByEmail(principal.getName());
+			if(room.getSeller() != myLoginInfo) {
+				model.addAttribute("message", "잘못된 접근입니다");
+				return "common/alert";
+			}
 			
 			// room insert
 			room.setRoomIn(isRoomIn);
@@ -115,22 +131,20 @@ public class SellerRoomController {
 		}
 		
 		
-		@RequestMapping("/seller/room/list")
-		public String sellerRoomList(Model model,
-						   @RequestParam(defaultValue = "1") Long sellerId) {
-
-			List<Room> findRooms = roomService.getRooms(sellerId);
-			model.addAttribute("roomList", findRooms);
-			
-			return "seller/room/list";
-		}
-		
-		
 		@GetMapping("/seller/room/detail")
 		public String sellerRoomDetail(Model model,
-									   @RequestParam Long roomId) {
-
+									   @RequestParam Long roomId,
+									   Principal principal) {
+			
+			SellerUser myLoginInfo = sellerUserService.getSellerUserByEmail(principal.getName());
 			Room findRoom = roomService.getRoom(roomId);
+			SellerUser findRoomUser = sellerUserService.getSellerUser(findRoom.getSeller().getSellerId());
+			
+			if(myLoginInfo != findRoomUser) {
+				model.addAttribute("message", "잘못된 접근입니다");
+				return "common/alert";
+			}
+			
 			List<RoomOptionType> roomOptionType = roomService.getRoomOptionType();
 			List<RoomOption> roomOptions = roomService.getRoomOptions(findRoom);
 			List<RoomPhoto> roomPhotos = roomService.getRoomPhotos(findRoom);
@@ -139,6 +153,7 @@ public class SellerRoomController {
 			model.addAttribute("optionTypes", roomOptionType);
 			model.addAttribute("thisRoomOptions", roomOptions);
 			model.addAttribute("roomPhotos", roomPhotos);
+			model.addAttribute("loginedSellerId", myLoginInfo.getSellerId());
 			 
 			return "seller/room/detail";
 		}
@@ -161,8 +176,14 @@ public class SellerRoomController {
 				  Room room,
 				  @RequestParam("isPhotoEdit") int isPhotoEdit,
 				  @RequestParam(value = "fileName", required = false) List<String> registRoomPhoto,
-				  Model model
-				  ) throws Exception, IOException {
+				  Model model,
+				  Principal principal) throws Exception, IOException {
+			
+			SellerUser myLoginInfo = sellerUserService.getSellerUserByEmail(principal.getName());
+			if(room.getSeller() != myLoginInfo) {
+				model.addAttribute("message", "잘못된 접근입니다");
+				return "common/alert";
+			}
 			
 			// room edit
 			room.setRoomIn(isRoomIn);
@@ -254,7 +275,15 @@ public class SellerRoomController {
 		
 		
 		@GetMapping("/seller/room/delete")
-		public String roomDelete(@RequestParam("roomId") Room room) {
+		public String roomDelete(@RequestParam("roomId") Room room,
+								 Principal principal,
+								 Model model) {
+			SellerUser myLoginInfo = sellerUserService.getSellerUserByEmail(principal.getName());
+			if(room.getSeller() != myLoginInfo) {
+				model.addAttribute("message", "잘못된 접근입니다");
+				return "common/alert";
+			}
+			
 			if(!roomService.getRoomOptions(room).isEmpty()) {
 				roomService.delRoomOptions(room);
 			}
