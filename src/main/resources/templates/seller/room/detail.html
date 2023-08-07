@@ -22,7 +22,7 @@
 		<div id="roomInsert">
 			<form id="saveForm" action="/seller/room/edit" method="post" enctype="multipart/form-data" autocomplete="off">
 			    <div id="formElements">
-					<input type="hidden" name="seller" th:value="${room.seller.sellerId}" />
+					<input type="hidden" name="seller" th:value="${loginedSellerId}" />
 					<input type="hidden" name="roomId" th:value="${room.roomId}" />
 					<input type="hidden" name="isPhotoEdit" id="isPhotoEdit" value="0" />
 					<div class="info-blocks">
@@ -220,10 +220,11 @@
 			    	</div>
 			    </div>
 			    <div class="bottom-btns">
-				    <button type="submit" id="roomAddBtn" class="btn btn-dark left-btn">수정</button>
+				    <button type="button" id="roomAddBtn" class="btn btn-dark left-btn" onclick="fileCheck(this.form)">수정</button>
 				    <div class="right-btns">
 					    <a th:href="@{/seller/room/list}" class="btn btn-dark list-btn">목록</a>
-					    <a th:href="@{/seller/room/delete(roomId=${room.roomId})}" class="btn btn-danger del-btn">삭제</a>
+					    <!-- <a th:href="@{/seller/room/delete(roomId=${room.roomId})}" class="btn btn-danger del-btn" onclick="roomDelCheck(this)">삭제</a> -->
+					    <a th:href="@{/seller/room/delete(roomId=${room.roomId})}" class="btn btn-danger del-btn" onclick="return roomDelCheck()">삭제</a>
 				    </div>
 			    </div>
 			</form>
@@ -238,7 +239,6 @@
 
 
 <th:block layout:fragment="customScript">
-			
 	<script th:inline="javascript">
 		var isPhoto = ([[${roomPhotos}]].length == 0);
 		/* 이미지 수정여부 확인 */
@@ -246,6 +246,7 @@
 	
 		$(document).ready(function() {
 			toggleMonthlyCost();
+			toggleOfferDiv();
 			
 			/* 불러올 이미지 없으면 기본폼 생성 */
 			if(isPhoto) {
@@ -258,13 +259,13 @@
 	                        <input type="file" name="uploadFile" onchange="selectFile(this);" style="display:none;"/>
 	                    </div>
 	                    <button type="button" onclick="removeFile(this);" class="btns del_btn"><span style="color: white;" class="minus-icon">ㅡ</span></button>
-	                    <span style="display: none;">메인사진</span>
+	                    <span class="main-img">메 인 사 진</span>
 		        	</div>
 				`;
 				formElements.append(addDefaultImageForm);
 			} else {
 				var addedMainImg = $(".myFile:first");
-				var addMainImgSpan = `<span style="display: none;">메인사진</span>`;
+				var addMainImgSpan = `<span class="main-img">메 인 사 진</span>`;
 				addedMainImg.append(addMainImgSpan);
 			}
 			/* insertAdjacentHTML
@@ -280,12 +281,31 @@
 			
 			/* 불러온 이미지 개수 */
 			fileCount = $('.myFile').length;
+			fileChooseCount = fileCount;
 			
 			/* textarea html형식 해석 */
 			var mySangse = [[${room.description}]];
 			mySangse = mySangse.replace(/<br>/g, "\n");
 			$('#target-textarea').val(mySangse);
+			resize();
 		})
+	</script>
+	
+	<!-- submit -> textarea 줄바꿈 변환, 파일선택 비었으면 alert -->
+		<script th:inline="javascript" type="text/javascript">
+		function fileCheck(frm) {
+			var addCheck = confirm('매물을 수정하시겠습니까?');
+			if(addCheck) {
+				if (fileChooseCount == 0){
+					alert("매물 사진은 최소 1장 이상 등록해주세요");
+					return false;
+				}
+				var content = $("#target-textarea").val();
+				content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+				$("#target-textarea").val(content);
+				frm.submit();
+			}
+		}
 	</script>
 	
 	<!-- textarea 자동길이조절 -->
@@ -300,15 +320,6 @@
 	
 	    document.addEventListener("input", resize);
 	    window.addEventListener("load", resize);
-	</script>
-	
-	<!-- textarea 줄바꿈 변환 -->
-	<script th:inline="javascript" type="text/javascript">
-		$("#roomAddBtn").click(function() {
-			var content = $("#target-textarea").val();
-			content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
-			$("#target-textarea").val(content);
-		})
 	</script>
 	
 	<!-- 주소 찾기 -->
@@ -337,6 +348,7 @@
 	<script th:inline="javascript" type="text/javascript">
 		var totalFileCount = 5;
 		var fileCount = 0;
+		var fileChooseCount = 0;
 		
 		// 파일 선택(imagePriview)
 		function openFileInput(event) {
@@ -396,6 +408,7 @@
 		    }
 		
 		    if (file) {
+		    	fileChooseCount = fileChooseCount+1;
 		        reader.readAsDataURL(file);
 		    }
 	    }
@@ -450,6 +463,7 @@
 				
 				   const delBtn = element.closest('.myFile').querySelector('.btns.del_btn');
 				   delBtn.style.display = 'none';
+				   fileChooseCount = fileChooseCount-1;
 			   }
         
 	           return false;
@@ -457,6 +471,7 @@
 	       element.parentElement.remove();
 	        
 	       fileCount = fileCount-1;
+	       fileChooseCount = fileChooseCount-1;
 	    }
 	 	
 	 	// 파일 추가 취소
@@ -464,6 +479,12 @@
 	        element.parentElement.remove();
 	        fileCount = fileCount-1;
 	    }
+	</script>
+	
+	<script>
+		function roomDelCheck() {
+		    return confirm('매물을 삭제하시겠습니까?');
+		}
 	</script>
 	
 	<!-- 월/전세 선택에 따른 월세 입력칸 보이기/숨기기 -->

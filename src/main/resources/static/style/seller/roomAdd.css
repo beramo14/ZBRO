@@ -178,6 +178,18 @@ textarea::placeholder {
     height:100%;
     object-fit:cover;
 }
+.main-img {
+	background: #bbbbbb;
+	position: absolute;
+	writing-mode: vertical-rl;
+  	white-space: nowrap;
+  	padding: 5px 1px;
+  	font-size: 0.9em;
+  	font-weight: 600;
+  	left: -25px;
+  	top: 0;
+  	border-radius: 10px 0 0 10px;
+}
 
 /* ------------- 이미지 삭제 ------------- */
 .btns.del_btn {
