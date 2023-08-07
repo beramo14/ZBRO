@@ -390,6 +390,7 @@ ul.room-detail-wrapper li span:nth-child(2){
 .one-option-flex {
 	display: flex;
 	padding: 18px 15px;
+	margin-right:120px;
 }
 
 
@@ -565,7 +566,20 @@ ul.room-detail-wrapper li span:nth-child(2){
 .review1-date    {
 margin-right: 10px;
 color:#9c9b9f;
+
 }
 
 
+.btn-primary-submit{
+	background-color:white;
+	color:#A6D795;
+	 border: 2px solid #A6D795;
+	 
+}
 
+.btn-primary-submit:hover {
+    background-color: #86C69F; 
+    color: white; 
+    border: 2px solid #86C69F;
+    align-items: center;
+}
