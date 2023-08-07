@@ -80,7 +80,6 @@ public class MailSendService{
 		
 		//dtoObject -> Map
 		Map objectMap = new ObjectMapper().convertValue(dto, Map.class);
-		log.info("Map : {}", objectMap);
 		
 		Context result = new Context();
 		result.setVariables(objectMap);
