@@ -115,57 +115,56 @@
 
 </th:block>
 <th:block layout:fragment="content">
-	<div class=reviewWrapTitle>작성한 리뷰 관리</div>  
-	<div class=reviewtWrap>  
-	    <table class="reviewTable">
-	        <thead>
-	            <tr>
-			        <th style="width: 15%; padding-left: 30px;">매물</th>
-			        <th style="width: 15%;">평점</th>
-	                <th style="width: 60%;">내용</th>
-	                <th style="text-align: center;">작성일</th>
-	            </tr>
-	        </thead>
-	        <tbody>
-	            <tr th:each="review : ${reviews}" th:unless="${reviews.empty}" th:onclick="'redirectToRoomDetails(\'' + ${review.room.roomId} + '\');'" style="cursor: pointer;">
-	                
-	                <td>
-	                    <img th:src="@{/room/photo(roomId=${review.room.roomId})}" class="room-image" />
-	                    <div th:text="${review.room.buildingName}" class="buildName"></div>
-	                </td>
-	                <td>
-	                    <span th:each="star : ${#numbers.sequence(1, review.score)}" class="bi bi-star-fill"></span>
-	                </td>
-	                <td th:text="${review.content}"></td>
-	                <td th:text="${#temporals.format(review.createDate, 'yyyy-MM-dd')}" style="text-align: center; color: #B2B2B2;"></td>
-	            </tr>
-	            <tr th:if="${reviews.empty}">
-	                <td colspan="4" class="noMessage" >작성한 리뷰가 없습니다!</td>
-	            </tr>
-	        </tbody>
-	    </table>
-    </div>
-    
-	<div class="pagination" th:unless="${reviews.empty}">
-	    <ul class="pagination pagination-modal">
-	        <li th:class="${reviews.number > 0 ? '' : 'disabled'}">
-	            <a th:href="@{/mypage/review/list(page=${reviews.number - 1})}" class="arrow-lf left"><i class="bi bi-rewind-fill"></i></a>
-	        </li>
-	        <li th:class="${reviews.number > 0 ? '' : 'disabled'}">
-	            <a th:href="@{/mypage/review/list(page=${reviews.number - 1})}" class="arrow arrow-l left"><i class="bi bi-play-fill"></i></a>
-	        </li>
-	        <li th:each="pageNumber : ${#numbers.sequence(0, reviews.totalPages - 1)}" th:class="${pageNumber == reviews.number ? 'active' : ''}">
-	            <a th:href="@{/mypage/review/list(page=${pageNumber})}" th:text="${pageNumber + 1}" class="num"></a>
-	        </li>
-	        <li th:class="${reviews.number < reviews.totalPages - 1 ? '' : 'disabled'}">
-	            <a th:href="@{/mypage/review/list(page=${reviews.number + 1})}" class="arrow arrow-r right"><i class="bi bi-play-fill"></i></a>
-	        </li>
-	        <li th:class="${reviews.number < reviews.totalPages - 1 ? '' : 'disabled'}">
-	            <a th:href="@{/mypage/review/list(page=${reviews.totalPages - 1})}" class="arrow-rf right"><i class="bi bi-fast-forward-fill"></i></a>
-	        </li>
-	    </ul>
-	</div>  
-</th:block>
+        <div class="reviewWrapTitle">작성한 리뷰 관리</div>  
+        <div class="reviewtWrap">  
+            <table class="reviewTable">
+                <thead>
+                    <tr>
+                        <th style="width: 15%; padding-left: 30px;">매물</th>
+                        <th style="width: 15%;">평점</th>
+                        <th style="width: 60%;">내용</th>
+                        <th style="text-align: center;">작성일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="review : ${reviews}" th:unless="${reviews.empty}" th:onclick="'redirectToRoomDetails(\'' + ${review.room.roomId} + '\');'" style="cursor: pointer;">
+                        <td>
+                            <img th:src="@{/room/photo(roomId=${review.room.roomId})}" class="room-image" />
+                            <div th:text="${review.room.buildingName}" class="buildName"></div>
+                        </td>
+                        <td>
+                            <span th:each="star : ${#numbers.sequence(1, review.score)}" class="bi bi-star-fill"></span>
+                        </td>
+                        <td th:text="${review.content}"></td>
+                        <td th:text="${#temporals.format(review.createDate, 'yyyy-MM-dd')}" style="text-align: center; color: #B2B2B2;"></td>
+                    </tr>
+                    <tr th:if="${reviews.empty}">
+                        <td colspan="4" class="noMessage">작성한 리뷰가 없습니다!</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pagination" th:unless="${reviews.empty}">
+            <ul class="pagination pagination-modal">
+                <li th:class="${reviews.number > 0 ? '' : 'disabled'}">
+                    <a th:if="${reviews.number > 0}" th:href="@{/seller/room/review?page=0}" class="arrow-lf left"><i class="bi bi-rewind-fill"></i></a>
+                </li>
+                <li th:class="${reviews.number > 0 ? '' : 'disabled'}">
+                    <a th:if="${reviews.number > 0}" th:href="@{/seller/room/review(page=${reviews.number - 1})}" class="arrow arrow-l left"><i class="bi bi-play-fill"></i></a>
+                </li>
+                <li th:each="pageNumber : ${#numbers.sequence(0, reviews.totalPages - 1)}" th:class="${pageNumber == reviews.number ? 'active' : ''}">
+                    <a th:href="@{/seller/room/review(page=${pageNumber})}" th:text="${pageNumber + 1}" class="num"></a>
+                </li>
+                <li th:class="${reviews.number < reviews.totalPages - 1 ? '' : 'disabled'}">
+                    <a th:if="${reviews.number < reviews.totalPages - 1}" th:href="@{/seller/room/review(page=${reviews.number + 1})}" class="arrow arrow-r right"><i class="bi bi-play-fill"></i></a>
+                </li>
+                <li th:class="${reviews.number < reviews.totalPages - 1 ? '' : 'disabled'}">
+                    <a th:if="${reviews.number < reviews.totalPages - 1}" th:href="@{/seller/room/review(page=${reviews.totalPages - 1})}" class="arrow-rf right"><i class="bi bi-fast-forward-fill"></i></a>
+                </li>
+            </ul>
+        </div>  
+    </th:block>
 <th:block layout:fragment="customScript">
 	<script th:inline="javascript" type="text/javascript">
 	

@@ -50,11 +50,22 @@
 .real-review{
 	font-weight: bold;
 }
-.detail-intro {
+.detail-intro-index {
 	font-weight: bold;
+	margin-top:50px;
 }
 .other-room-seller {
 	font-weight: bold;
+}
+.address {
+	color:gray;
+	font-size:14px;
+	text-align:left; 
+}
+.sidemenu-element {
+    font-size: 18px;
+    padding:5px;
+    text-align: left;
 }
 
 .sidemenu {
@@ -62,7 +73,8 @@
 	 border: 1px solid;
 	 border-color:#F3F3F3;
 	 min-height: 100%;
-	  width:30%; 
+	 width:30%;
+	 margin-left:10px;
 	 
 }
 
@@ -127,14 +139,6 @@ ul.room-detail-wrapper li span:nth-child(2){
 	font-weight:normal;
 	width:60%;	
 }
-.costinfo-tag {
-	margin-bottom:35px;
-	
-}
-
-.detailinfo-tag {
-	margin-bottom:35px;
-}
 
 .optionmain {
 	margin-bottom:35px;
@@ -146,6 +150,9 @@ ul.room-detail-wrapper li span:nth-child(2){
 	
 }
 
+.detailinfo-tag {
+	margin-top: 50px;
+}
 .detail-wrapper {
 	margin-top:90px;
 	margin-bottom:50px;
@@ -160,15 +167,11 @@ ul.room-detail-wrapper li span:nth-child(2){
 	
 }
 
-/* .otherroom-wrapper {
-	display:flex;
-	flex-wrap:nowrap;
-
-}
- */
  
  .otherroom-wrapper {
  	display: flex;
+ 	gap:10px;
+ 	margin-bottom: 40px;
  }
 .otherroom {
     display: flex;
@@ -197,7 +200,8 @@ ul.room-detail-wrapper li span:nth-child(2){
 .otherroomphoto {
 	height:160px;
 	width:170px;
-	
+	object-fit:cover;
+	gap:10px;
 }
 .review-wrapper {
 	display:flex;
@@ -264,10 +268,6 @@ ul.room-detail-wrapper li span:nth-child(2){
 	
 }
 
-.review-small-1 {
-	background-color:#F3F3F3;
-	
-}
 
 .review-small-2 {
 	background-color:#F3F3F3;
@@ -296,7 +296,8 @@ ul.room-detail-wrapper li span:nth-child(2){
 }
 
 .side-under-wrapper {
-	display: flex;
+	/* display: flex; */
+	width:100%;
     justify-content: center;
 	
 }
@@ -305,32 +306,30 @@ ul.room-detail-wrapper li span:nth-child(2){
 }
 
 
-.review1-date {
-	text-align: right;
-	 position: absolute;
-	top: 0;
-    right:10px;
-       
+.review1 {
+	background-color:#F3F3F3;
+    padding: 10px;
+    margin-bottom: 20px; 
 }
 
 .review-small-1 {
-	position:relative;
+	display:flex;
 }
 
 .telephone-container {
     display: flex;
-    align-items: center;
+    justify-content: center;
 }
 .bi-telephone-fill {
 	font-size: 24px; 
-    margin-right: 10px; 
+    margin-right: 5px; 
 }
 
 .btn-primary{
 	background-color:white;
 	color:#A6D795;
 	 border: 2px solid #A6D795;
-	 
+	 width:250px;
 }
 .btn-primary-write {
 	margin-right: 10px;
@@ -354,15 +353,16 @@ ul.room-detail-wrapper li span:nth-child(2){
 
 
 .building-name {
-    font-size: 20px;
+    font-size: 18px;
     text-align: left; 
-    margin-left: 10px;
 }
 
 
 .modal-body {
 	height:300px;
-	
+	display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 .modal-content {
@@ -371,7 +371,8 @@ ul.room-detail-wrapper li span:nth-child(2){
 }
 
 .sub-coment {
-	font-size:15px;
+	font-size:13px;
+	color:gray;
 }
 
 .bi-box-arrow-up-right {
@@ -381,23 +382,23 @@ ul.room-detail-wrapper li span:nth-child(2){
 }
 .all-option-flex {
 	display: flex;
-}
-.one-option-flex {
-	display: flex;
+	border-bottom: 2px solid lightgray;
+	padding: 18px 15px;
+	margin-right: 120px;
+	
 }
 
-.all-option {
-	margin-right: 140px;
+.one-option-flex {
+	display: flex;
+	padding: 18px 15px;
 }
-.sub-option {
-	margin-right: 140px;
-}
+
 
 .all-option-flex > div:nth-child(1) {
 	width:40%;
 }
 
-.sub-option-flex > div:nth-child(1) {
+.one-option-flex > div:nth-child(1) {
 	width:40%;
 }
 
@@ -406,9 +407,166 @@ ul.room-detail-wrapper li span:nth-child(2){
 	display: flex;
     flex-wrap: wrap;
     gap:10px;
+    width:100%;
 }
 .option-flex-2 {
 	display: flex;
     flex-wrap: wrap;
     gap:10px;
+    width:100%;
 }
+
+.brokername-tag {
+	margin-bottom: 20px;
+    text-align: left;
+    font-size: 18px;
+}
+
+.reviewimg {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+}
+
+.modal-title {
+	font-weight: bold;
+}
+
+.modal-brokername {
+	font-size: 25px;
+	margin-bottom: 6px;
+}
+}
+
+.broker-num {
+	font-weight: bold;
+}
+
+.descript {
+	font-size:15px;
+	color:gray;
+}
+
+.broker-info2 {
+	text-align: center;
+}
+
+
+/* 			페이징 버튼 				*/
+.pagingblock {
+	/* background: blue; */
+	position: relative;
+	margin-top: 10px;
+}
+.pagingblock > * {
+	/* background: orange; */
+	padding: 0;
+	margin: 0;
+}
+.pagination {
+	padding: 0 auto;
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	position: relative;
+	bottom: 10px;
+}
+.pagination a {
+	width: 30px;
+	height: 30px;
+	align-items: center;
+	justify-content: center;
+	float: left;
+	display: flex;
+	text-decoration: none;
+	/* background: blue; */
+	/* color: #86C69F; */
+	color: #7e8279;
+	line-height: 1.5;
+	border-radius: 6px;
+}
+.pagination .arrow-l .bi-play-fill{
+	transform: rotate(180deg);
+}
+.pagination .num {
+	/* border: 1.5px solid #dbefcf; */
+	border: 1.5px solid #ebeeea;
+	margin: 0 3.5px;
+}
+.num:hover {
+	border: none;
+	background: #86C69F;
+	color: white;
+}
+.left:hover, .right:hover {
+	color: #86C69F;
+}
+.pagination a:active {
+	cursor: default;
+	color: #448860;
+}
+.pagination .active > a {
+	border: none;
+	background: #7e8279;
+	color: white;
+}
+
+/* 페이징 버튼 끝  */
+
+/*캐러셀 버튼색  */
+.bi-arrow-left-square {
+	font-size: 50px;
+	color: gray;
+	
+}
+
+.bi-arrow-right-square {
+	font-size: 50px;
+	color: gray;
+}
+
+.bi-arrow-left-square:hover {
+    color: #86C69F;
+}
+
+.bi-arrow-right-square:hover {
+    color: #86C69F;
+}
+/*캐러셀 버튼색 종료  */
+
+/*판매자 프로필 이미지  */
+.profile-image {
+	margin: 0 auto;
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+  	overflow: hidden;
+}
+
+/*리뷰 출력 페이지 사진  */
+.review-photo {
+	margin:5px;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+  	overflow: hidden;
+	
+}
+
+
+/*후기 flex  */
+.review-flex {
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 5px;
+}
+
+.review1-date    {
+margin-right: 10px;
+color:#9c9b9f;
+}
+
+
+

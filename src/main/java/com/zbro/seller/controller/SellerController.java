@@ -16,6 +16,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.zbro.dto.RoomReviewDTO;
 import com.zbro.main.service.UserService;
 import com.zbro.model.Room;
 import com.zbro.model.RoomOption;
@@ -200,20 +202,35 @@ public class SellerController {
 	
 	
 	@GetMapping("seller/room/review")
-	public List<RoomReview> getroomReviewdetail(@RequestParam("sellerId")Long sellerId, Model model) {
-		Long sellerId1 = 2L;
-	    List<RoomReview> roomReview = roomService.getRoomReview(sellerId1);
-	    model.addAttribute("reviews", roomReview);
-	    return roomReview;
+	public Page<RoomReview> getroomReviewdetail(Principal principal,RoomReviewDTO ReviewDTO,@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "10") int size, 
+			@RequestParam(value = "searchType", required = false) String searchType, @RequestParam(value = "searchKeyword", required = false) String searchKeyword,@RequestParam(value = "type", required = false) 
+			List<String> types,Model model) {
+		// 판매자 아이디가져오기
+		SellerUser sellerUser = sellerUserService.getSellerUserByEmail(principal.getName());
+	    Long sellerId = sellerUser.getSellerId();
+	    //아이디가져오기 끝    
+	    //검색메서드 //오류 났던이유 페이지 불러온 메서드만 썻기 때문에, 검색기능에 들어간 reviews를 써야 호출이 되지
+	    Page<RoomReview> reviews;
+	    if ((searchType != null && searchKeyword != null) || (types != null && !types.isEmpty())) {
+	        reviews = roomService.searchRoomsByTypeOrBuildingNameOrAddressReview(ReviewDTO, sellerId,types,searchType,searchKeyword, page, size );
+	    } else {
+	        reviews = roomService.getRoomReviewSeller(ReviewDTO, sellerId, page, size, searchKeyword, searchKeyword, types);
+	    }
+	    
+	    model.addAttribute("reviews", reviews);
+	    model.addAttribute("searchKeyword", searchKeyword);
+	    model.addAttribute("searchType", searchType);
+	    model.addAttribute("types", types);
+	    return reviews;
 	}
 	
-	@GetMapping("seller/room/reviewdetail")
-	public List<RoomReview> getroomReviewdetaiList(@RequestParam("reviewId")Long reviewId, Model model) {
-	    List<RoomReview> roomReview3 = roomService.getRoomReviewDetail(reviewId);
-	    System.out.println(roomReview3);
-	    model.addAttribute("reviews", roomReview3);
-	    return roomReview3;
-	} 
+	/*
+	 * @GetMapping("seller/room/reviewdetail") public List<RoomReview>
+	 * getroomReviewdetaiList(@RequestParam("reviewId")Long reviewId, Model model) {
+	 * List<RoomReview> roomReview3 = roomService.getRoomReviewDetail(reviewId);
+	 * System.out.println(roomReview3); model.addAttribute("reviews", roomReview3);
+	 * return roomReview3; }
+	 */
 	
 	
 	@GetMapping("seller/room/detail_test")
