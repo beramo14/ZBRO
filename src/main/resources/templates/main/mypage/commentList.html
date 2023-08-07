@@ -34,8 +34,10 @@
      
      table#commentTable td {
      	border-bottom: 1px dotted #E3E3E3;
-        padding: 10px;
+        padding: 8px 10px 4px;
      }
+     
+   
          
     table#commentTable th:nth-child(2),
     table#commentTable td:nth-child(2) {
@@ -51,6 +53,13 @@
         font-size: 16px;
         color: #9C9A9A;	   
     }  
+	.comment-content {
+	  display: inline-block;
+	  max-width: 800px;
+	  white-space: nowrap;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	}      
 
     
 	.pagination {
@@ -116,7 +125,7 @@
 	        <tbody>
 	            <tr th:unless="${comments.empty}" th:each="comment : ${comments}">
 	                <td>
-	                    <a th:href="@{/community/detail?postId={id}(id=${comment.post.postId})}">
+	                    <a class="comment-content"  th:href="@{/community/detail?postId={id}(id=${comment.post.postId})}">
 	                        <span th:text="'[' + ${comment.post.title} + ']'" style="color: #858585"></span>
 	                        <span th:text="${comment.content}" style="color: #43604E;"></span>
 	                    </a>
@@ -128,6 +137,7 @@
                 </tr>	            
 	        </tbody>
 	    </table>
+	    
 	    
 	</div>
 
