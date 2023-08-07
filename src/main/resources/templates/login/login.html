@@ -306,7 +306,7 @@
 			
 			//기본 로그인타입 설정
 			$("input[name='loginType']:checked")[0].labels[0].click();
-			$("input[name='loginType']:checked").change( function(e) {
+			$("input[name='loginType']").change( function(e) {
 				console.log($("input[name='loginType']:checked").val());
 				let loginType = $("input[name='loginType']:checked").val();
 				
