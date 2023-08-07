@@ -12,11 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.zbro.dto.IndexRoomListDTO;
 import com.zbro.dto.RoomReviewDTO;
 import com.zbro.dto.RoomSearchDTO;
+import com.zbro.main.repository.ConsumerUserRepository;
 import com.zbro.main.repository.FavoritRepository;
 import com.zbro.main.repository.RoomOptionRepository;
 import com.zbro.main.repository.RoomPhotoRepository;
@@ -31,6 +37,8 @@ import com.zbro.model.RoomReview;
 import com.zbro.model.SellerUser;
 import com.zbro.type.CostType;
 import com.zbro.type.RoomType;
+
+
 
 @Service
 public class RoomService {
@@ -53,6 +61,10 @@ public class RoomService {
 	
 	@Autowired
 	private RoomReviewRepository roomReviewRepository;
+	
+	@Autowired
+	private ConsumerUserRepository consumerUserRepository;
+	
 	
 	
 	public List<RoomSearchDTO> searchRoomAndFavorite(RoomSearchDTO roomDTO, ConsumerUser consumerUser) {
@@ -152,23 +164,49 @@ public class RoomService {
 		return getRoomDetail;
 	}
 	
-	public String saveRoomReview(RoomReview roomReview) {
-		
-		roomReviewRepository.save(roomReview);
-		
-		return fileRoomPhotoPath;
-		
+	public boolean saveRoomReview(RoomReview roomReview) {
+	    ConsumerUser consumerUser = roomReview.getUser();
+	    Room room = roomReview.getRoom();
+
+	    // 중복 체크: 이미 해당 소비자가 해당 매물에 리뷰를 등록했는지 확인
+	    RoomReview existingReview = roomReviewRepository.findByUserAndRoom(consumerUser, room);
+
+	    if (existingReview != null) {
+	        return false; // 이미 리뷰를 등록한 경우
+	    }
+
+	    roomReviewRepository.save(roomReview);
+	    return true; // 리뷰 등록 성공
 	}
 	
-	public  List<RoomReview> getRoomReview(RoomReviewDTO roomReviewDTO,Long roomId) {
+	public  Page<RoomReview> getRoomReview(RoomReviewDTO roomReviewDTO,Long roomId , int page, int size) {
 		
-		/* List<RoomReview> getRoomReview = roomReviewRepository.findById(); */
-		List<RoomReview> getRoomReview = roomReviewRepository.findByRoomRoomId(roomId);
+		Pageable pageable = PageRequest.of(page, size);
+		Page<RoomReview> getRoomReview = roomReviewRepository.findByRoomRoomId(roomId, pageable);
 		return getRoomReview;
 		
 	}
 
+	
+	//detail.html RoomReview 페이징
+	/*
+	 * public Page<RoomReview> getRoomReviewsByRoomId(Long roomId, int page, int
+	 * size) { Pageable pageable = PageRequest.of(page, size); return
+	 * roomReviewRepository.findByRoomRoomId(roomId, pageable); }
+	 */
+	// 같은 판매자의 다른 매물 중에서 겹치지 않는 매물 필터링 roomId를 비교해서 같지 않은 매물만 ArrayList<>에 집어 넣고 매물 표시
+	public List<Room> findOtherRoomsBySellerId(SellerUser selleruser, Long RoomId) {
+	    List<Room> allRoomsOfSeller = roomRepository.findBySeller(selleruser);
+	    List<Room> otherRooms = new ArrayList<>();
 
+	    for (Room room : allRoomsOfSeller) {
+	        if (!room.getRoomId().equals(RoomId)) {
+	            otherRooms.add(room);
+	        }
+	    }
+
+	    return otherRooms;
+	}
 
 	public IndexRoomListDTO getRoomByRegion(List<RoomType> roomTypeList, IndexRoomListDTO indexRoomDTO) {
 		

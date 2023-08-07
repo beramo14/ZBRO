@@ -1,7 +1,7 @@
 package com.zbro.main.controller;
 
 import java.io.FileNotFoundException;
-
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,6 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -52,6 +56,7 @@ public class RoomController {
 	
 	
 	
+	
 	@GetMapping("/search")
 	public String searchView(RoomSearchDTO roomDTO, Authentication authentication, Model model) {
 		
@@ -75,34 +80,61 @@ public class RoomController {
 		
 		return "main/room/search";
 	}
-	
+	// 상세페이지 모든 데이터 + 리뷰페이징처리
 	@RequestMapping("/detail/{roomId}")
-	public String detailView(@PathVariable("roomId") Long roomId,RoomReviewDTO ReviewDTO,Model model) {
+	public String detailView(@PathVariable("roomId")Long roomId, RoomReviewDTO ReviewDTO,Authentication authentication ,
+							 @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "2") int size,Model model) {
+	    
+		
+		 // RoomReview 페이징 처리
+        Page<RoomReview> roomReviews = roomService.getRoomReview(ReviewDTO,roomId, page, size);
 	    Room room = roomService.findById(roomId);
 	    SellerUser selleruser = new SellerUser();
 	    selleruser.setSellerId(room.getSeller().getSellerId());
-	    ConsumerUser csuser = new ConsumerUser();
-	    csuser.setConsumerId(1L);
-	    List<Room> roomsame = roomService.findBySellerId(selleruser);
+	    if(authentication != null) {
+	    	//## authentication.getName() : 현재 로그인된 유저의 이메일
+	    	log.info("#### authentication.getName() : {}", authentication.getName());
+	    	//## authentication.getAuthorities() : 현재 로그인된 유저의 권한을 조회(구매자:ROLE_CONSUMER, 판매자:ROLE_SELLER)
+	    	log.info("#### authentication.getAuthorities() : {}", authentication.getAuthorities().toArray()[0].toString());
+	    	
+	    	// Collection<GrantedAuthority> => List<String>
+	    	// 권한을 list의 String형태로 변환(비교하기 쉽게)
+	    	List<String> authorityList = authentication.getAuthorities().stream().map(authority->authority.getAuthority()).collect(Collectors.toList());
+	    	
+	    	//## 현재 로그인된 유저 이메일을 사용하여 유저 Entity를 조회
+	    	if(authorityList.contains("ROLE_CONSUMER")) {
+	    	log.info("#### userService.getConsumerUserByEmail(authentication.getName()) : {}", userService.getConsumerUserByEmail(authentication.getName()));
+	    	ConsumerUser consumerUser = userService.getConsumerUserByEmail(authentication.getName());
+	    	Optional<Favorite> roomDetailFavorite = favService.getFavoriteDetail(consumerUser, room);
+	    	 model.addAttribute("isFavorite", roomDetailFavorite.isPresent());
+	 	    
+	 	    if (roomDetailFavorite.isPresent()) {
+	 	        model.addAttribute("roomDetailFavorite", roomDetailFavorite.get());
+	 	    }
+	    
+	    	} 
+
+	    }
+	    // 같은판매자의 다른 매물 필터링
+	    List<Room> roomsame = roomService.findOtherRoomsBySellerId(selleruser, roomId);
+		/* List<Room> roomsame = roomService.findBySellerId(selleruser); */
+	    
+
 	    List<RoomOption> roomOption = roomService.getroomOption(room);
 	    List<RoomPhoto> roomPhotoList = roomService.getRoomPhtotList(roomId);
-	    List<RoomReview> roomReviewList = roomService.getRoomReview(ReviewDTO,roomId);
-		Optional<Favorite> roomDetailFavorite = favService.getFavoriteDetail(csuser , room);
-		/*
-		 * List<RoomReviewDTO> roomReviewDTOList =
-		 * RoomReviewDTO.convertToDTOList(roomReviewList);
-		 */
+	    Page<RoomReview> roomReviewList = roomService.getRoomReview(ReviewDTO, roomId ,page, size);
+	    
 	    model.addAttribute("room", room);
 	    model.addAttribute("roomsame", roomsame);
 	    model.addAttribute("roomOptions", roomOption);
-	    model.addAttribute("roomPhotoList",roomPhotoList);
-	    model.addAttribute("roomReviews",roomReviewList);
-	    model.addAttribute("isFavorite",roomDetailFavorite.isPresent());
-	    if(roomDetailFavorite.isPresent()) {
-	    	model.addAttribute("roomDetailFavorite",roomDetailFavorite.get());
-	    }
+	    model.addAttribute("roomPhotoList", roomPhotoList);
+	    model.addAttribute("roomReviews", roomReviewList);
+	    model.addAttribute("roomReviewpage", roomReviews);
+	   
+			 
 	    return "main/room/detail";
 	}
+	
 	
 	
 	@PostMapping("/favorite")
@@ -154,7 +186,7 @@ public class RoomController {
 	}
 	
 
-//	// 상세페이지 사진 업로드 구현
+	// 상세페이지 사진 업로드 구현
 	@GetMapping("/photodetail")
 	public ResponseEntity<Resource> getDetailRoomPhotoImg(RoomPhoto roomphoto) throws FileNotFoundException {
 		
@@ -164,20 +196,77 @@ public class RoomController {
 		
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageResource);
 	}
-	
-	@PostMapping("/review")
-	public String postRoomReview(@RequestParam("roomId") Long roomId,RoomReview roomReview) {
+	// 리뷰 전송
+	/*
+	 * @PostMapping("/review") public String postRoomReview(@RequestParam("roomId")
+	 * Long roomId, RoomReview roomReview, Authentication authentication, Model
+	 * model) {
+	 * 
+	 * if (authentication != null) { //## authentication.getName() : 현재 로그인된 유저의 이메일
+	 * log.info("#### authentication.getName() : {}", authentication.getName());
+	 * //## authentication.getAuthorities() : 현재 로그인된 유저의 권한을 조회(구매자:ROLE_CONSUMER,
+	 * 판매자:ROLE_SELLER) log.info("#### authentication.getAuthorities() : {}",
+	 * authentication.getAuthorities().toArray()[0].toString());
+	 * 
+	 * // Collection<GrantedAuthority> => List<String> // 권한을 list의 String형태로
+	 * 변환(비교하기 쉽게) List<String> authorityList =
+	 * authentication.getAuthorities().stream() .map(authority ->
+	 * authority.getAuthority()) .collect(Collectors.toList());
+	 * 
+	 * //## 현재 로그인된 유저 이메일을 사용하여 유저 Entity를 조회 if
+	 * (authorityList.contains("ROLE_CONSUMER")) { log.
+	 * info("#### userService.getConsumerUserByEmail(authentication.getName()) : {}"
+	 * , userService.getConsumerUserByEmail(authentication.getName())); ConsumerUser
+	 * consumerUser = userService.getConsumerUserByEmail(authentication.getName());
+	 * 
+	 * // 중복 체크: 이미 해당 소비자가 해당 매물에 리뷰를 등록했는지 확인 boolean isDuplicateReview =
+	 * !roomService.saveRoomReview(roomReview);
+	 * model.addAttribute("isDuplicateReview", isDuplicateReview); } else if
+	 * (authorityList.contains("ROLE_SELLER")) { SellerUser sellerUser =
+	 * userService.getSellerUserByEmail(authentication.getName());
+	 * model.addAttribute("isSeller", true); } }
+	 * 
+	 * Room room = new Room(); room.setRoomId(roomId); roomReview.setRoom(room);
+	 * roomService.saveRoomReview(roomReview);
+	 * 
+	 * return "redirect:/room/detail/" + roomId; }
+	 */
+	// 리뷰 전송
+		@PostMapping("/review")
+		public String postRoomReview(@RequestParam("roomId") Long roomId, RoomReview roomReview,Authentication authentication, Model model) {
+		   
+		if(authentication != null) {
+		//## authentication.getName() : 현재 로그인된 유저의 이메일
+		log.info("#### authentication.getName() : {}", authentication.getName());
+		//## authentication.getAuthorities() : 현재 로그인된 유저의 권한을 조회(구매자:ROLE_CONSUMER, 판매자:ROLE_SELLER)
+		log.info("#### authentication.getAuthorities() : {}", authentication.getAuthorities().toArray()[0].toString());
 		
+		// Collection<GrantedAuthority> => List<String>
+		// 권한을 list의 String형태로 변환(비교하기 쉽게)
+		List<String> authorityList = authentication.getAuthorities().stream().map(authority->authority.getAuthority()).collect(Collectors.toList());
+		
+		//## 현재 로그인된 유저 이메일을 사용하여 유저 Entity를 조회
+		if(authorityList.contains("ROLE_CONSUMER")) {
+		log.info("#### userService.getConsumerUserByEmail(authentication.getName()) : {}", userService.getConsumerUserByEmail(authentication.getName()));
+		ConsumerUser consumerUser = userService.getConsumerUserByEmail(authentication.getName());
+		roomReview.setUser(consumerUser);
+		} else if(authorityList.contains("ROLE_SELLER")) {
+			SellerUser sellerUser = userService.getSellerUserByEmail(authentication.getName());
+	    	model.addAttribute("errorMessage", "판매자는 후기를 등록할 수 없습니다.");
+
+	    	return "redirect:room/detail/" + roomId;
+	    	
+		}
+
+	}
 		Room room = new Room();
 		room.setRoomId(roomId);
 		roomReview.setRoom(room);
 		roomService.saveRoomReview(roomReview); 
 		
+		    
+		    return "redirect:/room/detail/" + roomId;
+		}
 	
-		return "redirect:/room/detail/"+roomId;
-	
-		
-	}	
-	
-	
-}
+}	
+

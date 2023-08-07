@@ -152,11 +152,13 @@ public class MypageService {
 		return commentRepository.findTop6ByUserConsumerIdOrderByCreateDateDesc(userId);
 	}
 
-	public Page<RoomReview> getReviewsByLoggedInUser(int page, int size) {
-	    Long userId = getLoggedInUserId();
-	    Pageable pageable = PageRequest.of(page, size);
-	    return roomReviewRepository.findByUserConsumerId(userId, pageable);
-	}
+	
+	
+	  public Page<RoomReview> getReviewsByLoggedInUser(int page, int size) { Long
+	  userId = getLoggedInUserId(); Pageable pageable = PageRequest.of(page, size);
+	  return roomReviewRepository.findByUserConsumerId(userId, pageable); }
+	 
+	 
 
     
 }

@@ -25,6 +25,7 @@ public class RoomReviewDTO {
 	
 	 private String profilePhoto; 
 	 private String username;
+	 private Long userId;
 	//여기까지 ConsumerUser에서 불러온 field
 	
 	public RoomReviewDTO (RoomReview roomReview) {    
@@ -34,6 +35,7 @@ public class RoomReviewDTO {
 		  this.roomId = roomReview.getRoom().getRoomId();
 		  this.profilePhoto = roomReview.getUser().getProfilePhoto();
 		  this.username = roomReview.getUser().getName();
+		  this.userId = roomReview.getUser().getConsumerId();
 		  }
 	
 	
