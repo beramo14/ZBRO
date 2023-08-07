@@ -37,6 +37,8 @@ public class PasswordEmailDTO {
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime createDateString;
+	
+	private String mailSendDomail;
 
 	public PasswordEmailDTO(ConsumerPasswordToken passwordToken) {
 		this.userType = "consumer";

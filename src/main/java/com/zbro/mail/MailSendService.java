@@ -32,6 +32,9 @@ public class MailSendService{
 	@Value("${mail.sender.address}")
 	private String fromEmailAddress;
 	
+	@Value("${mail.send.domain}")
+	private String mailSendDomain;
+	
 	/**
 	 * Thymeleaf Template을 사용하여 이메일을 전송
 	 * 
@@ -92,6 +95,7 @@ public class MailSendService{
 		emailDTO.setTo(passwordEmailDTO.getEmail());
 		emailDTO.setSubject("비밀번호 안내 메일");
 		
+		passwordEmailDTO.setMailSendDomail(mailSendDomain);
 		
 		log.info("######## sendPasswordChangeMail : {}", passwordEmailDTO);
 		sendTemplateMail(emailDTO, "mail/password", passwordEmailDTO);
