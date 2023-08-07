@@ -168,7 +168,7 @@ public class SellerController {
 		SellerUser sellerUser = sellerUserService.getSellerUser(user.getSellerId());
 		
 		try {
-			Resource resource =  resourceLoader.getResource("file:/"+fileBizPath + sellerUser.getBizFile());
+			Resource resource =  resourceLoader.getResource("file:"+fileBizPath + sellerUser.getBizFile());
 			File file = resource.getFile();
 			String filename = URLEncoder.encode(file.getName(), "UTF-8");
 			
