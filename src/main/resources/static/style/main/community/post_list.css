@@ -29,7 +29,6 @@ body {
 	padding: 0;
 }
 #typeTitle > span{
-	font-family: 'La Belle Aurore', cursive;
 	font-size: 4em;
 	color: #D0D0D0;
 	position: relative;
@@ -37,7 +36,7 @@ body {
 }
 #typeTitle > h1 {
 	letter-spacing :-0.05em;
-	font-weight: 500;
+	font-weight: 600;
 	position: relative;
 	bottom: 30px;
 }
@@ -62,7 +61,7 @@ body {
 	color: #86C69F;
 }
 #category > li > a.black-underline {
-	font-weight: 600;
+	font-weight: 700;
 	color: #7e8279;
 	text-decoration: underline;
 	text-decoration-thickness : 2px;
@@ -87,7 +86,8 @@ body {
 #postListSearch > h4 {
 	font-size: 1.5em;
 	margin-bottom: 0;
-	color: black;
+	color: #636363;
+	font-weight: 600;
 }
 #postListSearch > div {
 	position: absolute;
@@ -123,7 +123,7 @@ body {
 .selectbox label {
     position: absolute;
     left: 3px;
-    padding: 2.5px .2em;  /* select의 여백 크기 만큼 */
+    padding: 0.5px .2em;  /* select의 여백 크기 만큼 */
     z-index: -1;  /* IE8에서 label이 위치한 곳이 클릭되지 않는 것 해결 */
 }
 .selectbox select {
@@ -152,7 +152,7 @@ body {
 	border: none;
 	background: #ebeeea;
 	border-radius: 15px;
-	padding: 0 35px 1px 10px;
+	padding: 0 35px 1px 12px;
 	margin-left: 15px;
 }
 .searchbox:focus {
@@ -170,7 +170,7 @@ body {
 /* ------------- 테이블 ------------- */
 .tableDiv {
 	margin-top: 15px;
-	font-family: 'Noto Sans KR', sans-serif;
+	font-weight: bold;
 }
 .postTable {
 	width: 100%;
@@ -207,7 +207,6 @@ tbody > tr {
 	font-size: 95%;
 	text-align: left;
 	padding-left: 20px;
-	font-weight: 400;
 }
 td > a {
 	text-decoration: none;
@@ -216,10 +215,11 @@ td > a {
 .postgray {
 	font-size: 95%;
 	color: #c3c3c3;
-	font-weight: 100;
+	font-weight: 500;
 }
 .nonePost {
 	color: #c3c3c3;
+	font-weight: 500;
 }
 
 

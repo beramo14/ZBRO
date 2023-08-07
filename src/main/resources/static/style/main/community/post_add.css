@@ -30,9 +30,6 @@ body {
 
 
 /* ------------- 상단 타입 ------------- */
-.myType {
-	letter-spacing: -0.1em;
-}
 .topType {
 	margin-bottom: 50px;
 }
@@ -51,8 +48,10 @@ body {
 	margin-bottom: 5px;
 }
 .myselect > span {
-	font-size: 1.2em;
+	font-size: 1.15em;
 	margin-right: 7px;
+	font-weight: bold;
+	color: #616161;
 }
 
 
@@ -84,7 +83,7 @@ body {
 .selectbox label {
     position: absolute;
     /* left: 3px; */
-    padding: 2.5px .2em;  /* select의 여백 크기 만큼 */
+    padding: 0.5px .2em;  /* select의 여백 크기 만큼 */
     z-index: -1;  /* IE8에서 label이 위치한 곳이 클릭되지 않는 것 해결 */
 }
 .selectbox select {
@@ -130,11 +129,11 @@ body {
 	/* background: purple; */
 	padding: 0;
 	margin: 0;
+	font-weight: 600;
 }
 .goWrite {
 	padding: 8px 30px 7px;
 	right: 15px;
-	font-weight: 600;
 	border-radius: 20px;
 	border: none;
 	background: #ebeeea;

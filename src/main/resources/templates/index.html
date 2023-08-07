@@ -7,6 +7,14 @@
 		overflow-x: hidden;
 	}
 	
+	input:focus {
+		outline: none !important;
+	}
+	
+	input::placeholder {
+		color: #cacec8;
+	}
+	
 	.main-index-wrapper {
 		margin-top: -40px;
 	}
@@ -15,7 +23,6 @@
 		position: absolute;
 		left:0;
 		height: 350px;
-		  
 	}
 	
 	.main-index-wrapper .banner-image-wrapper {
@@ -53,8 +60,14 @@
 		color: #43604E;
 	}
 	
-	.main-index-wrapper .banner-text-wrapper > span {
+	.main-index-wrapper .banner-text-wrapper > div {
 		margin-bottom: 0.5rem;
+		font-weight: bold;
+		color: #43604EB3;
+	}
+	
+	.main-index-wrapper .banner-text-wrapper > h3 {
+		font-weight: bold;
 	}
 	
 	.main-index-wrapper .banner-search-wrapper {
@@ -77,7 +90,7 @@
 		border-radius: 10px;
 		width: 550px;
 		height: 45px;
-		padding-left: 20px;
+		padding-left: 13px;
 		z-index: 200;
 	}
 	
@@ -110,6 +123,10 @@
 	
 	.main-index-wrapper .recommend-room-preview {
 		padding: 20px 0;
+	}
+	
+	.recommend-room > * {
+		font-weight: bold;
 	}
 	
 	.recommend-room-preview .recommand-title {
@@ -184,8 +201,10 @@
 		<div class="banner">
 			<div class="banner-search-wrapper"> 
 				<div class="banner-text-wrapper">
-					<span style="margin-right: 12px;">#1인가구</span><span>#홀로서기</span>
-					<h3>가고 싶은 집, 나만을 위한 공간</h3>
+					<div style="display: flex;">
+						<span style="margin-right: 12px;">#1인가구</span><span>#홀로서기</span>
+					</div>
+					<h3 style="margin-bottom: 5px;">가고 싶은 집, 나만을 위한 공간</h3>
 					<h3>지브로에서 쉽고 간편하게 찾아보세요</h3>
 				</div>
 				<form th:action="@{/room/search}" class="search-form">

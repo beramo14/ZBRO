@@ -9,3 +9,7 @@ html, body {
 	margin: 0 auto ;
 	padding-top: 40px;
 }
+
+* {
+	font-family: 'Noto Sans KR', sans-serif;
+}

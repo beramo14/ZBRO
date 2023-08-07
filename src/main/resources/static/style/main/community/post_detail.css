@@ -42,7 +42,7 @@ body {
 }
 #typeTitle > h1 {
 	letter-spacing :-0.05em;
-	font-weight: 500;
+	font-weight: 700;
 	position: relative;
 	bottom: 30px;
 }
@@ -106,6 +106,9 @@ body {
 	/* background: orange; */
 	margin: 0 0 7px 5px;
 	position: relative;
+}
+.content-title > h2 {
+	font-weight: bold;
 }
 .content-info {
 	/* background: purple; */
@@ -182,6 +185,7 @@ body {
 	/* background: green; */
 	margin-left: 15px;
 	font-size: 1.5em;
+	font-weight: bold;
 }
 .commentcount-line {
 	width: 100%;
