@@ -79,7 +79,7 @@ public class WebSecurityConfig {
 		    		requestMatchers
 						.antMatchers("/seller/login/**").permitAll()
 						.antMatchers("/seller/password/**").permitAll()
-						.antMatchers("/seller/profile").permitAll()
+						.antMatchers("/seller/profile/**").permitAll()
 						.antMatchers("/seller/**").hasAuthority("ROLE_SELLER")
 				)
 	    		.formLogin(login -> login.loginPage("/seller/login").loginProcessingUrl("/seller/login").successHandler(new SellerLoginSuccessHandler()));
