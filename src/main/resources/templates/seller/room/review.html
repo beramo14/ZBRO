@@ -12,13 +12,12 @@
 	    height: 150px;
 	}
 	
- 	.searchBarWrapper {
-		margin: auto;
+	.searchBarWrapper {
 		display: flex;
 		align-items: center;
-		justify-content: flex-end;
-		width: 900px;
-	} 	
+		justify-content: center;
+		width: 100%;
+	}	
 	
 	#searchType {
 	    margin-right: 5px;
@@ -63,12 +62,12 @@
         text-align: center;
         font-size: 30px;
         font-weight: 550;
-        margin: 100px 0;
+        margin: 100px 0 20px;
     }
    
    
    .reviewtWrap{
-      padding: 0 200px;
+      padding: 0 100px;
    }
      table.reviewTable {
         width: 100%;
@@ -110,59 +109,52 @@
       
    } 
 
-   .pagingblock {
-	position: relative;
-	margin-top: 10px;
-}
-.pagingblock > * {
-	padding: 0;
-	margin: 0;
-}
-.pagination {
-	padding: 0 auto;
-	margin: 0 auto;
-	display: flex;
-	justify-content: center;
-	position: relative;
-	bottom: 10px;
-}
-.pagination a {
-	width: 30px;
-	height: 30px;
-	align-items: center;
-	justify-content: center;
-	float: left;
-	display: flex;
-	text-decoration: none;
-	color: #7e8279;
-	line-height: 1.5;
-	border-radius: 6px;
-}
-.pagination .arrow-l .bi-play-fill{
-	transform: rotate(180deg);
-}
-.pagination .num {
-	/* border: 1.5px solid #dbefcf; */
-	border: 1.5px solid #ebeeea;
-	margin: 0 3.5px;
-}
-.num:hover {
-	border: none;
-	background: #86C69F;
-	color: white;
-}
-.left:hover, .right:hover {
-	color: #86C69F;
-}
-.pagination a:active {
-	cursor: default;
-	color: #448860;
-}
-.pagination .active > a {
-	border: none;
-	background: #7e8279;
-	color: white;
-}
+	.pagination {
+		padding: 0 auto;
+		margin: 0 auto;
+		display: flex;
+		justify-content: center;
+		position: relative;
+		bottom: 10px;
+		margin-top: 50px;
+	}       
+	.pagination a {
+		width: 30px;
+		height: 30px;
+		align-items: center;
+		justify-content: center;
+		float: left;
+		display: flex;
+		text-decoration: none;
+		color: #7e8279;
+		line-height: 1.5;
+		border-radius: 6px;
+	}
+	.pagination .arrow-l .bi-play-fill{
+		transform: rotate(180deg);
+	}
+	.pagination .num {
+		
+		border: 1.5px solid #ebeeea;
+		margin: 0 3.5px;
+	}
+	.num:hover {
+		border: none;
+		background: #86C69F;
+		color: white;
+	}
+	.left:hover, .right:hover {
+		color: #86C69F;
+	}
+	.pagination a:active {
+		cursor: default;
+		color: #448860;
+	}
+	.pagination .active > a {
+		border: none;
+		background: #7e8279;
+		color: white;
+	}
     .noMessage{
        padding : 10px 0;
         text-align: center;
@@ -171,11 +163,14 @@
     }  
    .remove-underline {
         text-decoration: none;
-    }             
-	
+    }       
+    
+    
 	</style>
 </th:block>
 <th:block layout:fragment="content">
+<div class="content">
+	
 	<div class=reviewWrapTitle>작성 리뷰 관리</div>  
 	 <form id="searchForm" th:action="@{/seller/room/review}" method="get">
 		
@@ -191,19 +186,19 @@
 	    </div>
 	  </form>
    <div class=reviewtWrap>
-       <table class="reviewTable" style="text-align: center;">  		
+       <table class="reviewTable" style="text-align: center;" >  		
            <thead>
                <tr style="text-align: center;">
-                <th style=" width:20%">매물사진</th>
-                 <th  style="width: 20%;">매물명</th>
-                 <th style="width: 20%;">작성자</th>
+                <th style=" width: 10%">매물사진</th>
+                 <th  style="width: 15%;">매물명</th>
+                 <th style="width: 10%;">작성자</th>
                  <th style="width: 10%;">평점</th>
-                 <th style="width: 30%;">내용</th>
-                 <th style=" width: 10%; text-align: right;">작성일</th>
+                 <th style="width: 40%;">내용</th>
+                 <th style=" width: 10%; text-align: center;">작성일</th>
                </tr>
            </thead>
            <tbody>
-               <tr th:each="review : ${reviews}" >
+               <tr th:each="review : ${reviews}" th:unless="${reviews.empty}" th:onclick="'redirectToRoomDetails(\'' + ${review.reviewId} + '\');'" style="cursor: pointer;">
                    <td>
                    	<div class="test">
                        <img th:src="@{/room/photo(roomId=${review.room.roomId})}" class="room-image" style="margin:10px;" /> 
@@ -218,10 +213,11 @@
                    <td>
                        <span th:each="star : ${#numbers.sequence(1, review.score)}" class="bi bi-star-fill"></span>
                    </td>
-                  <td ><a th:text="${review.content}" th:href="@{/seller/room/reviewdetail(reviewId=${review.reviewId})}" class="remove-underline"></a>
+                  <td >	
+                  		<span th:text="${review.content}" class="remove-underline"></a>
                   		<span th:if="${review.content.isEmpty()}">-</span>
                   </td>
-                   <td th:text="${#temporals.format(review.createDate, 'yyyy-MM-dd')}" style="text-align: right;"></td>
+                   <td th:text="${#temporals.format(review.createDate, 'yyyy-MM-dd')}" style="text-align: center;"></td>
                </tr>
                <tr th:if="${reviews.empty}">
                    <td colspan="4" class="noMessage" >작성한 리뷰가 없습니다!</td>
@@ -249,10 +245,17 @@
         </div>  
     </div>
 
+
+   
+     
+</div>
 	
 </th:block>
 <th:block layout:fragment="customScript">
 	<script th:inline="javascript" type="text/javascript">
-		//커스텀 스크립트
+    function redirectToRoomDetails(roomId) {
+  	  window.location.href = "/seller/room/reviewdetail/" + roomId;
+  	} 
+    
 	</script>
 </th:block>
