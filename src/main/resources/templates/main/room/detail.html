@@ -14,10 +14,11 @@
 		<div id="carouselExampleIndicators" class="carousel slide" style="margin-bottom:70px;"
 		data-bs-ride="carousel">
 			<div class="carousel-inner" align="center">
-				<div class="carousel-item active"
-					th:each="roomPhoto : ${roomPhotoList}">
-				<img style="height:450px;" th:src="@{/room/photodetail(photoId=${roomPhoto.photoId})}"
-						class="d-block" alt="roominfo">
+				<div class="carousel-item active">
+					<img style="height:450px;" th:src="@{/room/photodetail(photoId=${roomPhotoList[0].photoId})}"  class="d-block" alt="roominfo">
+				</div>
+				<div class="carousel-item" th:each="roomPhotoList, iterStat : ${roomPhotoList}" th:if="${iterStat.index} > 0">
+   					 <img style="height: 450px;" th:src="@{/room/photodetail(photoId=${roomPhotoList.photoId})}" alt="roominfo">
 				</div>
 			</div>
 			<button class="carousel-control-prev" type="button"

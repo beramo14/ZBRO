@@ -123,7 +123,7 @@ public class RoomController {
 	    List<RoomOption> roomOption = roomService.getroomOption(room);
 	    List<RoomPhoto> roomPhotoList = roomService.getRoomPhtotList(roomId);
 	    Page<RoomReview> roomReviewList = roomService.getRoomReview(ReviewDTO, roomId ,page, size);
-	    
+	    System.out.println(roomPhotoList);
 	    model.addAttribute("room", room);
 	    model.addAttribute("roomsame", roomsame);
 	    model.addAttribute("roomOptions", roomOption);
