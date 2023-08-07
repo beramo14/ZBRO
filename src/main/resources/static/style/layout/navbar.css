@@ -47,6 +47,11 @@ nav {
   padding: 10px;
   color : #86c69f;
 }
+.dropdown-menu .dropdown-item:active {
+  background-color: #acda93 ;
+  color : white;
+}
+
 
 .navbar-brand img {
 	height:100%;

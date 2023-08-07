@@ -41,7 +41,9 @@ public class AdminController {
 	                         @RequestParam(required = false) String memberType,
 	                         @RequestParam(required = false) String admission) {
 
+		// 요청받은 페이지와 페이지당 항목 수 기반으로 페이지네이션 정보 생성
 		Pageable pageable = PageRequest.of(page, size);
+		// 판매자 목록을 검색 조건(searchType, searchKeyword, memberType, admission)에 따라 조회
 	    Page<SellerUser> sellerListPage = adminService.searchByCriteria(searchType, searchKeyword, memberType, admission, pageable);
 
 	    model.addAttribute("sellerList", sellerListPage);
@@ -55,6 +57,7 @@ public class AdminController {
 
 	@PostMapping("/admin/seller/approve")
 	public String approveSeller(@RequestBody Map<String, Long> request) {
+		 // 요청 본문에서 판매자 ID가져옴
 	    Long sellerId = request.get("sellerId");
 	    adminService.approveSeller(sellerId);
 	    return "redirect:/admin/seller/list";

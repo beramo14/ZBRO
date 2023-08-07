@@ -31,7 +31,7 @@ public class AdminService {
     }
 
     public Page<SellerUser> searchByCriteria(String searchType, String searchKeyword, String memberType, String admission, Pageable pageable) {
-
+    	// 필터 옵션을 저장할 리스트들을 생성
         List<String> types = new ArrayList<>();
         List<String> admis = new ArrayList<>();
 
@@ -41,7 +41,7 @@ public class AdminService {
             types.add("Personal");
         }
             
-
+        // 필터링된 SellerUser 엔티티들을 저장할 리스트를 생성
         List<SellerUser> filteredSellers = new ArrayList<>();
         Page<SellerUser> sellers = findAll(Pageable.unpaged());
 
