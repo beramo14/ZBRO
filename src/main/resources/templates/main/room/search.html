@@ -45,10 +45,10 @@
 				    			</button>
 			    			</div>
 					    	<div class="image-wrapper" sec:authorize="hasRole('ROLE_CONSUMER')"></div>
-					        <img th:src="@{/room/photo(roomId=${room.roomId})}" th:alt="${room.address}" class="room-image" />
+					        <img th:src="@{/room/photo(roomId=${room.roomId})}" th:alt="${room.shortAddress}" class="room-image" />
 					    </div>
 					    
-					    <div class="room-info-wrapper" th:onclick="|location.href='@{/room/detail/{roomId}(roomId=${room.roomId})}'|">
+					    <div class="room-info-wrapper" th:onclick="|location.href='@{/room/detail/{roomId}(roomId=${room.roomId})}'|" th:title="${room.intro}">
 				            <p class="room-cost">
 				                <span th:text="${room.costType}">월세</span>
 				                <th:block th:if="${room.costType.toString() == '월세'}">
