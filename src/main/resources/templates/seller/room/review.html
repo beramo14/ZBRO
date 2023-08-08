@@ -163,7 +163,17 @@
     }  
    .remove-underline {
         text-decoration: none;
-    }       
+    }  
+    /*모달 속성 */
+   .display-wrapper {
+   	display:flex;
+   	gap:20px;
+   	margin-bottom:20px;
+   
+   }
+   .modal-body{
+   	height:200px;
+   }     
     
     
 	</style>
@@ -190,7 +200,7 @@
            <thead>
                <tr style="text-align: center;">
                 <th style=" width: 10%">매물사진</th>
-                 <th  style="width: 15%;">매물명</th>
+                 <th  style="width: 15%;">건물명</th>
                  <th style="width: 10%;">작성자</th>
                  <th style="width: 10%;">평점</th>
                  <th style="width: 40%;">내용</th>
@@ -198,7 +208,7 @@
                </tr>
            </thead>
            <tbody>
-               <tr th:each="review : ${reviews}" th:unless="${reviews.empty}" th:onclick="'redirectToRoomDetails(\'' + ${review.reviewId} + '\');'" style="cursor: pointer;">
+               <tr th:each="review : ${reviews}" th:unless="${reviews.empty}" th:onclick="'openReviewModal(\'' + ${review.reviewId} + '\');'" style="cursor: pointer;">
                    <td>
                    	<div class="test">
                        <img th:src="@{/room/photo(roomId=${review.room.roomId})}" class="room-image" style="margin:10px;" /> 
@@ -214,7 +224,7 @@
                        <span th:each="star : ${#numbers.sequence(1, review.score)}" class="bi bi-star-fill"></span>
                    </td>
                   <td >	
-                  		<span th:text="${review.content}" class="remove-underline"></a>
+                  		<span th:text="${review.content}" class="remove-underline"></span>
                   		<span th:if="${review.content.isEmpty()}">-</span>
                   </td>
                    <td th:text="${#temporals.format(review.createDate, 'yyyy-MM-dd')}" style="text-align: center;"></td>
@@ -244,8 +254,25 @@
             </ul>
         </div>  
     </div>
-
-
+    <!--상세 리뷰 모달  -->
+	<div class="modal" tabindex="-1" id="myModal">
+	  <div class="modal-dialog">
+		    <div class="modal-content">
+			   <div class="modal-header">
+			      <h5 class="modal-title" style="font-weight:bold;">리뷰상세보기</h5>
+			      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body" th:each="review : ${reviews}" >
+			      <div class="display-wrapper">
+			      	 <div style="font-weight:bold; font-size:20px; margin-bottom:10px;">후기:<span th:text="${review.user.name}"></span></div>
+			       	 <div style="font-weight:bold; font-size:20px;">별점: <span th:each="star : ${#numbers.sequence(1, review.score)}" class="bi bi-star-fill"></span></div>
+			      </div>
+			       	 <div style="font-weight:bold; font-size:20px;">후기:<span th:text="${review.content}" ></span></div>
+			   </div>
+		    </div>
+	  </div>
+	</div>
+	 <!--상세 리뷰 모달 끝 -->
    
      
 </div>
@@ -253,9 +280,35 @@
 </th:block>
 <th:block layout:fragment="customScript">
 	<script th:inline="javascript" type="text/javascript">
-    function redirectToRoomDetails(roomId) {
-  	  window.location.href = "/seller/room/reviewdetail/" + roomId;
-  	} 
-    
+  	
+  	
+	
+	$(document).ready(function() {
+        $(document).on("click", ".open-modal-button", function() {
+            var reviewId = $(this).data("review-id");
+            openReviewModal(reviewId);
+        });
+    });
+
+    function openReviewModal(reviewId) {
+        var modalBody = $("#modalBody");
+
+        // Simulating AJAX success response for demonstration purposes
+         var reviewData = {
+            buildingName: "Sample Building",
+            userName: "John Doe",
+            rating: 4,
+            content: "This is a sample review content."
+        };
+
+         var html = "<p>Building Name: " + reviewData.buildingName + "</p>";
+        html += "<p>User Name: " + reviewData.userName + "</p>";
+        html += "<p>Rating: " + reviewData.rating + "</p>";
+        html += "<p>Content: " + reviewData.content + "</p>"; 
+  
+        modalBody.html(html);
+        $('#myModal').modal('show');
+    }
+
 	</script>
 </th:block>

@@ -208,11 +208,15 @@ public class SellerRoomService {
 		roomRepo.deleteById(roomId);
 	}
 
-	/*
-	 * public List<RoomReview> getRoomReviewDetail(Long reviewId) { List<RoomReview>
-	 * sellerRoomReview2 = sellerReviewRepo.findByreviewId(reviewId); return
-	 * sellerRoomReview2; }
-	 */
+		// 리뷰 상세 페이지 이동 메서드
+	  public List<RoomReview> getRoomReviewDetail(Long reviewId) { 
+		  List<RoomReview> sellerRoomReview2 = sellerReviewRepo.findByreviewId(reviewId); 
+	  return sellerRoomReview2; 
+	  
+	  
+	  }
+	 
+	
 	// 리뷰(review)페이지 페이징처리 및 검색기능
 	public Page<RoomReview> getRoomReviewSeller(RoomReviewDTO roomReviewDTO, Long sellerId, int page, int size, String searchType, String searchKeyword, List<String> types) {
 	    // Sort는 정렬기준 Sort 객체 import 후, Pageable에 객체 대입

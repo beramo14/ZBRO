@@ -251,13 +251,17 @@ public class SellerController {
 	    return reviews;
 	}
 	
-	/*
-	 * @GetMapping("seller/room/reviewdetail") public List<RoomReview>
-	 * getroomReviewdetaiList(@RequestParam("reviewId")Long reviewId, Model model) {
-	 * List<RoomReview> roomReview3 = roomService.getRoomReviewDetail(reviewId);
-	 * System.out.println(roomReview3); model.addAttribute("reviews", roomReview3);
-	 * return roomReview3; }
-	 */
+		// 리뷰 상세페이지 메서드
+	  @GetMapping("seller/room/reviewdetail") 
+	  public List<RoomReview> getroomReviewdetaiList(@RequestParam("reviewId")Long reviewId, Model model) {
+	  List<RoomReview> roomReview3 = roomService.getRoomReviewDetail(reviewId);
+	  System.out.println(roomReview3);
+	  model.addAttribute("reviews", roomReview3);
+	  return roomReview3; 
+	  
+	  
+	  }
+	 
 	
 	
 	@GetMapping("seller/room/detail_test")

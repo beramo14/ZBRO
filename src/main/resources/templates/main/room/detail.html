@@ -114,7 +114,7 @@
 				<!--상세 소개  -->
 				<div class="detail-wrapper" th:each="room : ${room}">
 					<h4 class="detail-intro-index">상세소개</h4>
-					<div class="detail-intro" th:text="${room.description}"></div>
+					<div class="detail-intro" th:utext="${room.description}"></div>
 				</div>
 				<!--상세소개 종료  -->
 		
@@ -202,6 +202,9 @@
 				<!--후기를 표시할 자리-->
 				<div class="big-review">
 				  <!--후기1  -->
+				  <div class="review1" th:if="${roomReviews.isEmpty()}">
+   					  <p style="text-align:center; font-weight:bold;">등록된 후기가 없습니다.</p>
+				  </div>
 				  <div class="review1" th:each="roomReview, iterStat : ${roomReviews}" th:if="${iterStat.index} < 2">
 				  	<div class="review-flex">
 					   <div class="review-small-1" style="align-items:center;" >
@@ -234,7 +237,19 @@
 					   </div> 
 				     <p  class="review1-date" th:text="${#temporals.format(roomReview.createDate, 'yyyy-MM-dd')}"></p>
 			     </div>
+			     	<div style="display:flex;">
 				      <p th:text="${roomReview.content}" style="padding-left:15px;"></p>
+					     <div class="comment" style="display:flex;">
+						    <p>댓글 내용...</p>
+						    <button class="edit-button">수정</button>
+						    <div class="edit-form" style="display: none;">
+						        <form>
+						            <input type="text" name="editedComment" value="댓글 내용...">
+						            <button type="submit">저장</button>
+						        </form>
+						    </div>
+						</div>
+				    </div>  
 				  </div>
 				<!--후기페이징  -->
 					<div class="page" th:unless="${roomReviews.empty}">
