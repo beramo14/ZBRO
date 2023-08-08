@@ -126,7 +126,7 @@
 	            <tr th:unless="${comments.empty}" th:each="comment : ${comments}">
 	                <td>
 	                    <a class="comment-content"  th:href="@{/community/detail?postId={id}(id=${comment.post.postId})}">
-	                        <span th:text="'[' + ${comment.post.title} + ']'" style="color: #858585"></span>
+	                        <span th:text="'[' + ${comment.post.title} + ']'" style="color: #AEAEAE"></span>
 	                        <span th:text="${comment.content}" style="color: #43604E;"></span>
 	                    </a>
 	                </td>
