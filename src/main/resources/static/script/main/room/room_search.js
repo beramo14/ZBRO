@@ -41,11 +41,17 @@ $(document).ready(function () {
 
     var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 
-    
     var geocoder = new kakao.maps.services.Geocoder();
 
     //바운즈 - 마커 중앙설정
     bounds = new kakao.maps.LatLngBounds();
+    
+    let clusterer = new kakao.maps.MarkerClusterer({
+		map:map,
+		averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
+		minClusterSize: 1,
+        minLevel: 7 // 클러스터 할 최소 지도 레벨 
+	});
     
     $.each(addressArray, function(index, item) {
     	
@@ -65,18 +71,23 @@ $(document).ready(function () {
 				    clickable: true,
 				    position: coords
 				});
+				//markers.push(marker);
+				clusterer.addMarker(marker);
 				
 				//마커 클릭시 좌측 매물 리스트에서 클릭한 매물 하나만 표출
 				kakao.maps.event.addListener(marker, 'click', function() {
 					map.setCenter(coords);
-					map.setLevel(3);
+					map.setLevel(6);
 					roomItemShowController(item.roomId);
 				});
+				
 		    }
     		map.setBounds(bounds);
 		});
 		
     });
+    
+    
     
     //맵 클릭시 매물 리스트 전체 표시
     kakao.maps.event.addListener(map, 'click', function() {
