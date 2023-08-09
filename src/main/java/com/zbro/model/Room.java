@@ -60,7 +60,6 @@ public class Room {
 	private String address;
 	
 	@Comment("호수")
-	@Column(length = 30)
 	private String roomNumber;
 	
 	@Comment("월세")
@@ -98,7 +97,6 @@ public class Room {
 	private boolean isRoomIn;
 	
 	@Comment("안전(보안)")
-	@Column(length = 50)
 	private String securityInfo;
 	
 	@Comment("엘리베이터_여부")
@@ -121,11 +119,9 @@ public class Room {
 	private String genderInfo;
 	
 	@Comment("제공식사_고시원")
-	@Column(length = 100)
 	private String foodOffer;
 	
 	@Comment("제공비품_고시원")
-	@Column(length = 100)
 	private String amenityOffer;
 	
 	@Comment("조회수")
