@@ -67,11 +67,12 @@
 							<li class="font-2"><span>냉난방</span><span th:text="${room.heatInfo}"></span></li>
 							<li class="font-2"><span>인터넷</span><span th:text="${room.internetInfo}"></span></li>
 							<li class="font-2"><span>보안</span><span th:text="${room.securityInfo}"></span></li>
+						 <th:block th:if="${#strings.equals(room.type, '고시원')== true}">
+						 	<li class="font-2"><span>남여층분리</span><span th:text="${room.genderInfo}"></span></li>
+						 	<li class="font-2"><span>제공식사</span><span th:text="${room.foodOffer}"></span></li>
+						 	<li class="font-2"><span>제공비품</span><span th:text="${room.amenityOffer}"></span></li>
+						 </th:block>
 						</ul>
-						<th:blcok th:if="${room.type}== '고시원'">
-							<li>남여층 분리:<span th:text="${room.genderInfo}"></span></li>
-						</th:blcok>
-						<th:blcok th:unless="${room.type} != '고시원'"></th:blcok>
 					</div>
 					<h4 style="font-weight: bold; margin-top:40px;">옵션 및 서비스</h4>
 					<div>
@@ -132,13 +133,13 @@
 								<span  style="font-weight: bold;" th:text="${roomsame.costType}"></span>
 								<th:block th:if="${roomsame.costType.toString() == '월세'}">
 									<th:block th:if="${roomsame.deposit != 0}">
-										<span  style="font-weight: bold;" th:text="${roomsame.deposit}"></span>
+										<span  style="font-weight: bold;"  th:text="${roomsame.deposit}"></span>
 										<span style="font-weight: bold;">/</span>
 									</th:block>
 									<span style="font-weight: bold;" th:text="${roomsame.monthCost}"></span>
 								</th:block>
 								<th:block th:if="${roomsame.costType.toString() == '전세'}">
-									<span th:text="${roomsame.deposit}"></span>
+									<span th:if="${room.deposit != 0}" th:text="${roomsame.deposit}"></span>
 								</th:block>
 							</div>
 							<div class="typewrapper">
@@ -237,19 +238,7 @@
 					   </div> 
 				     <p  class="review1-date" th:text="${#temporals.format(roomReview.createDate, 'yyyy-MM-dd')}"></p>
 			     </div>
-			     	<div style="display:flex;">
 				      <p th:text="${roomReview.content}" style="padding-left:15px;"></p>
-					     <div class="comment" style="display:flex;">
-						    <p>댓글 내용...</p>
-						    <button class="edit-button">수정</button>
-						    <div class="edit-form" style="display: none;">
-						        <form>
-						            <input type="text" name="editedComment" value="댓글 내용...">
-						            <button type="submit">저장</button>
-						        </form>
-						    </div>
-						</div>
-				    </div>  
 				  </div>
 				<!--후기페이징  -->
 					<div class="page" th:unless="${roomReviews.empty}">
@@ -294,7 +283,7 @@
 				        	<h2 class="costtype" th:text="${room.costType}"></h2>
 				        	<div style="display:flex;">
 							    <h2 th:text="${room.monthCost}"></h2><h2>/</h2>
-								<h2 th:text="${room.deposit}"></h2>
+								<h2 th:if="${room.deposit != 0}" th:text="${room.deposit}"></h2>
 					        </div>
 				        </div>
 				            <p class="address" th:text="${room.address}"></p>
@@ -305,8 +294,8 @@
 				            </tr>
 				            <tr>
 				           		 <td class="sidemenu-element">
-					           		 <span th:text="${room.totalFloor}"></span>층/
-					           		 <span th:text="${room.roomFloor}"></span>층
+					           		 <span th:text="${room.roomFloor}"></span>층/
+					           		 <span th:text="${room.totalFloor}"></span>층
 				           		 </td>
 				            	<td class="sidemenu-element">
 				            		<span th:text="${room.manageCost}"></span>만원
@@ -484,6 +473,7 @@
 				e.innerHTML = heartElement;
 			}
 		}
+		
 	</script>
 </th:block>
 

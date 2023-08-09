@@ -208,11 +208,6 @@ ul.room-detail-wrapper li span:nth-child(2){
 }
 
 
-/* .bi-star-fill {
-	color: #86C69F;
-    margin-right: 1px;
-} */
-
  .review-small-1 i {
 	color: #86C69F;
     margin-right: 1px;
@@ -295,7 +290,6 @@ ul.room-detail-wrapper li span:nth-child(2){
 }
 
 .side-under-wrapper {
-	/* display: flex; */
 	width:100%;
     justify-content: center;
 	

@@ -239,8 +239,6 @@ public class RoomService {
 		
 		return resultIndexRoomDTO;
 	}
-	
-
 
 
 }

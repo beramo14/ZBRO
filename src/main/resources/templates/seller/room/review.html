@@ -164,27 +164,13 @@
    .remove-underline {
         text-decoration: none;
     }  
-    /*모달 속성 */
-   .display-wrapper {
-   	display:flex;
-   	gap:20px;
-   	margin-bottom:20px;
-   
-   }
-   .modal-body{
-   	height:200px;
-   }     
-    
     
 	</style>
 </th:block>
 <th:block layout:fragment="content">
 <div class="content">
-	
 	<div class=reviewWrapTitle>작성 리뷰 관리</div>  
 	 <form id="searchForm" th:action="@{/seller/room/review}" method="get">
-		
-
 		<div class= "searchBarWrapper">
 			<select id="searchType" name="searchType" class="form-select pt-1" >
 			    <option value="buildingName" th:selected="${searchType == 'buildingName'}">건물명</option>
@@ -208,7 +194,7 @@
                </tr>
            </thead>
            <tbody>
-               <tr th:each="review : ${reviews}" th:unless="${reviews.empty}" th:onclick="'openReviewModal(\'' + ${review.reviewId} + '\');'" style="cursor: pointer;">
+               <tr th:each="review : ${reviews}" th:unless="${reviews.empty}" th:onclick="'openReviewDetail(\'' + ${review.reviewId} + '\');'" style="cursor: pointer;">
                    <td>
                    	<div class="test">
                        <img th:src="@{/room/photo(roomId=${review.room.roomId})}" class="room-image" style="margin:10px;" /> 
@@ -230,7 +216,7 @@
                    <td th:text="${#temporals.format(review.createDate, 'yyyy-MM-dd')}" style="text-align: center;"></td>
                </tr>
                <tr th:if="${reviews.empty}">
-                   <td colspan="4" class="noMessage" >작성한 리뷰가 없습니다!</td>
+                   <td colspan="6" class="noMessage">작성한 리뷰가 없습니다!</td>
                </tr>
            </tbody>
        </table>
@@ -254,61 +240,13 @@
             </ul>
         </div>  
     </div>
-    <!--상세 리뷰 모달  -->
-	<div class="modal" tabindex="-1" id="myModal">
-	  <div class="modal-dialog">
-		    <div class="modal-content">
-			   <div class="modal-header">
-			      <h5 class="modal-title" style="font-weight:bold;">리뷰상세보기</h5>
-			      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      <div class="modal-body" th:each="review : ${reviews}" >
-			      <div class="display-wrapper">
-			      	 <div style="font-weight:bold; font-size:20px; margin-bottom:10px;">후기:<span th:text="${review.user.name}"></span></div>
-			       	 <div style="font-weight:bold; font-size:20px;">별점: <span th:each="star : ${#numbers.sequence(1, review.score)}" class="bi bi-star-fill"></span></div>
-			      </div>
-			       	 <div style="font-weight:bold; font-size:20px;">후기:<span th:text="${review.content}" ></span></div>
-			   </div>
-		    </div>
-	  </div>
-	</div>
-	 <!--상세 리뷰 모달 끝 -->
-   
-     
 </div>
 	
 </th:block>
 <th:block layout:fragment="customScript">
 	<script th:inline="javascript" type="text/javascript">
-  	
-  	
-	
-	$(document).ready(function() {
-        $(document).on("click", ".open-modal-button", function() {
-            var reviewId = $(this).data("review-id");
-            openReviewModal(reviewId);
-        });
-    });
-
-    function openReviewModal(reviewId) {
-        var modalBody = $("#modalBody");
-
-        // Simulating AJAX success response for demonstration purposes
-         var reviewData = {
-            buildingName: "Sample Building",
-            userName: "John Doe",
-            rating: 4,
-            content: "This is a sample review content."
-        };
-
-         var html = "<p>Building Name: " + reviewData.buildingName + "</p>";
-        html += "<p>User Name: " + reviewData.userName + "</p>";
-        html += "<p>Rating: " + reviewData.rating + "</p>";
-        html += "<p>Content: " + reviewData.content + "</p>"; 
-  
-        modalBody.html(html);
-        $('#myModal').modal('show');
-    }
-
+	function openReviewDetail(reviewId) {
+	    window.location.href = '/seller/room/reviewdetail?reviewId=' + reviewId;
+	}
 	</script>
 </th:block>
