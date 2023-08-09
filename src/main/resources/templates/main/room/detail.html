@@ -81,7 +81,7 @@
 								<span style="font-weight: bold;">공용옵션</span>
 							</div>
 							<div class="option-flex">
-								<div th:each="roomOption : ${roomOptions}">
+								<div th:each="roomOption : ${roomOptions}" th:if="${roomOption.optionType.isShare} == true">
 									<span th:text="${roomOption.optionType.optionName}"></span>
 								</div>
 							</div>
