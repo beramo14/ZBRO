@@ -115,7 +115,7 @@
 				<!--상세 소개  -->
 				<div class="detail-wrapper" th:each="room : ${room}">
 					<h4 class="detail-intro-index">상세소개</h4>
-					<div class="detail-intro" th:utext="${room.description}"></div>
+					<div class="detail-intro"></div>
 				</div>
 				<!--상세소개 종료  -->
 		
@@ -357,6 +357,10 @@
 
 	<script th:inline="javascript" type="text/javascript">
 		$(document).ready(function(){
+			/* 상세소개 엔터처리 */
+			var SangseText = [[${room.description}]];
+			$('.detail-intro').html(SangseText);
+			
 			var mapContainer = document.getElementById('map') // 지도를 표시할 div 
 			mapOption = {
 				center : new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
@@ -399,6 +403,7 @@
 	    
 	    
 	});  
+	
 		})
 //공유기능 메서드
 	function clip(){
