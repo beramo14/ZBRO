@@ -286,7 +286,8 @@
 	                }
 	
 	                // 주소 정보를 해당 필드에 넣기
-	                document.getElementById("jibunAddress").value = data.jibunAddress;	//지번
+	                /* document.getElementById("jibunAddress").value = data.jibunAddress; */	//지번
+	                document.getElementById("jibunAddress").value = roadAddr;	//지번
 	            }
 	        }).open();
 	    }
