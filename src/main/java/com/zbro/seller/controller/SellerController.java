@@ -263,13 +263,5 @@ public class SellerController {
 	  }
 	 
 	
-	
-	@GetMapping("seller/room/detail_test")
-	public String detail_test () {
-		
-		// 파라미터를 roomId로 받아와서 매물 등록 정보를 펼쳐
-		return "seller/room/detail_test";
-		
-	}
 }
 	
